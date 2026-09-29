@@ -1,22 +1,19 @@
 "use client";
 
-import { Suspense, useState, FormEvent, useEffect } from "react";
+import { Suspense, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authApi } from "@/utils/api/auth";
+import AuthFrame from "@/components/admin/AuthFrame";
+import Notice from "@/components/admin/Notice";
+import { PASSWORD_HINT } from "@/components/admin/format";
 
 function ConfirmResetForm() {
-  const params = useSearchParams();
-  const token = params.get("token") ?? "";
-
+  const token = useSearchParams().get("token") ?? "";
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!token) setError("Invalid or missing reset token. Please request a new one.");
-  }, [token]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -24,64 +21,71 @@ function ConfirmResetForm() {
     setLoading(true);
     try {
       await authApi.confirmPasswordReset({ token, newPassword: password });
-      setSuccess(true);
+      setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to reset password");
+      setError(err instanceof Error ? err.message : "The password wasn't saved. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
+  if (!token) {
+    return (
+      <>
+        <Notice tone="error">This reset link is incomplete. Request a new one and use the link in that email.</Notice>
+        <Link className="btn btn-quiet" href="/admin/reset-password/request">
+          Request a new link
+        </Link>
+      </>
+    );
+  }
+
+  if (done) {
+    return (
+      <>
+        <Notice tone="success">Password saved. Sign in with your new password.</Notice>
+        <Link className="btn btn-primary btn-block" href="/admin/login">
+          Sign in
+        </Link>
+      </>
+    );
+  }
+
   return (
-    <div className="auth-card">
-      <h1>Set new password</h1>
-      <p className="subtitle">Enter your new password below.</p>
-
-      {error && <div className="alert alert-error">{error}</div>}
-
-      {success ? (
-        <>
-          <div className="alert alert-success">Password reset successfully.</div>
-          <p className="auth-footer">
-            <Link href="/admin/login">Sign in with your new password</Link>
-          </p>
-        </>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="password">New password</label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Min 8 chars, upper, lower, digit"
-              disabled={!token}
-            />
-          </div>
-          <button className="btn btn-primary" type="submit" disabled={loading || !token}>
-            {loading ? "Saving…" : "Reset password"}
-          </button>
-        </form>
-      )}
-    </div>
+    <>
+      {error && <Notice tone="error">{error}</Notice>}
+      <form onSubmit={handleSubmit}>
+        <div className="field">
+          <label htmlFor="password">New password</label>
+          <input
+            id="password"
+            className="input"
+            type="password"
+            autoComplete="new-password"
+            aria-describedby="password-hint"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoFocus
+          />
+          <span className="field-hint" id="password-hint">
+            {PASSWORD_HINT}
+          </span>
+        </div>
+        <button className="btn btn-primary btn-block" type="submit" disabled={loading}>
+          {loading ? "Saving…" : "Save new password"}
+        </button>
+      </form>
+    </>
   );
 }
 
 export default function ResetPasswordConfirmPage() {
   return (
-    <div className="auth-page">
-      <Suspense
-        fallback={
-          <div className="auth-card">
-            <p>Loading…</p>
-          </div>
-        }
-      >
+    <AuthFrame title="Choose a new password">
+      <Suspense fallback={null}>
         <ConfirmResetForm />
       </Suspense>
-    </div>
+    </AuthFrame>
   );
 }

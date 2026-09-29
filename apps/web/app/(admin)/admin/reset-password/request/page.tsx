@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { authApi } from "@/utils/api/auth";
+import AuthFrame from "@/components/admin/AuthFrame";
+import Notice from "@/components/admin/Notice";
 
 export default function ResetPasswordRequestPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +17,7 @@ export default function ResetPasswordRequestPage() {
     try {
       await authApi.requestPasswordReset({ email });
     } catch {
-      // Silently ignore — API always returns 204 to prevent email enumeration
+      // The API answers 204 whether or not the email exists, so there's nothing to show.
     } finally {
       setLoading(false);
       setSubmitted(true);
@@ -23,45 +25,39 @@ export default function ResetPasswordRequestPage() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h1>Reset password</h1>
-        <p className="subtitle">Enter your email address and we&apos;ll send you a reset link.</p>
-
-        {submitted ? (
-          <>
-            <div className="alert alert-success">
-              If that email is registered, a reset link has been sent. Check your inbox — the link expires in 1 hour.
-            </div>
-            <p className="auth-footer">
-              <Link href="/admin/login">Back to sign in</Link>
-            </p>
-          </>
-        ) : (
-          <>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="email">Email address</label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoFocus
-                />
-              </div>
-              <button className="btn btn-primary" type="submit" disabled={loading}>
-                {loading ? "Sending…" : "Send reset link"}
-              </button>
-            </form>
-            <p className="auth-footer">
-              <Link href="/admin/login">Back to sign in</Link>
-            </p>
-          </>
-        )}
-      </div>
-    </div>
+    <AuthFrame
+      title="Reset your password"
+      intro={submitted ? undefined : "Enter the email on your staff account and we'll send you a reset link."}
+    >
+      {submitted ? (
+        <Notice tone="success">
+          If {email} belongs to a staff account, a reset link is on its way. The link works for 1 hour.
+        </Notice>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              className="input"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
+          <button className="btn btn-primary btn-block" type="submit" disabled={loading}>
+            {loading ? "Sending…" : "Send reset link"}
+          </button>
+        </form>
+      )}
+      <p className="auth-foot">
+        <Link className="link" href="/admin/login">
+          Back to sign in
+        </Link>
+      </p>
+    </AuthFrame>
   );
 }
