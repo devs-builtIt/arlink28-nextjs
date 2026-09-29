@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0 .",
-    "typecheck": "tsc --noEmit --incremental false"
+    "typecheck": "tsc --noEmit --incremental false",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@arlink28/api-client": "workspace:*",
@@ -19,6 +20,7 @@
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^9.39.5",
     "@next/eslint-plugin-next": "14.2.35",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^20.14.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

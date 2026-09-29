@@ -108,8 +108,7 @@ function StaffCards({ staff, failed }: { staff: UserResponse[] | null; failed: b
           Staff accounts
         </h2>
         <p className="count">
-          {active.length}
-          <span>active</span>
+          {active.length} <span>active</span>
         </p>
         <div
           className="bar"

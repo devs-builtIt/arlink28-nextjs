@@ -30,6 +30,13 @@ export default tseslint.config(
       ...noDbImports,
     },
   },
+  // The e2e mock API is a plain Node script.
+  {
+    files: ["e2e/**/*.mjs"],
+    languageOptions: {
+      globals: { process: "readonly", Buffer: "readonly", URL: "readonly", console: "readonly" },
+    },
+  },
   // Last: turn off stylistic rules that Prettier owns.
   prettier,
 );
