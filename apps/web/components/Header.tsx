@@ -49,6 +49,10 @@ export default function Header() {
           <Link className="btn btn-primary nav-contact-btn" href="/contact">
             Contact Us
           </Link>
+          <Link className="btn btn-secondary nav-signin-btn" href="/admin/login">
+            <i className="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+            Sign in
+          </Link>
         </nav>
         <div className="nav-actions">
           <button className="icon-btn" aria-label="Search">
@@ -57,6 +61,11 @@ export default function Header() {
           <button className="icon-btn" aria-label="Language">
             <i className="fa-solid fa-globe"></i>
           </button>
+          {/* Staff sign-in; middleware.ts sends signed-in visitors straight to the dashboard. */}
+          <Link className="btn btn-secondary" id="header-signin-btn" href="/admin/login">
+            <i className="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+            Sign in
+          </Link>
           <Link className="btn btn-primary" id="header-register-btn" href="/contact">
             Contact Us
           </Link>

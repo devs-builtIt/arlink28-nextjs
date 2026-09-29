@@ -1543,11 +1543,13 @@ body {
     animation: none;
   }
 }
-.nav-contact-btn {
+.nav-contact-btn,
+.nav-signin-btn {
   display: none;
 }
 @media (max-width: 768px) {
-  .nav-contact-btn {
+  .nav-contact-btn,
+  .nav-signin-btn {
     justify-content: center;
     width: 100%;
     margin-top: 10px;
@@ -1675,7 +1677,8 @@ body {
     padding: 15px 5%;
     position: fixed;
   }
-  #header-register-btn {
+  #header-register-btn,
+  #header-signin-btn {
     display: none;
   }
   nav#nav-menu {
