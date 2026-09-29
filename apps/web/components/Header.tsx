@@ -40,7 +40,8 @@ export default function Header() {
             style={{ color: "transparent", width: "auto", height: "40px" }}
           />
         </Link>
-        <nav id="nav-menu" className={menuOpen ? "open" : ""}>
+        {/* The site CSS reveals the mobile menu and overlay with `.active`. */}
+        <nav id="nav-menu" className={menuOpen ? "active" : ""}>
           {NAV_LINKS.map((link) => (
             <Link key={link.href} className={isActive(link.href) ? "active" : ""} href={link.href}>
               {link.label}
@@ -49,10 +50,10 @@ export default function Header() {
           <Link className="btn btn-primary nav-contact-btn" href="/contact">
             Contact Us
           </Link>
-          <Link className="btn btn-secondary nav-signin-btn" href="/admin/login">
+          <a className="btn btn-secondary nav-signin-btn" href="/admin/login">
             <i className="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
             Sign in
-          </Link>
+          </a>
         </nav>
         <div className="nav-actions">
           <button className="icon-btn" aria-label="Search">
@@ -61,11 +62,12 @@ export default function Header() {
           <button className="icon-btn" aria-label="Language">
             <i className="fa-solid fa-globe"></i>
           </button>
-          {/* Staff sign-in; middleware.ts sends signed-in visitors straight to the dashboard. */}
-          <Link className="btn btn-secondary" id="header-signin-btn" href="/admin/login">
+          {/* Staff sign-in; middleware.ts sends signed-in visitors straight to the dashboard.
+              A plain <a> (full page load), so the public site's CSS doesn't carry into the admin. */}
+          <a className="btn btn-secondary" id="header-signin-btn" href="/admin/login">
             <i className="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
             Sign in
-          </Link>
+          </a>
           <Link className="btn btn-primary" id="header-register-btn" href="/contact">
             Contact Us
           </Link>
@@ -80,9 +82,8 @@ export default function Header() {
         </div>
       </header>
       <div
-        className="menu-overlay"
+        className={menuOpen ? "menu-overlay active" : "menu-overlay"}
         id="menu-overlay"
-        style={{ display: menuOpen ? "block" : "none" }}
         onClick={() => setMenuOpen(false)}
       ></div>
     </>

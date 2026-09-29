@@ -18,6 +18,16 @@ test.describe("on a phone", () => {
     await expect(nav).not.toBeInViewport();
   });
 
+  test("Sign in in the site's menu opens the staff sign-in", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#header-signin-btn")).toBeHidden();
+    await page.getByRole("button", { name: "Toggle Menu" }).click();
+    await page.locator(".nav-signin-btn").click();
+
+    await expect(page).toHaveURL(/\/admin\/login$/);
+    await expect(page.getByRole("heading", { name: "Sign in", level: 1 })).toBeVisible();
+  });
+
   test("Escape closes the menu", async ({ page }) => {
     await signIn(page, SUPER_ADMIN);
     const menu = page.getByRole("button", { name: "Menu" });
