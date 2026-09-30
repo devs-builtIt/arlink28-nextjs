@@ -9,6 +9,7 @@ import Notice from "@/components/admin/Notice";
 import { Pagination, Skeleton, StatusBadge } from "@/components/admin/ui";
 import { adminPackagesApi, packagesApi } from "@/utils/api/packages";
 import { fullDate, money, party, timeAgo, titleCase } from "@/components/admin/format";
+import { PRODUCT_TYPES, detailsSummary, isHoliday, isProductType, typeLabel } from "@/utils/productTypes";
 
 const CATEGORIES = ["SAFARI", "LODGE"];
 const SIZES = [10, 25, 50, 100];
@@ -45,10 +46,7 @@ function SkeletonRows({ rows = 10 }: { rows?: number }) {
             <Skeleton w={90} />
           </td>
           <td>
-            <Skeleton w={60} />
-          </td>
-          <td>
-            <Skeleton w={110} />
+            <Skeleton w={140} />
           </td>
           <td className="num">
             <Skeleton w={64} />
@@ -72,6 +70,8 @@ function PackagesList() {
   const q = params.get("q") ?? "";
   const destination = params.get("destination") ?? "";
   const category = params.get("category") ?? "";
+  const rawType = params.get("type");
+  const type = isProductType(rawType) ? rawType : "";
   const page = Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1);
   const requestedSize = Number.parseInt(params.get("size") ?? "25", 10);
   const size = SIZES.includes(requestedSize) ? requestedSize : 25;
@@ -125,7 +125,7 @@ function PackagesList() {
   function clearFilters() {
     pushedSearch.current = "";
     setSearch("");
-    update({ q: undefined, destination: undefined, category: undefined });
+    update({ q: undefined, destination: undefined, category: undefined, type: undefined });
   }
 
   useEffect(() => {
@@ -138,6 +138,7 @@ function PackagesList() {
         search: q || undefined,
         destination: destination || undefined,
         category: category || undefined,
+        type: type || undefined,
         page,
         pageSize: size,
       })
@@ -147,7 +148,7 @@ function PackagesList() {
     return () => {
       stale = true;
     };
-  }, [status, q, destination, category, page, size, retry]);
+  }, [status, q, destination, category, type, page, size, retry]);
 
   // A page past the end (a shorter list, or an old link) goes to the last one.
   const lastPage = data ? Math.max(1, Math.ceil(data.total / size)) : 1;
@@ -157,7 +158,7 @@ function PackagesList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pastEnd, lastPage]);
 
-  const filtered = !!(q || destination || category);
+  const filtered = !!(q || destination || category || type);
   const firstLoad = data === null;
   const items = data?.items ?? [];
 
@@ -173,13 +174,15 @@ function PackagesList() {
           <div>
             <h1 className="pk-title">Packages</h1>
             <p className="pk-meta">
-              <span>Everything on the site, and every draft that isn&apos;t yet.</span>
+              <span>
+                Holidays, flights, hotel reservations and visa support, and every draft that isn&apos;t live yet.
+              </span>
             </p>
           </div>
           <div className="pk-header-actions">
-            <Link className="btn btn-primary" href="/admin/packages/new">
+            <Link className="btn btn-primary" href={type ? `/admin/packages/new?type=${type}` : "/admin/packages/new"}>
               <i className="fa-solid fa-plus" aria-hidden="true"></i>
-              New package
+              New {type ? typeLabel(type).toLowerCase() : "listing"}
             </Link>
           </div>
         </div>
@@ -234,17 +237,32 @@ function PackagesList() {
           </select>
           <select
             className="input"
-            aria-label="Category"
-            value={category}
-            onChange={(e) => update({ category: e.target.value || undefined })}
+            aria-label="Kind"
+            value={type}
+            onChange={(e) => update({ type: e.target.value || undefined, category: undefined })}
           >
-            <option value="">All categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {titleCase(c)}
+            <option value="">All kinds</option>
+            {PRODUCT_TYPES.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.plural}
               </option>
             ))}
           </select>
+          {(!type || isHoliday(type)) && (
+            <select
+              className="input"
+              aria-label="Category"
+              value={category}
+              onChange={(e) => update({ category: e.target.value || undefined })}
+            >
+              <option value="">All styles</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {titleCase(c)}
+                </option>
+              ))}
+            </select>
+          )}
           {filtered && (
             <button type="button" className="btn btn-quiet" onClick={clearFilters}>
               Clear filters
@@ -272,8 +290,7 @@ function PackagesList() {
                   <th scope="col">Package</th>
                   <th scope="col">Status</th>
                   <th scope="col">Destination</th>
-                  <th scope="col">Stay</th>
-                  <th scope="col">Party</th>
+                  <th scope="col">Details</th>
                   <th scope="col" className="num">
                     From
                   </th>
@@ -302,7 +319,7 @@ function PackagesList() {
                             {p.title}
                           </Link>
                           <span className="pkg-sub">
-                            <span>{titleCase(p.category)}</span>
+                            <span>{isHoliday(p.productType) ? titleCase(p.category) : typeLabel(p.productType)}</span>
                             {p.mediaCount > 0 && (
                               <span>
                                 {p.mediaCount} {p.mediaCount === 1 ? "photo" : "photos"}
@@ -317,9 +334,10 @@ function PackagesList() {
                     </td>
                     <td>{p.destination.name}</td>
                     <td className="muted">
-                      {p.nights} {p.nights === 1 ? "night" : "nights"}
+                      {isHoliday(p.productType)
+                        ? `${p.nights} ${p.nights === 1 ? "night" : "nights"}, ${party(p.adults, p.children)}`
+                        : detailsSummary(p.productType, p.details) || "No details yet"}
                     </td>
-                    <td className="muted">{party(p.adults, p.children)}</td>
                     <td className="num">
                       {p.fromPriceMinor != null ? (
                         money(p.fromPriceMinor, p.baseCurrency)
@@ -356,9 +374,9 @@ function PackagesList() {
               ) : (
                 <>
                   <h2>No packages yet</h2>
-                  <p>Create a package to start building the catalogue. It stays a draft until you publish it.</p>
+                  <p>Create a listing to start building the catalogue. It stays a draft until you publish it.</p>
                   <Link className="btn btn-primary" href="/admin/packages/new">
-                    New package
+                    New listing
                   </Link>
                 </>
               )}

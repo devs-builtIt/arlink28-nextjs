@@ -123,9 +123,12 @@ test.describe("packages list", () => {
     await expect(page.getByRole("heading", { name: "Sala Mara Escape", level: 1 })).toBeVisible();
   });
 
-  test("New package starts the stepper", async ({ page }) => {
-    await page.getByRole("link", { name: "New package" }).click();
+  test("New asks what kind of listing, then starts that stepper", async ({ page }) => {
+    await page.getByRole("link", { name: "New listing" }).click();
     await expect(page).toHaveURL(/\/admin\/packages\/new$/);
+    await expect(page.getByRole("heading", { name: "What are you adding?", level: 1 })).toBeVisible();
+    await page.getByRole("link", { name: /Holiday package/ }).click();
+    await expect(page).toHaveURL(/\/admin\/packages\/new\?type=HolidayPackage$/);
     await expect(page.getByRole("heading", { name: "New package", level: 1 })).toBeVisible();
   });
 
@@ -336,7 +339,7 @@ const photo = (name: string, bytes = PNG) => ({
 });
 
 const newPackageForm = async (page: Page) => {
-  await page.goto("/admin/packages/new");
+  await page.goto("/admin/packages/new?type=HolidayPackage");
   await expect(page.getByLabel("Destination")).toContainText("Masai Mara");
   return page;
 };
@@ -372,7 +375,7 @@ test.describe("creating a package", () => {
     await expect(steps.getByRole("button")).toHaveCount(7);
     await expect(steps.getByRole("button", { name: /Basics/ })).toHaveAttribute("aria-current", "step");
     await expect(page.getByLabel("Package name")).toBeFocused();
-    await expect(page.getByLabel("Type")).toHaveValue("SAFARI");
+    await expect(page.getByLabel("Style")).toHaveValue("SAFARI");
     await expect(page.getByLabel("Nights", { exact: true })).toHaveValue("2");
     await expect(page.getByLabel("Adults")).toHaveValue("2");
     await expect(page.getByLabel("Children")).toHaveValue("0");

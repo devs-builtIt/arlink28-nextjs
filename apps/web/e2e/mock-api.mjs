@@ -108,9 +108,54 @@ const fromPrice = (pkg) => {
   return prices.length ? Math.min(...prices) : null;
 };
 
+/** The required fields per type, and the message the API gives when one is missing. */
+const DETAIL_RULES = {
+  Flight: [
+    ["origin", "Say where the flight leaves from."],
+    ["destination", "Say where the flight goes to."],
+  ],
+  HotelReservation: [],
+  VisaSupport: [
+    ["country", "Say which country the visa is for."],
+    ["visaType", "Say which kind of visa this is."],
+  ],
+};
+const DETAIL_KEYS = {
+  Flight: ["origin", "destination", "tripType", "airline", "cabin", "baggage", "fareNotes", "validUntil"],
+  HotelReservation: ["propertyId", "hotelName", "roomType", "boardBasis", "cancellationTerms"],
+  VisaSupport: [
+    "country",
+    "visaType",
+    "processingTime",
+    "validity",
+    "serviceFeeMinor",
+    "governmentFeeMinor",
+    "currency",
+    "requirements",
+  ],
+};
+/** The details to store, or an error message. Unknown fields are dropped, as the API does. */
+function normalizeDetails(type, raw) {
+  if (!raw || typeof raw !== "object") return { error: "Fill in the details for this type first." };
+  const out = {};
+  for (const key of DETAIL_KEYS[type])
+    if (raw[key] !== undefined && raw[key] !== null && raw[key] !== "") out[key] = raw[key];
+  for (const [key, message] of DETAIL_RULES[type]) if (!String(out[key] ?? "").trim()) return { error: message };
+  if (type === "HotelReservation" && !out.propertyId && !String(out.hotelName ?? "").trim())
+    return { error: "Pick one of our properties or type the hotel's name." };
+  return { value: out };
+}
+
 /** What a package still needs before it can be published: the API's checklist. */
 function publishChecklist(pkg) {
   const missing = [];
+  if (pkg.productType !== "HolidayPackage") {
+    if (!pkg.title.trim()) missing.push("A name");
+    if (!pkg.summary?.trim()) missing.push("A summary");
+    if (!pkg.details) missing.push("The details for this type");
+    if (pkg.media.filter((m) => m.role === "Hero").length !== 1) missing.push("A main photo");
+    return missing;
+  }
   const nightsWord = (n) => `${n} ${n === 1 ? "night" : "nights"}`;
   if (!pkg.title.trim()) missing.push("A name");
   if (!pkg.summary?.trim()) missing.push("A summary");
@@ -139,6 +184,8 @@ function buildAdminPackages() {
       subtitle: p.subtitle ?? null,
       summary: p.summary ?? null,
       description: d?.description ?? null,
+      productType: "HolidayPackage",
+      details: null,
       category: p.category,
       destination: clone(p.destination),
       nights: p.nights,
@@ -192,6 +239,8 @@ function buildAdminPackages() {
     subtitle: null,
     summary: null,
     description: null,
+    productType: "HolidayPackage",
+    details: null,
     category: "SAFARI",
     destination: clone(CATALOGUE.destinations.find((x) => x.slug === "masai-mara")),
     nights: 3,
@@ -221,6 +270,8 @@ const adminSummary = (p) => ({
   slug: p.slug,
   title: p.title,
   status: p.status,
+  productType: p.productType,
+  details: p.details,
   category: p.category,
   destination: p.destination,
   nights: p.nights,
@@ -422,6 +473,10 @@ function seedEnquiries(now, packages) {
   ];
 }
 
+/** What kind of listing an enquiry is about, from its package; null for a general message. */
+const enquiryKind = (packageTitle) =>
+  packageTitle ? (db.packages.find((p) => p.title === packageTitle)?.productType ?? "HolidayPackage") : null;
+
 const enquiryItem = ({
   id,
   reference,
@@ -437,6 +492,7 @@ const enquiryItem = ({
   email,
   createdAt,
 }) => ({
+  productType: enquiryKind(packageTitle),
   id,
   reference,
   type,
@@ -761,20 +817,22 @@ const server = http.createServer(async (req, res) => {
       const page = Math.max(1, Number(url.searchParams.get("page") ?? 1));
       const pageSize = Math.min(100, Math.max(1, Number(url.searchParams.get("pageSize") ?? 25)));
       const status = url.searchParams.get("status");
-      const count = (s) => db.enquiries.filter((e) => e.status === s).length;
-      const matching = status
-        ? db.enquiries.filter((e) => e.status.toLowerCase() === status.toLowerCase())
+      const kind = url.searchParams.get("type")?.toLowerCase();
+      const ofKind = kind
+        ? db.enquiries.filter((e) => enquiryKind(e.packageTitle)?.toLowerCase() === kind)
         : db.enquiries;
+      const count = (s) => ofKind.filter((e) => e.status === s).length;
+      const matching = status ? ofKind.filter((e) => e.status.toLowerCase() === status.toLowerCase()) : ofKind;
       return send(res, 200, {
         items: matching.slice((page - 1) * pageSize, page * pageSize).map(enquiryItem),
         total: matching.length,
         page,
         pageSize,
-        counts: { all: db.enquiries.length, new: count("New"), contacted: count("Contacted"), closed: count("Closed") },
+        counts: { all: ofKind.length, new: count("New"), contacted: count("Contacted"), closed: count("Closed") },
       });
     }
     if (enquiryMatch[1] && !target) return problem(res, 404, "Enquiry not found.");
-    if (method === "GET") return send(res, 200, target);
+    if (method === "GET") return send(res, 200, { ...target, productType: enquiryKind(target.packageTitle) });
     if (method === "PATCH") {
       if (!["New", "Contacted", "Closed"].includes(body.status)) {
         return problem(res, 400, undefined, {
@@ -816,9 +874,11 @@ const server = http.createServer(async (req, res) => {
         const term = q.get("search")?.trim().toLowerCase();
         const destination = q.get("destination");
         const category = q.get("category")?.toUpperCase();
+        const type = q.get("type");
         const matching = db.packages.filter(
           (p) =>
             (!term || p.title.toLowerCase().includes(term) || p.slug.includes(term)) &&
+            (!type || p.productType === type) &&
             (!destination || p.destination.slug === destination) &&
             (!category || p.category === category),
         );
@@ -840,9 +900,17 @@ const server = http.createServer(async (req, res) => {
       }
       if (method === "POST") {
         const errors = {};
+        const productType = body.productType ?? "HolidayPackage";
+        const holiday = productType === "HolidayPackage";
         if (!body.title?.trim()) errors.Title = ["'Title' must not be empty."];
-        if (!(body.nights >= 1 && body.nights <= 60)) errors.Nights = ["'Nights' must be between 1 and 60."];
+        if (holiday && !(body.nights >= 1 && body.nights <= 60)) errors.Nights = ["'Nights' must be between 1 and 60."];
         if (Object.keys(errors).length) return validation(errors);
+        let details = null;
+        if (!holiday) {
+          const result = normalizeDetails(productType, body.details);
+          if (result.error) return problem(res, 400, result.error);
+          details = result.value;
+        }
         const destination = CATALOGUE.destinations.find((d) => d.id === body.destinationId);
         if (!destination) return problem(res, 400, "That destination doesn't exist.");
         let slug = slugify(body.title);
@@ -856,7 +924,9 @@ const server = http.createServer(async (req, res) => {
           subtitle: body.subtitle?.trim() || null,
           summary: body.summary?.trim() || null,
           description: null,
-          category: String(body.category).toUpperCase(),
+          productType,
+          details,
+          category: holiday ? String(body.category).toUpperCase() : productType.toUpperCase(),
           destination,
           nights: body.nights,
           minNights: body.nights,
@@ -864,7 +934,7 @@ const server = http.createServer(async (req, res) => {
           children: body.children,
           pricingBasis: body.pricingBasis ?? "PerParty",
           baseCurrency: body.baseCurrency ?? "USD",
-          fromPriceMinor: null,
+          fromPriceMinor: !holiday && body.fromPriceMinor ? body.fromPriceMinor : null,
           featured: false,
           seoTitle: null,
           seoDescription: null,
@@ -891,9 +961,11 @@ const server = http.createServer(async (req, res) => {
         const bad = (detail) => problem(res, 400, detail);
         const touch = () => {
           pkg.updatedAt = new Date().toISOString();
-          pkg.fromPriceMinor = fromPrice(pkg);
+          if (pkg.productType === "HolidayPackage") pkg.fromPriceMinor = fromPrice(pkg);
           return send(res, 200, pkg);
         };
+        if (["stays", "rates", "add-ons"].includes(part) && pkg.productType !== "HolidayPackage")
+          return bad("Only holiday packages have stays, rates and add-ons.");
 
         if (part === "publish" && method === "POST") {
           const missing = publishChecklist(pkg);
@@ -1042,7 +1114,24 @@ const server = http.createServer(async (req, res) => {
             pkg.minNights = Math.min(pkg.minNights, pkg.nights);
           if (pkg.minNights > pkg.nights)
             return problem(res, 400, "The minimum stay can't be longer than the package's nights.");
-          pkg.fromPriceMinor = fromPrice(pkg);
+          if (pkg.productType === "HolidayPackage") {
+            if (body.fromPriceMinor !== undefined)
+              return problem(res, 400, "A holiday package's from-price comes from its season rates.");
+            if (body.details !== undefined)
+              return problem(
+                res,
+                400,
+                "Holiday packages don't have a details object; edit their stays and rates instead.",
+              );
+            pkg.fromPriceMinor = fromPrice(pkg);
+          } else {
+            if (body.details !== undefined) {
+              const result = normalizeDetails(pkg.productType, body.details);
+              if (result.error) return problem(res, 400, result.error);
+              pkg.details = result.value;
+            }
+            if (body.fromPriceMinor !== undefined) pkg.fromPriceMinor = body.fromPriceMinor || null;
+          }
           if (body.destinationId) {
             const destination = CATALOGUE.destinations.find((d) => d.id === body.destinationId);
             if (!destination) return problem(res, 400, "That destination doesn't exist.");

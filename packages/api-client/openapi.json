@@ -20,6 +20,13 @@
             }
           },
           {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -253,6 +260,13 @@
           },
           {
             "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
             "in": "query",
             "schema": {
               "type": "string"
@@ -2136,6 +2150,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3042,6 +3063,7 @@
           "minNights",
           "nights",
           "pricingBasis",
+          "productType",
           "rates",
           "slug",
           "status",
@@ -3162,6 +3184,12 @@
             "items": {
               "$ref": "#/components/schemas/MediaResponse"
             }
+          },
+          "productType": {
+            "type": "string"
+          },
+          "details": {
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3210,6 +3238,7 @@
           "id",
           "mediaCount",
           "nights",
+          "productType",
           "slug",
           "status",
           "title",
@@ -3267,6 +3296,12 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "productType": {
+            "type": "string"
+          },
+          "details": {
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3573,6 +3608,17 @@
           "baseCurrency": {
             "type": "string",
             "nullable": true
+          },
+          "productType": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "details": {
+            "nullable": true
+          },
+          "fromPriceMinor": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3713,6 +3759,10 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "productType": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3778,6 +3828,10 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "productType": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4088,6 +4142,7 @@
           "id",
           "lodges",
           "nights",
+          "productType",
           "slug",
           "title"
         ],
@@ -4155,6 +4210,12 @@
             "items": {
               "type": "string"
             }
+          },
+          "productType": {
+            "type": "string"
+          },
+          "details": {
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4174,6 +4235,7 @@
           "minNights",
           "nights",
           "pricingBasis",
+          "productType",
           "rates",
           "slug",
           "stays",
@@ -4276,6 +4338,12 @@
             "items": {
               "$ref": "#/components/schemas/SeasonRateResponse"
             }
+          },
+          "productType": {
+            "type": "string"
+          },
+          "details": {
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4376,6 +4444,15 @@
           }
         },
         "additionalProperties": {}
+      },
+      "ProductType": {
+        "enum": [
+          "HolidayPackage",
+          "Flight",
+          "HotelReservation",
+          "VisaSupport"
+        ],
+        "type": "string"
       },
       "PropertyOption": {
         "required": [
@@ -4790,6 +4867,14 @@
           },
           "seoDescription": {
             "type": "string",
+            "nullable": true
+          },
+          "details": {
+            "nullable": true
+          },
+          "fromPriceMinor": {
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           }
         },
