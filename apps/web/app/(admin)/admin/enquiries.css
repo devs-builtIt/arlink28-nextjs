@@ -1,0 +1,196 @@
+/*
+ * Enquiries console: the list and an enquiry. Built on the packages console (.pk): same tokens,
+ * tabs, table, panels and pager. Only what an enquiry needs beyond that lives here, under .enq.
+ *
+ * The one piece of motion is the status control's thumb, which slides to the new state so the
+ * change reads as a change. It stands still for anyone who has asked for less movement.
+ */
+
+/* ── List ───────────────────────────────────────────────────────────── */
+
+.adm .enq-table td {
+  vertical-align: top;
+}
+.adm .enq-ref {
+  width: 1%;
+  padding-right: 24px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.adm .enq-guest,
+.adm .enq-subject {
+  display: block;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.adm .enq-table tr[data-unread] .enq-guest,
+.adm .enq-table tr[data-unread] .enq-subject {
+  font-weight: 600;
+}
+.adm .enq-table tr.row-link:hover .enq-subject {
+  text-decoration: underline;
+}
+.adm .enq-sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── One enquiry ────────────────────────────────────────────────────── */
+
+.adm .enq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+  align-items: start;
+}
+.adm .enq-col {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.adm .enq .pk-panel-body {
+  padding-top: 16px;
+}
+
+.adm .enq-message {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.adm .enq-facts {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.adm .enq-facts > div {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 16px;
+}
+.adm .enq-facts dt {
+  color: var(--muted);
+}
+.adm .enq-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.adm .enq-facts a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.adm .enq-facts-stack > div {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+.adm .enq-source {
+  color: var(--muted);
+  font-size: 13px;
+  word-break: break-all;
+}
+.adm .enq-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* The reference, copied with one click. */
+.adm .enq-copy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 500 14px/1.4 var(--font);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.adm .enq-copy-state {
+  min-width: 44px;
+  color: var(--muted);
+  font-size: 12px;
+  opacity: 0;
+}
+.adm .enq-copy:hover .enq-copy-state,
+.adm .enq-copy:focus-visible .enq-copy-state,
+.adm .enq-copy[data-copied] .enq-copy-state {
+  opacity: 1;
+}
+.adm .enq-copy[data-copied] .enq-copy-state {
+  color: var(--pk-ok);
+}
+
+/* Status: three states in one row. */
+.adm .enq-seg {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--tile);
+}
+.adm .enq-seg-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 3);
+  border-radius: 6px;
+  background: var(--ink);
+  transform: translateX(calc(var(--i, 0) * 100%));
+}
+.adm .enq-seg button {
+  position: relative;
+  z-index: 1;
+  height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  font: 500 14px/1 var(--font);
+  cursor: pointer;
+}
+.adm .enq-seg button:hover:not([aria-checked="true"]):not(:disabled) {
+  color: var(--ink);
+}
+.adm .enq-seg button[aria-checked="true"] {
+  color: #fff;
+  cursor: default;
+}
+.adm .enq-seg button:disabled {
+  cursor: progress;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .adm .enq-seg-thumb {
+    transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  .adm .enq-seg button {
+    transition: color 0.15s;
+  }
+}
+
+@media (max-width: 960px) {
+  .adm .enq-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .adm .enq-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}

@@ -1,7 +1,20 @@
-/node_modules
-/.next/
-/out/
+node_modules/
+.next/
+.next-e2e/
+out/
+dist/
+.turbo/
+*.tsbuildinfo
 .DS_Store
 *.pem
 npm-debug.log*
 .env*.local
+.idea/
+.env
+# Ralph / agent worktrees
+.tmp/
+# Claude Code
+.claude/
+# Playwright
+test-results/
+playwright-report/
