@@ -216,6 +216,10 @@ body {
   border-color: var(--livery);
   box-shadow: 0 0 0 3px rgba(230, 30, 43, 0.15);
 }
+.adm .input[aria-invalid="true"] {
+  border-color: #d9363e;
+  background: #fdf7f7;
+}
 .adm .input:disabled {
   opacity: 0.55;
 }
@@ -983,6 +987,515 @@ body {
   margin-top: 16px;
 }
 
+/* ── Packages ───────────────────────────────────────────────────────── */
+
+.adm .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.adm .toolbar .input {
+  width: auto;
+  min-width: 180px;
+}
+.adm .toolbar-search {
+  position: relative;
+  flex: 1 1 260px;
+}
+.adm .toolbar-search i {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+.adm .toolbar-search .input {
+  width: 100%;
+  padding-left: 34px;
+}
+.adm .num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.adm .row-link {
+  cursor: pointer;
+}
+.adm .pkg {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.adm .pkg-thumb {
+  flex: none;
+  width: 64px;
+  height: 44px;
+  border-radius: var(--radius-m);
+  object-fit: cover;
+  background: var(--tile);
+}
+.adm .pkg-thumb-empty {
+  display: grid;
+  place-items: center;
+  color: #a3aebd;
+}
+.adm .pkg-title {
+  display: block;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.adm .row-link:hover .pkg-title {
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+.adm .pkg-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.adm .load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.adm .pkg-summary {
+  max-width: 68ch;
+  margin-bottom: 18px;
+  color: var(--muted);
+}
+.adm .pkg-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.adm .pkg-facts > div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--tile);
+}
+.adm .pkg-facts dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.adm .pkg-facts dd {
+  font-weight: 500;
+}
+.adm .rates th,
+.adm .rates td {
+  padding-inline: 0;
+}
+.adm .rates th + th,
+.adm .rates td + td {
+  padding-left: 16px;
+}
+.adm .incl-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 32px;
+}
+.adm .incl-title {
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.adm .incl-list {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  font-size: 14px;
+}
+.adm .incl-list li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+}
+.adm .incl-list i {
+  margin-top: 3px;
+  color: var(--taxiway);
+  font-size: 13px;
+  text-align: center;
+}
+.adm .incl-list small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.adm .incl-excluded i {
+  color: #a3aebd;
+}
+.adm .incl-excluded span {
+  color: var(--muted);
+}
+
+.adm .quote .field {
+  margin-bottom: 16px;
+}
+.adm .addon-pick {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  font-size: 14px;
+  cursor: pointer;
+}
+.adm .addon-pick input {
+  margin: 3px 0 0;
+  accent-color: var(--livery);
+}
+.adm .addon-pick small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.adm .quote-result {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.adm .quote-result .notice {
+  margin-bottom: 0;
+}
+.adm .quote-lines {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  font-size: 14px;
+}
+.adm .quote-lines li,
+.adm .quote-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.adm .quote-lines li span:first-child {
+  color: var(--muted);
+}
+.adm .quote-total {
+  align-items: baseline;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+}
+.adm .quote-total strong {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ── Package form and photos ────────────────────────────────────────── */
+
+.adm .field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+.adm .field-row-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.adm textarea.input {
+  height: auto;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.adm .optional {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+.adm .field-error {
+  color: #8f111a;
+  font-size: 13px;
+}
+.adm .tag-live {
+  background: #ecf8f2;
+  color: #12704a;
+}
+.adm .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+.adm .saved-note {
+  color: #12704a;
+  font-size: 14px;
+}
+.adm .draft-note {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--muted);
+}
+.adm .photos-lede {
+  margin: -6px 0 16px;
+}
+.adm .photos-empty {
+  margin: 16px 0 0;
+}
+.adm .problem-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.adm .dropzone {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 28px 16px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-m);
+  color: var(--muted);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.adm .dropzone:hover,
+.adm .dropzone-over {
+  border-color: var(--livery);
+  background: var(--livery-wash);
+}
+.adm .dropzone:has(input:focus-visible) {
+  outline: 2px solid var(--livery);
+  outline-offset: 2px;
+}
+.adm .dropzone-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.adm .dropzone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.adm .dropzone i {
+  margin-bottom: 4px;
+  font-size: 22px;
+}
+.adm .dropzone-title {
+  color: var(--ink);
+  font-weight: 500;
+}
+.adm .dropzone-hint {
+  font-size: 13px;
+}
+
+.adm .upload-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.adm .upload-progress {
+  width: 160px;
+  height: 6px;
+  accent-color: var(--livery);
+}
+
+.adm .photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.adm .photo-tile {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+.adm .photo-tile img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-m);
+  background: var(--tile);
+  object-fit: cover;
+}
+.adm .photo-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+.adm .photo-badge + .photo-badge {
+  top: 34px;
+}
+.adm .photo-badge-quiet {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+}
+.adm .photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.adm .photo-actions .btn-s {
+  padding: 0 10px;
+}
+.adm .photo-actions .btn-icon {
+  width: 30px;
+  padding: 0;
+}
+.adm .btn-icon {
+  width: 32px;
+  padding: 0;
+}
+
+@media (max-width: 700px) {
+  .adm .field-row,
+  .adm .field-row-3 {
+    grid-template-columns: 1fr;
+  }
+  .adm .field-row-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 10px;
+  }
+  .adm .photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Row editors: stays, rates, inclusions, add-ons ─────────────────── */
+
+.adm .section-hint {
+  margin: -6px 0 16px;
+}
+.adm .rows {
+  display: grid;
+  gap: 10px;
+}
+.adm .row-head,
+.adm .row-line {
+  display: grid;
+  gap: 10px;
+  align-items: start;
+}
+.adm .row-head {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.adm .row-stays {
+  grid-template-columns: minmax(0, 2fr) 84px minmax(0, 1.4fr) 32px;
+}
+.adm .row-rates {
+  grid-template-columns: minmax(0, 2.2fr) 84px minmax(0, 1fr) minmax(0, 1fr) 32px;
+}
+.adm .row-addons {
+  grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr) 84px minmax(0, 0.9fr) 32px;
+}
+.adm .row-features {
+  grid-template-columns: minmax(0, 2.8fr) minmax(0, 1fr) 32px;
+  margin-bottom: 8px;
+}
+.adm .feature-pick {
+  grid-template-columns: minmax(0, 1fr);
+}
+.adm .feature-pick:has(input) {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+}
+.adm .row-line .btn-icon {
+  height: 42px;
+  width: 32px;
+}
+.adm .feature-pick,
+.adm .addon-main {
+  display: grid;
+  gap: 8px;
+}
+.adm .feature-group {
+  margin-bottom: 22px;
+}
+.adm .feature-group .incl-title {
+  margin: 0 0 8px;
+}
+.adm .add-row {
+  margin-top: 12px;
+}
+.adm .field-row > .field {
+  align-content: start;
+}
+.adm .add-row {
+  align-self: flex-start;
+}
+.adm .add-row ~ .form-actions,
+.adm .nights-tally ~ .form-actions {
+  margin-top: 18px;
+}
+.adm .rows-lede {
+  margin: 0 0 14px;
+}
+.adm .rows-empty {
+  margin: 0;
+  padding: 18px 0;
+  text-align: left;
+}
+.adm .nights-tally {
+  margin: 12px 0 0;
+}
+.adm .nights-off {
+  color: #8f111a;
+}
+.adm .status-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+.adm .muted-wrap {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .adm .row-head {
+    display: none;
+  }
+  .adm .row-line {
+    grid-template-columns: 1fr 32px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .adm .row-line > :not(.btn-icon) {
+    grid-column: 1;
+  }
+  .adm .row-line > .btn-icon {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .adm .feature-pick:has(input) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ── Smaller screens ────────────────────────────────────────────────── */
 
 @media (max-width: 1100px) {
@@ -1057,6 +1570,14 @@ body {
   }
   .adm .who-text {
     display: none;
+  }
+  .adm .pkg-facts,
+  .adm .incl-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adm .toolbar .input {
+    flex: 1 1 140px;
+    min-width: 0;
   }
 }
 

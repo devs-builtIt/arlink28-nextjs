@@ -4,6 +4,7 @@
 **/.turbo/
 pnpm-lock.yaml
 **/.next/
+**/.next-e2e/
 apps/web/public/
 apps/web/next-env.d.ts
 packages/api-client/openapi.json

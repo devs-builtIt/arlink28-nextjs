@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./packages.css";
+import "./enquiries.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 // One plain, highly legible UI face for everything (headings, tables, forms).

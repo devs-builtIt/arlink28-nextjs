@@ -24,6 +24,10 @@ async function proxy(req: NextRequest, { params }: { params: { path: string[] } 
   if (contentType) headers.set("Content-Type", contentType);
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   if (token) headers.set("Authorization", `Bearer ${token}`);
+  // The API limits public forms per address. Without this it would see this server for every guest.
+  // The last entry is the one our own reverse proxy added; earlier ones can be forged by the client.
+  const client = req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim();
+  if (client) headers.set("X-Forwarded-For", client);
 
   const hasBody = req.method !== "GET" && req.method !== "HEAD";
   let upstream: Response;

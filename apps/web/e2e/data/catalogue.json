@@ -1,0 +1,2514 @@
+{
+  "capturedFrom": "arlink28-api seed-catalogue (2026-09-29)",
+  "packages": [
+    {
+      "id": "d3acc9d5-5467-450b-a086-a17ba8bf3880",
+      "slug": "sala-mara-escape",
+      "title": "Sala Mara Escape",
+      "subtitle": "2-Night Fully Inclusive Luxury Masai Mara Safari Experience for Two Adults",
+      "summary": "Luxury tent stay with curated safari inclusions and added premium ARLink28 travel services.",
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 2,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 747200,
+      "featured": false,
+      "heroImagePath": null
+    },
+    {
+      "id": "a7777d18-72a6-478e-8992-2a633fee052b",
+      "slug": "salas-classic-safari",
+      "title": "Sala's Classic Safari",
+      "subtitle": "3-Night Fully Inclusive Luxury Masai Mara Safari Experience for Two Adults",
+      "summary": "Luxury tent stay with curated safari inclusions and added premium ARLink28 travel services.",
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 3,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1775000,
+      "featured": false,
+      "heroImagePath": null
+    },
+    {
+      "id": "34764c50-7c8e-4bad-8598-1503129d37a3",
+      "slug": "ultimate-safari-collection-journey",
+      "title": "Ultimate Safari Collection Journey",
+      "subtitle": "10-Night Premium Long-Stay Safari for Two Adults",
+      "summary": "Luxury multi-destination travel with curated safari inclusions and added premium ARLink28 travel services.",
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 10,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 3088900,
+      "featured": false,
+      "heroImagePath": null
+    },
+    {
+      "id": "4e045f10-2337-4251-844f-3c57b9e1b71a",
+      "slug": "giraffe-manor-signature-escape",
+      "title": "Giraffe Manor Signature Escape",
+      "subtitle": "2 Nights / 3 Days for Two Adults",
+      "summary": "Step into elegance, where heritage, wildlife and warm hospitality create unforgettable moments.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 589600,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-signature-escape.jpg"
+    },
+    {
+      "id": "d76e5f67-59da-4edb-81a0-c0dea346575b",
+      "slug": "giraffe-manor-grand-escape",
+      "title": "Giraffe Manor Grand Escape",
+      "subtitle": "3 Nights / 4 Days for Two Adults",
+      "summary": "Step into elegance, where heritage, wildlife and warm hospitality create unforgettable moments.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 3,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 848800,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-grand-escape.jpg"
+    },
+    {
+      "id": "f0407b2c-47e3-4948-8218-bcafee3d92ef",
+      "slug": "giraffe-manor-luxury-escape",
+      "title": "Giraffe Manor Luxury Escape",
+      "subtitle": "4 Nights / 5 Days for Two Adults",
+      "summary": "Indulge in sophisticated comfort, exceptional service and extraordinary moments at Giraffe Manor.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 4,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1136800,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-luxury-escape.jpg"
+    },
+    {
+      "id": "258d1fb7-48f6-4650-b9f3-32fff956aba8",
+      "slug": "giraffe-manor-family-experience",
+      "title": "Giraffe Manor Family Experience",
+      "subtitle": "2 Nights / 3 Days for Two Adults + Two Children",
+      "summary": "Create timeless moments together, surrounded by elegance, heritage and the gentle giants of Giraffe Manor.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "adults": 2,
+      "children": 2,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 968500,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-family-experience.jpg"
+    },
+    {
+      "id": "4d963233-237d-4c82-bd4b-e4e57b5ffd0e",
+      "slug": "giraffe-manor-family-celebration",
+      "title": "Giraffe Manor Family Celebration",
+      "subtitle": "3 Nights / 4 Days for Two Adults + Two Children",
+      "summary": "Create unforgettable family memories with extraordinary experiences at Giraffe Manor.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 3,
+      "adults": 2,
+      "children": 2,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1459900,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-family-celebration.jpg"
+    },
+    {
+      "id": "11a63b5f-95ac-4cb6-bc64-0efa74a5c320",
+      "slug": "giraffe-manor-family-celebration-3-children",
+      "title": "Giraffe Manor Family Celebration (3 Children)",
+      "subtitle": "2 Nights / 3 Days for Two Adults + Three Children",
+      "summary": "Create unforgettable family memories with extraordinary experiences at Giraffe Manor.",
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "adults": 2,
+      "children": 3,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1180900,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-manor-family-celebration-3.jpg"
+    },
+    {
+      "id": "308e5066-6cbf-423a-a8a9-435867bb4e9d",
+      "slug": "giraffe-and-nairobi-wildlife-escape",
+      "title": "Giraffe and Nairobi Wildlife Escape",
+      "subtitle": "2 Nights / 3 Days for Two Adults",
+      "summary": "Experience the best of Nairobi's wildlife and iconic landscapes.",
+      "category": "SAFARI",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "adults": 2,
+      "children": 0,
+      "baseCurrency": "USD",
+      "fromPriceMinor": 658900,
+      "featured": false,
+      "heroImagePath": "/images/packages/giraffe-nairobi-wildlife-escape.jpg"
+    }
+  ],
+  "details": {
+    "sala-mara-escape": {
+      "id": "d3acc9d5-5467-450b-a086-a17ba8bf3880",
+      "slug": "sala-mara-escape",
+      "title": "Sala Mara Escape",
+      "subtitle": "2-Night Fully Inclusive Luxury Masai Mara Safari Experience for Two Adults",
+      "summary": "Luxury tent stay with curated safari inclusions and added premium ARLink28 travel services.",
+      "description": null,
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 2,
+      "minNights": 2,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 747200,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "577c5014-cc37-41ff-b7b2-a73e2f2b8cee",
+          "nights": 2,
+          "roomType": "Keekorok Tent with Pool or Forest Tent with Pool",
+          "sortOrder": 0,
+          "propertyName": "Sala's Camp",
+          "propertySlug": "salas-camp",
+          "destinationName": "Masai Mara"
+        }
+      ],
+      "features": [
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "2 nights in a luxury tent with private plunge pool",
+          "icon": "bed",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Highlight",
+          "label": "All tents have private plunge pools",
+          "icon": "water-ladder",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Vehicle",
+          "label": "For two adults: Sala Mara Escape guests staying in the standard Keekorok Tent with Pool or Forest Tent with Pool receive shared game-drive vehicle use.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Highlight",
+          "label": "En suite bathrooms with a bath",
+          "icon": "bath",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Vehicle",
+          "label": "Private exclusive vehicle use is available at an extra charge of $490 per day.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service from the airport to the destination",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Highlight",
+          "label": "Flushing toilet",
+          "icon": "toilet",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Highlight",
+          "label": "Plumbed shower",
+          "icon": "shower",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "House soft drinks",
+          "icon": "glass-water",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Cigars",
+          "icon": "smoking",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "House beers",
+          "icon": "beer-mug-empty",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Travel emergency evacuation insurance",
+          "icon": "kit-medical",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "House spirits",
+          "icon": "martini-glass",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Game drives",
+          "icon": "car-side",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Bush meals",
+          "icon": "bell-concierge",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "Sundowners",
+          "icon": "sun",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Transfers from Keekorok Airstrip",
+          "icon": "plane-arrival",
+          "footnote": null,
+          "sortOrder": 9
+        },
+        {
+          "section": "Included",
+          "label": "Laundry",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 10
+        },
+        {
+          "section": "Included",
+          "label": "Seasonal bush volleyball",
+          "icon": "volleyball",
+          "footnote": null,
+          "sortOrder": 11
+        },
+        {
+          "section": "Included",
+          "label": "Nature walks",
+          "icon": "person-hiking",
+          "footnote": null,
+          "sortOrder": 12
+        },
+        {
+          "section": "Included",
+          "label": "Children's activities",
+          "icon": "children",
+          "footnote": null,
+          "sortOrder": 13
+        },
+        {
+          "section": "Included",
+          "label": "Other camp activities",
+          "icon": "binoculars",
+          "footnote": null,
+          "sortOrder": 14
+        }
+      ],
+      "addOns": [
+        {
+          "id": "bc8c1d7a-8b30-4831-a6f6-63497ff140e3",
+          "name": "Private exclusive vehicle",
+          "description": "Exclusive use of a game-drive vehicle for your party, charged per day of your stay.",
+          "unit": "PerDay",
+          "currency": "USD",
+          "priceMinor": 49000,
+          "sortOrder": 0
+        }
+      ],
+      "media": [],
+      "rates": [
+        {
+          "seasonName": "Savings Season 2026",
+          "seasonSlug": "safari-collection-savings-2026",
+          "currency": "USD",
+          "priceMinor": 747200,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "salas-classic-safari": {
+      "id": "a7777d18-72a6-478e-8992-2a633fee052b",
+      "slug": "salas-classic-safari",
+      "title": "Sala's Classic Safari",
+      "subtitle": "3-Night Fully Inclusive Luxury Masai Mara Safari Experience for Two Adults",
+      "summary": "Luxury tent stay with curated safari inclusions and added premium ARLink28 travel services.",
+      "description": null,
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 3,
+      "minNights": 3,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1775000,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "79438e7d-62d6-4014-803b-4f968f1950ab",
+          "nights": 3,
+          "roomType": "Keekorok Tent with Pool or Forest Tent with Pool",
+          "sortOrder": 0,
+          "propertyName": "Sala's Camp",
+          "propertySlug": "salas-camp",
+          "destinationName": "Masai Mara"
+        }
+      ],
+      "features": [
+        {
+          "section": "Vehicle",
+          "label": "For two adults: Sala's Classic Safari guests staying in the standard Keekorok Tent with Pool or Forest Tent with Pool receive shared game-drive vehicle use.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Highlight",
+          "label": "All tents have private plunge pools",
+          "icon": "water-ladder",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "3 nights in a luxury tent with private plunge pool",
+          "icon": "bed",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Vehicle",
+          "label": "Private exclusive vehicle use is available at an extra charge of $490 per day.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Highlight",
+          "label": "En suite bathrooms with a bath",
+          "icon": "bath",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Highlight",
+          "label": "Flushing toilet",
+          "icon": "toilet",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "House wines",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service from the airport to the destination",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Highlight",
+          "label": "Plumbed shower",
+          "icon": "shower",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "House soft drinks",
+          "icon": "glass-water",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Cigars",
+          "icon": "smoking",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "House beers",
+          "icon": "beer-mug-empty",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "House spirits",
+          "icon": "martini-glass",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Travel emergency evacuation insurance",
+          "icon": "kit-medical",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Game drives",
+          "icon": "car-side",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Bush meals",
+          "icon": "bell-concierge",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "Sundowners",
+          "icon": "sun",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Transfers from Keekorok Airstrip",
+          "icon": "plane-arrival",
+          "footnote": null,
+          "sortOrder": 9
+        },
+        {
+          "section": "Included",
+          "label": "Laundry",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 10
+        },
+        {
+          "section": "Included",
+          "label": "Seasonal bush volleyball",
+          "icon": "volleyball",
+          "footnote": null,
+          "sortOrder": 11
+        },
+        {
+          "section": "Included",
+          "label": "Nature walks",
+          "icon": "person-hiking",
+          "footnote": null,
+          "sortOrder": 12
+        },
+        {
+          "section": "Included",
+          "label": "Children's activities",
+          "icon": "children",
+          "footnote": null,
+          "sortOrder": 13
+        },
+        {
+          "section": "Included",
+          "label": "Other camp activities",
+          "icon": "binoculars",
+          "footnote": null,
+          "sortOrder": 14
+        }
+      ],
+      "addOns": [
+        {
+          "id": "559d9b74-8681-4364-b80d-1c0ce7876df0",
+          "name": "Private exclusive vehicle",
+          "description": "Exclusive use of a game-drive vehicle for your party, charged per day of your stay.",
+          "unit": "PerDay",
+          "currency": "USD",
+          "priceMinor": 49000,
+          "sortOrder": 0
+        }
+      ],
+      "media": [],
+      "rates": [
+        {
+          "seasonName": "Peak Season 2026",
+          "seasonSlug": "safari-collection-peak-2026",
+          "currency": "USD",
+          "priceMinor": 1775000,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "ultimate-safari-collection-journey": {
+      "id": "34764c50-7c8e-4bad-8598-1503129d37a3",
+      "slug": "ultimate-safari-collection-journey",
+      "title": "Ultimate Safari Collection Journey",
+      "subtitle": "10-Night Premium Long-Stay Safari for Two Adults",
+      "summary": "Luxury multi-destination travel with curated safari inclusions and added premium ARLink28 travel services.",
+      "description": null,
+      "category": "SAFARI",
+      "destination": {
+        "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+        "slug": "masai-mara",
+        "name": "Masai Mara",
+        "country": "KE"
+      },
+      "nights": 10,
+      "minNights": 10,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 3088900,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "3f0deb9e-0f9a-4d11-9007-282f2cf08862",
+          "nights": 5,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Sala's Camp",
+          "propertySlug": "salas-camp",
+          "destinationName": "Masai Mara"
+        },
+        {
+          "id": "b27a3229-3872-4596-b6a2-46cb5fb7764e",
+          "nights": 5,
+          "roomType": null,
+          "sortOrder": 1,
+          "propertyName": "Sasaab",
+          "propertySlug": "sasaab",
+          "destinationName": "Samburu"
+        }
+      ],
+      "features": [
+        {
+          "section": "Included",
+          "label": "5 nights in Sala's Camp",
+          "icon": "bed",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Vehicle",
+          "label": "For two adults, Ultimate Safari Collection Journey guests receive shared game-drive vehicle use.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Highlight",
+          "label": "Private plunge pools",
+          "icon": "water-ladder",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Perk",
+          "label": "Eligibility for a complimentary retreat day pass and 30% off the retreat day room or early bed & breakfast package.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "5 nights in Sasaab",
+          "icon": "bed",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Vehicle",
+          "label": "Private exclusive vehicle use is available at an extra charge of $490 per day.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Highlight",
+          "label": "En suite bathrooms with a bath",
+          "icon": "bath",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "Luxury accommodation",
+          "icon": "house",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Highlight",
+          "label": "Flushing toilet",
+          "icon": "toilet",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service from the airport to the destination",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Highlight",
+          "label": "Plumbed shower",
+          "icon": "shower",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Cigars",
+          "icon": "smoking",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "House wines",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "House soft drinks",
+          "icon": "glass-water",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Travel emergency evacuation insurance",
+          "icon": "kit-medical",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "House beers",
+          "icon": "beer-mug-empty",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "House spirits",
+          "icon": "martini-glass",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "Game drives",
+          "icon": "car-side",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Bush meals",
+          "icon": "bell-concierge",
+          "footnote": null,
+          "sortOrder": 9
+        },
+        {
+          "section": "Included",
+          "label": "Sundowners",
+          "icon": "sun",
+          "footnote": null,
+          "sortOrder": 10
+        },
+        {
+          "section": "Included",
+          "label": "Camp and airstrip transfers",
+          "icon": "plane-arrival",
+          "footnote": null,
+          "sortOrder": 11
+        },
+        {
+          "section": "Included",
+          "label": "Laundry",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 12
+        },
+        {
+          "section": "Included",
+          "label": "Seasonal bush volleyball",
+          "icon": "volleyball",
+          "footnote": null,
+          "sortOrder": 13
+        },
+        {
+          "section": "Included",
+          "label": "Nature walks",
+          "icon": "person-hiking",
+          "footnote": null,
+          "sortOrder": 14
+        },
+        {
+          "section": "Included",
+          "label": "Children's activities",
+          "icon": "children",
+          "footnote": null,
+          "sortOrder": 15
+        },
+        {
+          "section": "Included",
+          "label": "Other camp activities",
+          "icon": "binoculars",
+          "footnote": null,
+          "sortOrder": 16
+        }
+      ],
+      "addOns": [
+        {
+          "id": "5afbb6f1-d936-4e2e-9053-58716afa6cfe",
+          "name": "Private exclusive vehicle",
+          "description": "Exclusive use of a game-drive vehicle for your party, charged per day of your stay.",
+          "unit": "PerDay",
+          "currency": "USD",
+          "priceMinor": 49000,
+          "sortOrder": 0
+        }
+      ],
+      "media": [],
+      "rates": [
+        {
+          "seasonName": "Peak Season 2026",
+          "seasonSlug": "safari-collection-peak-2026",
+          "currency": "USD",
+          "priceMinor": 4484800,
+          "extraNightPriceMinor": null
+        },
+        {
+          "seasonName": "Savings Season 2026",
+          "seasonSlug": "safari-collection-savings-2026",
+          "currency": "USD",
+          "priceMinor": 3088900,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-signature-escape": {
+      "id": "4e045f10-2337-4251-844f-3c57b9e1b71a",
+      "slug": "giraffe-manor-signature-escape",
+      "title": "Giraffe Manor Signature Escape",
+      "subtitle": "2 Nights / 3 Days for Two Adults",
+      "summary": "Step into elegance, where heritage, wildlife and warm hospitality create unforgettable moments.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "minNights": 2,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 589600,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "5095af06-2171-4465-9638-f4f22f055e52",
+          "nights": 2,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "d2511964-b387-4b74-9c1f-efca7067d053",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-signature-escape.jpg",
+          "alt": "Giraffe Manor Signature Escape",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 589600,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-grand-escape": {
+      "id": "d76e5f67-59da-4edb-81a0-c0dea346575b",
+      "slug": "giraffe-manor-grand-escape",
+      "title": "Giraffe Manor Grand Escape",
+      "subtitle": "3 Nights / 4 Days for Two Adults",
+      "summary": "Step into elegance, where heritage, wildlife and warm hospitality create unforgettable moments.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 3,
+      "minNights": 3,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 848800,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "aecd5635-b610-4961-a380-9e75a67f3c43",
+          "nights": 3,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "274469af-858e-44e7-8a7a-817c3e18308b",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-grand-escape.jpg",
+          "alt": "Giraffe Manor Grand Escape",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 848800,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-luxury-escape": {
+      "id": "f0407b2c-47e3-4948-8218-bcafee3d92ef",
+      "slug": "giraffe-manor-luxury-escape",
+      "title": "Giraffe Manor Luxury Escape",
+      "subtitle": "4 Nights / 5 Days for Two Adults",
+      "summary": "Indulge in sophisticated comfort, exceptional service and extraordinary moments at Giraffe Manor.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 4,
+      "minNights": 4,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1136800,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "e6492a81-a2bd-48cd-8da3-676ce10104ff",
+          "nights": 4,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "c6fcd124-cb4e-4e37-9652-41abe6dc3ba1",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-luxury-escape.jpg",
+          "alt": "Giraffe Manor Luxury Escape",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 1136800,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-family-experience": {
+      "id": "258d1fb7-48f6-4650-b9f3-32fff956aba8",
+      "slug": "giraffe-manor-family-experience",
+      "title": "Giraffe Manor Family Experience",
+      "subtitle": "2 Nights / 3 Days for Two Adults + Two Children",
+      "summary": "Create timeless moments together, surrounded by elegance, heritage and the gentle giants of Giraffe Manor.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "minNights": 2,
+      "adults": 2,
+      "children": 2,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 968500,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "24d3c57f-7e61-4584-88e7-affb45f1ef9e",
+          "nights": 2,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "66d60156-2d27-47d2-80d0-82198104fcc8",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-family-experience.jpg",
+          "alt": "Giraffe Manor Family Experience",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 968500,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-family-celebration": {
+      "id": "4d963233-237d-4c82-bd4b-e4e57b5ffd0e",
+      "slug": "giraffe-manor-family-celebration",
+      "title": "Giraffe Manor Family Celebration",
+      "subtitle": "3 Nights / 4 Days for Two Adults + Two Children",
+      "summary": "Create unforgettable family memories with extraordinary experiences at Giraffe Manor.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 3,
+      "minNights": 3,
+      "adults": 2,
+      "children": 2,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1459900,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "197b5521-e6c9-42f7-8833-8ea46ff551ec",
+          "nights": 3,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "a447d379-73d8-4781-b3f8-b61fddab47d0",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-family-celebration.jpg",
+          "alt": "Giraffe Manor Family Celebration",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 1459900,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-manor-family-celebration-3-children": {
+      "id": "11a63b5f-95ac-4cb6-bc64-0efa74a5c320",
+      "slug": "giraffe-manor-family-celebration-3-children",
+      "title": "Giraffe Manor Family Celebration (3 Children)",
+      "subtitle": "2 Nights / 3 Days for Two Adults + Three Children",
+      "summary": "Create unforgettable family memories with extraordinary experiences at Giraffe Manor.",
+      "description": null,
+      "category": "LODGE",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "minNights": 2,
+      "adults": 2,
+      "children": 3,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 1180900,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "e097b90b-9c59-4845-bc5d-426f01d096de",
+          "nights": 2,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "AFEW Giraffe Centre entry",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Orchid House dining",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Access to The Retreat during check-in & check-out",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Included",
+          "label": "Boules & croquet",
+          "icon": "baseball-bat-ball",
+          "footnote": null,
+          "sortOrder": 7
+        },
+        {
+          "section": "Included",
+          "label": "VAT",
+          "icon": "receipt",
+          "footnote": null,
+          "sortOrder": 8
+        },
+        {
+          "section": "Included",
+          "label": "Arrival & departure transfers – Karen & Langata area",
+          "icon": "van-shuttle",
+          "footnote": "Subject to applicable collection and departure times.",
+          "sortOrder": 9
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "8a0ab5ff-04db-4011-adc8-1a595a5f5f59",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-manor-family-celebration-3.jpg",
+          "alt": "Giraffe Manor Family Celebration (3 Children)",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 1180900,
+          "extraNightPriceMinor": null
+        }
+      ]
+    },
+    "giraffe-and-nairobi-wildlife-escape": {
+      "id": "308e5066-6cbf-423a-a8a9-435867bb4e9d",
+      "slug": "giraffe-and-nairobi-wildlife-escape",
+      "title": "Giraffe and Nairobi Wildlife Escape",
+      "subtitle": "2 Nights / 3 Days for Two Adults",
+      "summary": "Experience the best of Nairobi's wildlife and iconic landscapes.",
+      "description": null,
+      "category": "SAFARI",
+      "destination": {
+        "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+        "slug": "nairobi",
+        "name": "Nairobi",
+        "country": "KE"
+      },
+      "nights": 2,
+      "minNights": 2,
+      "adults": 2,
+      "children": 0,
+      "pricingBasis": "PerParty",
+      "baseCurrency": "USD",
+      "fromPriceMinor": 658900,
+      "featured": false,
+      "seoTitle": null,
+      "seoDescription": null,
+      "stays": [
+        {
+          "id": "d7311b35-385b-4198-9841-44dac9845137",
+          "nights": 2,
+          "roomType": null,
+          "sortOrder": 0,
+          "propertyName": "Giraffe Manor",
+          "propertySlug": "giraffe-manor",
+          "destinationName": "Nairobi"
+        }
+      ],
+      "features": [
+        {
+          "section": "Note",
+          "label": "Nairobi National Park fees are not included.",
+          "icon": null,
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Excluded",
+          "label": "Champagne",
+          "icon": "champagne-glasses",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "Included",
+          "label": "All meals",
+          "icon": "utensils",
+          "footnote": null,
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from home to airport",
+          "icon": "car",
+          "footnote": "If required",
+          "sortOrder": 0
+        },
+        {
+          "section": "PremiumService",
+          "label": "Meet & greet service at the airport",
+          "icon": "people-group",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Included",
+          "label": "House wines, soft drinks, beers & spirits",
+          "icon": "wine-glass",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "Excluded",
+          "label": "Luxury spirits",
+          "icon": "wine-bottle",
+          "footnote": null,
+          "sortOrder": 1
+        },
+        {
+          "section": "PremiumService",
+          "label": "VIP transfer from airport to resort",
+          "icon": "plane",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Selected wines",
+          "icon": "wine-glass-empty",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Included",
+          "label": "Laundry service",
+          "icon": "shirt",
+          "footnote": null,
+          "sortOrder": 2
+        },
+        {
+          "section": "Excluded",
+          "label": "Tips",
+          "icon": "hand-holding-dollar",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Included",
+          "label": "Wi-Fi",
+          "icon": "wifi",
+          "footnote": null,
+          "sortOrder": 3
+        },
+        {
+          "section": "Excluded",
+          "label": "Health insurance",
+          "icon": "notes-medical",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Included",
+          "label": "Game drives",
+          "icon": "car-side",
+          "footnote": null,
+          "sortOrder": 4
+        },
+        {
+          "section": "Excluded",
+          "label": "Massage treatments",
+          "icon": "spa",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Park fees",
+          "icon": "ticket",
+          "footnote": null,
+          "sortOrder": 5
+        },
+        {
+          "section": "Included",
+          "label": "Airport transfers",
+          "icon": "plane-arrival",
+          "footnote": null,
+          "sortOrder": 6
+        },
+        {
+          "section": "Excluded",
+          "label": "Personal effects",
+          "icon": "suitcase",
+          "footnote": null,
+          "sortOrder": 6
+        }
+      ],
+      "addOns": [],
+      "media": [
+        {
+          "id": "b55a89c8-ce09-42e5-be73-098a28743e04",
+          "role": "Hero",
+          "path": "/images/packages/giraffe-nairobi-wildlife-escape.jpg",
+          "alt": "Giraffe and Nairobi Wildlife Escape",
+          "caption": null,
+          "width": null,
+          "height": null,
+          "videoProvider": null,
+          "videoId": null,
+          "sortKey": 0
+        }
+      ],
+      "rates": [
+        {
+          "seasonName": "2026",
+          "seasonSlug": "giraffe-manor-2026",
+          "currency": "USD",
+          "priceMinor": 658900,
+          "extraNightPriceMinor": null
+        }
+      ]
+    }
+  },
+  "destinations": [
+    {
+      "id": "66c81605-140d-42d5-8ff4-1d8d0a6e18a6",
+      "slug": "masai-mara",
+      "name": "Masai Mara",
+      "country": "KE"
+    },
+    {
+      "id": "dbfb024c-82c4-45ea-a0df-f55ca6ff71b4",
+      "slug": "nairobi",
+      "name": "Nairobi",
+      "country": "KE"
+    },
+    {
+      "id": "47782cfd-0b50-436f-ae0e-314b49745d6b",
+      "slug": "samburu",
+      "name": "Samburu",
+      "country": "KE"
+    }
+  ],
+  "seasons": {
+    "safari-collection-savings-2026": [
+      ["01-06", "05-31"],
+      ["11-01", "12-15"]
+    ],
+    "safari-collection-peak-2026": [
+      ["01-01", "01-05"],
+      ["06-01", "10-31"],
+      ["12-16", "12-31"]
+    ],
+    "giraffe-manor-2026": [["01-01", "12-31"]]
+  }
+}

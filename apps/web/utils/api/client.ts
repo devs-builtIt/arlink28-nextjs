@@ -11,6 +11,8 @@ export class ApiError extends Error {
     public code?: string,
     /** Per-field messages from a 400 validation failure, keyed by field name. */
     public fieldErrors?: Record<string, string[]>,
+    /** What a 422 PUBLISH_BLOCKED says the package still needs. */
+    public missing?: string[],
   ) {
     super(message);
     this.name = "ApiError";
@@ -55,7 +57,8 @@ function toApiError(status: number, body: unknown): ApiError {
     // TODO(remove once arlink28-api's Problem Details release is deployed): old envelope's message.
     (typeof body.message === "string" && body.message) ||
     fallbackMessage(status);
-  return new ApiError(status, message, code, fieldErrors);
+  const missing = Array.isArray(body.missing) ? body.missing.map(String) : undefined;
+  return new ApiError(status, message, code, fieldErrors, missing);
 }
 
 /**
@@ -84,13 +87,21 @@ export async function parseResponse<T>(res: Response): Promise<T> {
 export async function apiFetch<T = void>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
   headers.set("Accept", "application/json");
-  if (options.body !== undefined && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  // A FormData body needs the browser to set Content-Type itself (it adds the multipart boundary).
+  if (options.body !== undefined && !(options.body instanceof FormData) && !headers.has("Content-Type"))
+    headers.set("Content-Type", "application/json");
   const res = await fetch(path, { ...options, headers, credentials: "same-origin" });
-  // The API rejected the session (expired or revoked) and the proxy has cleared
-  // the cookie: go back to sign-in, as middleware.ts does for page loads.
-  if (res.status === 401 && path.startsWith("/api/v1/") && window.location.pathname.startsWith("/admin/")) {
+  returnToSignInIfExpired(res.status, path);
+  return parseResponse<T>(res);
+}
+
+/**
+ * The API rejected the session (expired or revoked) and the proxy has cleared
+ * the cookie: go back to sign-in, as middleware.ts does for page loads.
+ */
+export function returnToSignInIfExpired(status: number, path: string): void {
+  if (status === 401 && path.startsWith("/api/v1/") && window.location.pathname.startsWith("/admin/")) {
     const next = encodeURIComponent(window.location.pathname);
     window.location.assign(`/admin/login?next=${next}`);
   }
-  return parseResponse<T>(res);
 }

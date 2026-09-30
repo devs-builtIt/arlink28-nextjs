@@ -6,7 +6,16 @@
 // middleware can decode them; the mock "verifies" a token by looking it up.
 //
 // POST /__reset restores the seed data between tests.
+//
+// The package catalogue is real data captured from arlink28-api after
+// `seed-catalogue` (e2e/data/catalogue.json). Quotes follow the C# pricing
+// rules, except that seasons match on month and day only, so the 2026 posters
+// keep quoting when the tests run in later years.
 import http from "node:http";
+import { readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
+
+const CATALOGUE = JSON.parse(readFileSync(new URL("./data/catalogue.json", import.meta.url), "utf8"));
 
 const PORT = Number(process.env.MOCK_API_PORT ?? 5399);
 const HOUR = 3600_000;
@@ -15,11 +24,270 @@ const DAY = 24 * HOUR;
 // Test-only accounts; e2e/fixtures.ts holds the same values for the specs.
 const PASSWORDS = { anna_bello: "Runway-2026", kwame_mensah: "Taxiway-2026" };
 
+const clone = (v) => JSON.parse(JSON.stringify(v));
+
+// ── Admin packages ──
+// The published packages come from the captured catalogue; the draft is what the
+// API has after `seed-catalogue` for a poster whose data contradicts itself.
+const REF_YEAR = new Date().getFullYear() + 1;
+const byName = (a, b) => a.name.localeCompare(b.name);
+
+/** The pickers' lists, derived from the captured catalogue. Season dates sit next year, so they never lapse mid-test. */
+function buildReference() {
+  const properties = new Map();
+  const features = new Map();
+  const seasons = new Map();
+  for (const d of Object.values(CATALOGUE.details)) {
+    for (const s of d.stays) {
+      properties.set(s.propertySlug, {
+        id: `prop-${s.propertySlug}`,
+        slug: s.propertySlug,
+        name: s.propertyName,
+        destinationId: CATALOGUE.destinations.find((x) => x.name === s.destinationName)?.id ?? "",
+        destinationName: s.destinationName,
+      });
+    }
+    for (const f of d.features) {
+      if (!features.has(f.label)) {
+        features.set(f.label, {
+          id: `feat-${features.size}`,
+          slug: `feat-${features.size}`,
+          label: f.label,
+          icon: f.icon ?? null,
+        });
+      }
+    }
+    for (const r of d.rates) {
+      seasons.set(r.seasonSlug, {
+        id: `season-${r.seasonSlug}`,
+        slug: r.seasonSlug,
+        name: r.seasonName,
+        ranges: CATALOGUE.seasons[r.seasonSlug].map(([a, b]) => ({
+          start: `${REF_YEAR}-${a}`,
+          end: `${REF_YEAR}-${b}`,
+        })),
+      });
+    }
+  }
+  return {
+    destinations: CATALOGUE.destinations,
+    properties: [...properties.values()].sort(byName),
+    seasons: [...seasons.values()].sort(byName),
+    features: [...features.values()].sort((a, b) => a.label.localeCompare(b.label)),
+  };
+}
+const REFERENCE = buildReference();
+
+// ── Public catalogue: cards and details as the real API serves them ──
+const seasonRanges = (slug) =>
+  (CATALOGUE.seasons[slug] ?? []).map(([a, b]) => ({ start: `${REF_YEAR}-${a}`, end: `${REF_YEAR}-${b}` }));
+
+/** A card: what the list shows, with three highlights and the lodges, as the API derives them. */
+function publicCard(card) {
+  const detail = CATALOGUE.details[card.slug];
+  const label = (f) => f.label;
+  const highlights = [
+    ...detail.features.filter((f) => f.section === "Highlight").sort((a, b) => a.sortOrder - b.sortOrder),
+    ...detail.features.filter((f) => f.section === "Included").sort((a, b) => a.sortOrder - b.sortOrder),
+  ]
+    .map(label)
+    .slice(0, 3);
+  const lodges = [
+    ...new Set([...detail.stays].sort((a, b) => a.sortOrder - b.sortOrder).map((st) => st.propertyName)),
+  ].slice(0, 3);
+  return { ...card, highlights, lodges };
+}
+
+/** A detail, with each rate carrying the dates it covers. */
+function publicDetail(detail) {
+  return { ...detail, rates: detail.rates.map((r) => ({ ...r, ranges: seasonRanges(r.seasonSlug) })) };
+}
+
+const fromPrice = (pkg) => {
+  const prices = pkg.rates.filter((r) => r.currency === pkg.baseCurrency).map((r) => r.priceMinor);
+  return prices.length ? Math.min(...prices) : null;
+};
+
+/** What a package still needs before it can be published: the API's checklist. */
+function publishChecklist(pkg) {
+  const missing = [];
+  const nightsWord = (n) => `${n} ${n === 1 ? "night" : "nights"}`;
+  if (!pkg.title.trim()) missing.push("A name");
+  if (!pkg.summary?.trim()) missing.push("A summary");
+  if (pkg.minNights < 1 || pkg.nights < pkg.minNights)
+    missing.push("Nights that are at least the minimum stay, and at least one");
+  if (pkg.adults < 1) missing.push("At least one adult");
+  const placed = pkg.stays.reduce((sum, s) => sum + s.nights, 0);
+  if (pkg.stays.length === 0) missing.push("At least one stay");
+  else if (placed !== pkg.nights)
+    missing.push(`Stays that add up to ${nightsWord(pkg.nights)} (they add up to ${placed})`);
+  if (!pkg.rates.some((r) => r.currency === pkg.baseCurrency))
+    missing.push(`A ${pkg.baseCurrency} rate for a season that has not ended`);
+  if (pkg.media.filter((m) => m.role === "Hero").length !== 1) missing.push("A main photo");
+  return missing;
+}
+
+function buildAdminPackages() {
+  const now = new Date().toISOString();
+  const published = CATALOGUE.packages.map((p) => {
+    const d = CATALOGUE.details[p.slug];
+    return {
+      id: p.id,
+      slug: p.slug,
+      status: "Published",
+      title: p.title,
+      subtitle: p.subtitle ?? null,
+      summary: p.summary ?? null,
+      description: d?.description ?? null,
+      category: p.category,
+      destination: clone(p.destination),
+      nights: p.nights,
+      minNights: d?.minNights ?? p.nights,
+      adults: p.adults,
+      children: p.children,
+      pricingBasis: d?.pricingBasis ?? "PerParty",
+      baseCurrency: p.baseCurrency,
+      fromPriceMinor: p.fromPriceMinor,
+      featured: p.featured,
+      seoTitle: d?.seoTitle ?? null,
+      seoDescription: d?.seoDescription ?? null,
+      publishedAt: now,
+      createdAt: now,
+      updatedAt: now,
+      stays: (d?.stays ?? []).map((s) => ({
+        id: s.id,
+        propertyId: `prop-${s.propertySlug}`,
+        propertyName: s.propertyName,
+        destinationName: s.destinationName,
+        nights: s.nights,
+        roomType: s.roomType,
+        sortOrder: s.sortOrder,
+      })),
+      features: (d?.features ?? []).map((f, i) => ({
+        id: `${p.id}-feature-${i}`,
+        section: f.section,
+        featureId: null,
+        label: f.label,
+        icon: f.icon ?? null,
+        footnote: f.footnote,
+        sortOrder: f.sortOrder,
+      })),
+      rates: (d?.rates ?? []).map((r) => ({
+        id: `${p.id}-${r.seasonSlug}-${r.currency}`,
+        seasonId: `season-${r.seasonSlug}`,
+        seasonName: r.seasonName,
+        currency: r.currency,
+        priceMinor: r.priceMinor,
+        extraNightPriceMinor: r.extraNightPriceMinor,
+      })),
+      addOns: clone(d?.addOns ?? []),
+      media: clone(d?.media ?? []),
+    };
+  });
+  const draft = {
+    id: "5a1a5fa0-0000-4000-8000-000000000001",
+    slug: "salas-family-safari",
+    status: "Draft",
+    title: "Sala's Family Safari",
+    subtitle: null,
+    summary: null,
+    description: null,
+    category: "SAFARI",
+    destination: clone(CATALOGUE.destinations.find((x) => x.slug === "masai-mara")),
+    nights: 3,
+    minNights: 3,
+    adults: 2,
+    children: 2,
+    pricingBasis: "PerParty",
+    baseCurrency: "USD",
+    fromPriceMinor: null,
+    featured: false,
+    seoTitle: null,
+    seoDescription: null,
+    publishedAt: null,
+    createdAt: now,
+    updatedAt: now,
+    stays: [],
+    features: [],
+    rates: [],
+    addOns: [],
+    media: [],
+  };
+  return [...published, draft];
+}
+
+const adminSummary = (p) => ({
+  id: p.id,
+  slug: p.slug,
+  title: p.title,
+  status: p.status,
+  category: p.category,
+  destination: p.destination,
+  nights: p.nights,
+  adults: p.adults,
+  children: p.children,
+  baseCurrency: p.baseCurrency,
+  fromPriceMinor: p.fromPriceMinor,
+  heroImagePath: p.media.find((m) => m.role === "Hero")?.path ?? null,
+  mediaCount: p.media.length,
+  updatedAt: p.updatedAt,
+});
+
+const slugify = (t) =>
+  t
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "package";
+
+const readRaw = async (req) => {
+  const chunks = [];
+  for await (const chunk of req) chunks.push(chunk);
+  return Buffer.concat(chunks);
+};
+
+/** The file parts of a multipart body: [{ name, filename, data }]. */
+function parseMultipart(buf, contentType) {
+  const m = /boundary=(?:"([^"]+)"|([^;]+))/.exec(contentType ?? "");
+  if (!m) return [];
+  const delimiter = Buffer.from(`--${m[1] ?? m[2]}`);
+  const parts = [];
+  let start = buf.indexOf(delimiter);
+  while (start !== -1) {
+    const next = buf.indexOf(delimiter, start + delimiter.length);
+    if (next === -1) break;
+    const part = buf.subarray(start + delimiter.length + 2, next - 2);
+    const split = part.indexOf("\r\n\r\n");
+    const head = part.subarray(0, split).toString();
+    parts.push({
+      name: /name="([^"]*)"/.exec(head)?.[1],
+      filename: /filename="([^"]*)"/.exec(head)?.[1],
+      data: part.subarray(split + 4),
+    });
+    start = next;
+  }
+  return parts.filter((p) => p.filename !== undefined);
+}
+
+/** Identifies an image by its first bytes, like the API. */
+function sniff(b) {
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "image/jpeg";
+  if (b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "image/png";
+  if (b.subarray(0, 4).toString() === "RIFF" && b.subarray(8, 12).toString() === "WEBP") return "image/webp";
+  return null;
+}
+
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+
 function seed() {
   const now = Date.now();
   const iso = (ms) => new Date(ms).toISOString();
+  const packages = buildAdminPackages();
   return {
     passwords: { ...PASSWORDS },
+    packages,
+    files: new Map(),
     tokens: new Map(),
     users: [
       {
@@ -79,7 +347,165 @@ function seed() {
     ],
     invites: new Map([["valid-invite", { email: "new.hire@arlink28.test", role: "Operator" }]]),
     resets: new Set(["valid-reset"]),
+    enquiries: seedEnquiries(now, packages),
   };
+}
+
+// ── Enquiries ──
+// What the contact form has left behind: the API keeps them newest first.
+function seedEnquiries(now, packages) {
+  const base = {
+    packageId: null,
+    packageTitle: null,
+    checkIn: null,
+    nights: null,
+    quotedTotalMinor: null,
+    currency: null,
+    phone: null,
+    subject: null,
+    message: null,
+    sourceUrl: null,
+    handledById: null,
+  };
+  const at = (ms) => new Date(now - ms).toISOString();
+  return [
+    {
+      ...base,
+      id: "enq-3",
+      reference: `ENQ-${new Date(now).getFullYear()}-0003`,
+      type: "General",
+      status: "New",
+      name: "Sam Roe",
+      email: "sam.roe@example.test",
+      subject: "Group booking",
+      message: "Ten of us are travelling in June and would like a quote.",
+      consentAt: at(2 * HOUR),
+      createdAt: at(2 * HOUR),
+      updatedAt: at(2 * HOUR),
+    },
+    {
+      ...base,
+      id: "enq-2",
+      reference: `ENQ-${new Date(now).getFullYear()}-0002`,
+      type: "Package",
+      status: "Contacted",
+      packageId: packages.find((p) => p.title === "Sala Mara Escape")?.id ?? null,
+      packageTitle: "Sala Mara Escape",
+      checkIn: "2027-01-12",
+      nights: 2,
+      quotedTotalMinor: 747200,
+      currency: "USD",
+      name: "Jane Doe",
+      email: "jane.doe@example.test",
+      phone: "+254700000000",
+      message: "Two adults and two children.",
+      handledById: "u2",
+      consentAt: at(DAY),
+      createdAt: at(DAY),
+      updatedAt: at(5 * HOUR),
+    },
+    {
+      ...base,
+      id: "enq-1",
+      reference: `ENQ-${new Date(now).getFullYear()}-0001`,
+      type: "Career",
+      status: "Closed",
+      name: "Amara Nwosu",
+      email: "amara.nwosu@example.test",
+      subject: "Operations role",
+      message: "Applying for the operations coordinator role.",
+      handledById: "u1",
+      consentAt: at(6 * DAY),
+      createdAt: at(6 * DAY),
+      updatedAt: at(4 * DAY),
+    },
+  ];
+}
+
+const enquiryItem = ({
+  id,
+  reference,
+  type,
+  status,
+  packageTitle,
+  subject,
+  checkIn,
+  nights,
+  quotedTotalMinor,
+  currency,
+  name,
+  email,
+  createdAt,
+}) => ({
+  id,
+  reference,
+  type,
+  status,
+  packageTitle,
+  subject,
+  checkIn,
+  nights,
+  quotedTotalMinor,
+  currency,
+  name,
+  email,
+  createdAt,
+});
+
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** POST /enquiries, following arlink28-api's rules (no rate limit: every test would share one address). */
+function createEnquiry(res, body) {
+  const errors = {};
+  const type = body.type ?? "General";
+  if (!body.name?.trim()) errors.Name = ["'Name' must not be empty."];
+  if (!body.email?.trim()) errors.Email = ["'Email' must not be empty."];
+  else if (!EMAIL_SHAPE.test(body.email)) errors.Email = ["'Email' is not a valid email address."];
+  if (body.consent !== true) errors.Consent = ["Please agree to the privacy policy so we can contact you."];
+  if (type === "Package" && !body.slug) errors.Slug = ["'Slug' must not be empty."];
+  if (type !== "Package" && !body.subject?.trim()) errors.Subject = ["'Subject' must not be empty."];
+  if (type !== "Package" && !body.message?.trim()) errors.Message = ["'Message' must not be empty."];
+  if (Object.keys(errors).length > 0) {
+    return problem(res, 400, undefined, {
+      title: "One or more validation errors occurred.",
+      code: "VALIDATION_FAILED",
+      errors,
+    });
+  }
+
+  const year = new Date().getFullYear();
+  const reference = `ENQ-${year}-${String(db.enquiries.length + 1).padStart(4, "0")}`;
+  if (body.website) return send(res, 201, { reference }); // the honeypot: same answer, nothing saved
+
+  let detail = null;
+  if (type === "Package") {
+    detail = CATALOGUE.details[body.slug];
+    if (!detail) return problem(res, 400, `Package '${body.slug}' is not available for enquiries.`);
+  }
+  const now = new Date().toISOString();
+  db.enquiries.unshift({
+    id: `enq-${randomUUID()}`,
+    reference,
+    type,
+    status: "New",
+    packageId: detail ? `pkg-${detail.slug}` : null,
+    packageTitle: detail?.title ?? null,
+    checkIn: body.checkIn ?? null,
+    nights: body.nights ?? null,
+    quotedTotalMinor: null,
+    currency: null,
+    name: body.name.trim(),
+    email: body.email.trim(),
+    phone: body.phone?.trim() || null,
+    subject: body.subject?.trim() || null,
+    message: body.message?.trim() || null,
+    consentAt: now,
+    sourceUrl: body.sourceUrl ?? null,
+    handledById: null,
+    createdAt: now,
+    updatedAt: now,
+  });
+  return send(res, 201, { reference });
 }
 let db = seed();
 
@@ -108,8 +534,14 @@ function send(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
-const TITLES = { 400: "Bad Request", 401: "Unauthorized", 403: "Forbidden", 404: "Not Found" };
-const CODES = { 400: "BAD_REQUEST", 401: "UNAUTHENTICATED", 403: "FORBIDDEN", 404: "NOT_FOUND" };
+const TITLES = {
+  400: "Bad Request",
+  401: "Unauthorized",
+  403: "Forbidden",
+  404: "Not Found",
+  422: "Unprocessable Entity",
+};
+const CODES = { 400: "BAD_REQUEST", 401: "UNAUTHENTICATED", 403: "FORBIDDEN", 404: "NOT_FOUND", 422: "UNPROCESSABLE" };
 const problem = (res, status, detail, extra = {}) =>
   send(res, status, {
     title: TITLES[status],
@@ -119,6 +551,53 @@ const problem = (res, status, detail, extra = {}) =>
     traceId: "mock",
     ...extra,
   });
+
+const quoteError = (res, code, detail) => problem(res, 422, detail, { code });
+
+/** GET /packages/{slug}/quote, following arlink28-api's PricingEngine (see header note on seasons). */
+function quote(res, pkg, params) {
+  const checkIn = params.get("checkIn") ?? "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(checkIn)) {
+    return problem(res, 400, undefined, {
+      title: "One or more validation errors occurred.",
+      code: "VALIDATION_FAILED",
+      errors: { CheckIn: ["The CheckIn field is required."] },
+    });
+  }
+  const nights = params.get("nights") ? Number(params.get("nights")) : pkg.nights;
+  const currency = params.get("currency") ?? "USD";
+  if (nights < pkg.minNights) return quoteError(res, "BELOW_MIN_NIGHTS", `Minimum stay is ${pkg.minNights} nights.`);
+  if (nights > pkg.nights && !pkg.rates.some((r) => r.extraNightPriceMinor != null)) {
+    return quoteError(res, "EXTRA_NIGHTS_NOT_SOLD", "Extra nights are not available for this package.");
+  }
+  const md = checkIn.slice(5);
+  const rate = pkg.rates.find((r) =>
+    (CATALOGUE.seasons[r.seasonSlug] ?? []).some(([start, end]) => start <= md && md <= end),
+  );
+  if (!rate) return quoteError(res, "NO_RATE_FOR_DATE", "No rate is defined for the requested check-in date.");
+  if (rate.currency !== currency)
+    return quoteError(res, "CURRENCY_NOT_AVAILABLE", `This package is not priced in ${currency}.`);
+
+  const lines = [{ label: "Base package", amountMinor: rate.priceMinor, currency }];
+  const extra = nights - pkg.nights;
+  if (extra > 0)
+    lines.push({ label: `${extra} extra night(s)`, amountMinor: rate.extraNightPriceMinor * extra, currency });
+  const people = pkg.adults + pkg.children;
+  for (const part of (params.get("addOns") ?? "").split(",").filter(Boolean)) {
+    const [id, qty] = part.split(":");
+    const addOn = pkg.addOns.find((a) => a.id === id);
+    if (!addOn) return quoteError(res, "UNKNOWN_ADD_ON", `Add-on ${id} not found.`);
+    const units = addOn.unit === "PerStay" ? 1 : addOn.unit === "PerPerson" ? people : nights;
+    const quantity = units * Number(qty);
+    lines.push({
+      label: `${addOn.name} x${quantity}`,
+      amountMinor: addOn.priceMinor * quantity,
+      currency: addOn.currency,
+    });
+  }
+  const totalMinor = lines.reduce((sum, l) => sum + l.amountMinor, 0);
+  return send(res, 200, { totalMinor, currency, baseMinor: rate.priceMinor, nights, lines });
+}
 
 function strongPassword(p) {
   if (typeof p !== "string" || p.length < 8) return "Password must be at least 8 characters.";
@@ -148,7 +627,16 @@ const server = http.createServer(async (req, res) => {
     return send(res, 204);
   }
 
-  const body = method === "GET" ? {} : await readJson(req);
+  if (method === "GET" && path.startsWith("/media/")) {
+    const file = db.files.get(path);
+    if (!file) return problem(res, 404);
+    res.writeHead(200, { "Content-Type": file.type });
+    return res.end(file.data);
+  }
+
+  const isUpload = method === "POST" && /^\/api\/v1\/admin\/packages\/[^/]+\/media$/.test(path);
+  const raw = isUpload ? await readRaw(req) : null;
+  const body = method === "GET" || isUpload ? {} : await readJson(req);
   if (body === null)
     return problem(res, 400, undefined, {
       errors: { "": ["The request body isn't valid JSON."] },
@@ -218,6 +706,413 @@ const server = http.createServer(async (req, res) => {
       });
     db.resets.delete(body.token);
     return send(res, 204);
+  }
+
+  // ── Catalogue (public) ──
+  if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, CATALOGUE.destinations);
+  if (method === "GET" && path === "/api/v1/packages") {
+    const q = Object.fromEntries([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
+    let items = CATALOGUE.packages;
+    if (q.destination) items = items.filter((p) => p.destination.slug === q.destination);
+    if (q.category) items = items.filter((p) => p.category === q.category);
+    if (q.partner)
+      items = items.filter((p) => CATALOGUE.details[p.slug].stays.some((st) => st.propertySlug === q.partner));
+    if (q.adults) items = items.filter((p) => p.adults >= Number(q.adults));
+    if (q.q) {
+      const term = q.q.toLowerCase();
+      items = items.filter((p) => `${p.title} ${p.subtitle ?? ""} ${p.summary ?? ""}`.toLowerCase().includes(term));
+    }
+    const limit = Math.min(100, Math.max(1, Number(q.limit ?? 20)));
+
+    if (q.page) {
+      const price = (p) => p.fromPriceMinor ?? Infinity;
+      const order =
+        {
+          price: (a, b) => price(a) - price(b),
+          "-price": (a, b) => (b.fromPriceMinor ?? -Infinity) - (a.fromPriceMinor ?? -Infinity) || 0,
+          nights: (a, b) => a.nights - b.nights,
+        }[q.sort] ?? ((a, b) => Number(b.featured) - Number(a.featured));
+      const sorted = items.slice().sort(order);
+      const page = Math.max(1, Number(q.page));
+      const pageItems = sorted.slice((page - 1) * limit, page * limit).map(publicCard);
+      return send(res, 200, { items: pageItems, nextCursor: null, total: sorted.length, page, pageSize: limit });
+    }
+
+    const offset = q.cursor ? Number(Buffer.from(q.cursor, "base64url").toString()) : 0;
+    const page = items.slice(offset, offset + limit).map(publicCard);
+    const next = offset + limit < items.length ? Buffer.from(String(offset + limit)).toString("base64url") : null;
+    return send(res, 200, { items: page, nextCursor: next });
+  }
+  const pkgMatch = path.match(/^\/api\/v1\/packages\/([^/]+)(\/quote)?$/);
+  if (method === "GET" && pkgMatch) {
+    const detail = CATALOGUE.details[decodeURIComponent(pkgMatch[1])];
+    if (!detail) return problem(res, 404, `Package '${pkgMatch[1]}' not found.`);
+    if (!pkgMatch[2]) return send(res, 200, publicDetail(detail));
+    return quote(res, detail, url.searchParams);
+  }
+
+  // ── Enquiries ──
+  if (method === "POST" && path === "/api/v1/enquiries") return createEnquiry(res, body);
+  const enquiryMatch = path.match(/^\/api\/v1\/admin\/enquiries(?:\/([^/]+))?$/);
+  if (enquiryMatch) {
+    if (!requireUser()) return problem(res, 401);
+    const target = enquiryMatch[1] && db.enquiries.find((e) => e.id === enquiryMatch[1]);
+    if (method === "GET" && !enquiryMatch[1]) {
+      const page = Math.max(1, Number(url.searchParams.get("page") ?? 1));
+      const pageSize = Math.min(100, Math.max(1, Number(url.searchParams.get("pageSize") ?? 25)));
+      const status = url.searchParams.get("status");
+      const count = (s) => db.enquiries.filter((e) => e.status === s).length;
+      const matching = status
+        ? db.enquiries.filter((e) => e.status.toLowerCase() === status.toLowerCase())
+        : db.enquiries;
+      return send(res, 200, {
+        items: matching.slice((page - 1) * pageSize, page * pageSize).map(enquiryItem),
+        total: matching.length,
+        page,
+        pageSize,
+        counts: { all: db.enquiries.length, new: count("New"), contacted: count("Contacted"), closed: count("Closed") },
+      });
+    }
+    if (enquiryMatch[1] && !target) return problem(res, 404, "Enquiry not found.");
+    if (method === "GET") return send(res, 200, target);
+    if (method === "PATCH") {
+      if (!["New", "Contacted", "Closed"].includes(body.status)) {
+        return problem(res, 400, undefined, {
+          title: "One or more validation errors occurred.",
+          code: "VALIDATION_FAILED",
+          errors: { Status: ["'Status' has a range of values which does not include the one given."] },
+        });
+      }
+      if (target.status !== body.status) {
+        target.status = body.status;
+        target.handledById = body.status === "New" ? null : me.id;
+        target.updatedAt = new Date().toISOString();
+      }
+      return send(res, 200, target);
+    }
+  }
+
+  // ── Admin packages ──
+  if (method === "GET" && path === "/api/v1/admin/reference") {
+    return requireUser() ? send(res, 200, REFERENCE) : problem(res, 401);
+  }
+  const adminMatch = path.match(
+    /^\/api\/v1\/admin\/packages(?:\/([^/]+))?(?:\/(media|stays|features|rates|add-ons|publish|unpublish|archive)(?:\/([^/]+))?)?$/,
+  );
+  if (adminMatch) {
+    if (!requireUser()) return problem(res, 401);
+    const [, id, part, mediaKey] = adminMatch;
+    const isMedia = part === "media";
+    const validation = (errors) =>
+      problem(res, 400, undefined, {
+        title: "One or more validation errors occurred.",
+        code: "VALIDATION_FAILED",
+        errors,
+      });
+
+    if (!id) {
+      if (method === "GET") {
+        const q = url.searchParams;
+        const term = q.get("search")?.trim().toLowerCase();
+        const destination = q.get("destination");
+        const category = q.get("category")?.toUpperCase();
+        const matching = db.packages.filter(
+          (p) =>
+            (!term || p.title.toLowerCase().includes(term) || p.slug.includes(term)) &&
+            (!destination || p.destination.slug === destination) &&
+            (!category || p.category === category),
+        );
+        const inStatus = (name) => matching.filter((p) => p.status === name).length;
+        const counts = {
+          all: matching.length,
+          draft: inStatus("Draft"),
+          published: inStatus("Published"),
+          archived: inStatus("Archived"),
+        };
+        const status = q.get("status")?.toLowerCase();
+        const filtered = (status ? matching.filter((p) => p.status.toLowerCase() === status) : matching)
+          .slice()
+          .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt) || a.title.localeCompare(b.title));
+        const page = Math.max(1, Number(q.get("page")) || 1);
+        const pageSize = Math.min(100, Math.max(1, Number(q.get("pageSize")) || 25));
+        const items = filtered.slice((page - 1) * pageSize, page * pageSize).map(adminSummary);
+        return send(res, 200, { items, total: filtered.length, page, pageSize, counts });
+      }
+      if (method === "POST") {
+        const errors = {};
+        if (!body.title?.trim()) errors.Title = ["'Title' must not be empty."];
+        if (!(body.nights >= 1 && body.nights <= 60)) errors.Nights = ["'Nights' must be between 1 and 60."];
+        if (Object.keys(errors).length) return validation(errors);
+        const destination = CATALOGUE.destinations.find((d) => d.id === body.destinationId);
+        if (!destination) return problem(res, 400, "That destination doesn't exist.");
+        let slug = slugify(body.title);
+        for (let n = 2; db.packages.some((p) => p.slug === slug); n++) slug = `${slugify(body.title)}-${n}`;
+        const now = new Date().toISOString();
+        const created = {
+          id: randomUUID(),
+          slug,
+          status: "Draft",
+          title: body.title.trim(),
+          subtitle: body.subtitle?.trim() || null,
+          summary: body.summary?.trim() || null,
+          description: null,
+          category: String(body.category).toUpperCase(),
+          destination,
+          nights: body.nights,
+          minNights: body.nights,
+          adults: body.adults,
+          children: body.children,
+          pricingBasis: body.pricingBasis ?? "PerParty",
+          baseCurrency: body.baseCurrency ?? "USD",
+          fromPriceMinor: null,
+          featured: false,
+          seoTitle: null,
+          seoDescription: null,
+          publishedAt: null,
+          createdAt: now,
+          updatedAt: now,
+          stays: [],
+          features: [],
+          rates: [],
+          addOns: [],
+          media: [],
+        };
+        db.packages.push(created);
+        res.setHeader("Location", `/api/v1/admin/packages/${created.id}`);
+        return send(res, 201, created);
+      }
+    } else {
+      const pkg = db.packages.find((p) => p.id === id);
+      if (!pkg) return problem(res, 404, "Package not found.");
+      const sorted = () => [...pkg.media].sort((a, b) => a.sortKey - b.sortKey);
+
+      if (part && part !== "media") {
+        const list = Array.isArray(body) ? body : [];
+        const bad = (detail) => problem(res, 400, detail);
+        const touch = () => {
+          pkg.updatedAt = new Date().toISOString();
+          pkg.fromPriceMinor = fromPrice(pkg);
+          return send(res, 200, pkg);
+        };
+
+        if (part === "publish" && method === "POST") {
+          const missing = publishChecklist(pkg);
+          if (missing.length)
+            return problem(res, 422, "This package is not ready to publish.", { code: "PUBLISH_BLOCKED", missing });
+          pkg.status = "Published";
+          pkg.publishedAt ??= new Date().toISOString();
+          return touch();
+        }
+        if (part === "unpublish" && method === "POST") {
+          pkg.status = "Draft";
+          return touch();
+        }
+        if (part === "archive" && method === "POST") {
+          pkg.status = "Archived";
+          return touch();
+        }
+
+        if (part === "stays" && method === "PUT") {
+          for (const [i, s] of list.entries()) {
+            const property = REFERENCE.properties.find((p) => p.id === s.propertyId);
+            if (!property) return bad(`Stay ${i + 1}: choose a property.`);
+            if (!(s.nights >= 1 && s.nights <= 60)) return bad(`Stay ${i + 1}: nights must be between 1 and 60.`);
+          }
+          pkg.stays = list.map((s, i) => {
+            const property = REFERENCE.properties.find((p) => p.id === s.propertyId);
+            return {
+              id: randomUUID(),
+              propertyId: s.propertyId,
+              propertyName: property.name,
+              destinationName: property.destinationName,
+              nights: s.nights,
+              roomType: s.roomType?.trim() || null,
+              sortOrder: i,
+            };
+          });
+          return touch();
+        }
+
+        if (part === "features" && method === "PUT") {
+          for (const [i, f] of list.entries()) {
+            if (!f.featureId && !f.label?.trim())
+              return bad(`Line ${i + 1}: write the line, or choose one from the list.`);
+            if (f.featureId && !REFERENCE.features.some((x) => x.id === f.featureId))
+              return bad(`Line ${i + 1}: that feature does not exist.`);
+          }
+          pkg.features = list.map((f, i) => {
+            const shared = REFERENCE.features.find((x) => x.id === f.featureId);
+            return {
+              id: randomUUID(),
+              section: f.section,
+              featureId: f.featureId ?? null,
+              label: shared ? shared.label : f.label.trim(),
+              icon: shared?.icon ?? null,
+              footnote: f.footnote?.trim() || null,
+              sortOrder: i,
+            };
+          });
+          return touch();
+        }
+
+        if (part === "rates" && method === "PUT") {
+          const rates = [];
+          for (const [i, r] of list.entries()) {
+            const season = REFERENCE.seasons.find((s) => s.id === r.seasonId);
+            const currency = String(r.currency ?? "")
+              .trim()
+              .toUpperCase();
+            if (!season) return bad(`Rate ${i + 1}: choose a season.`);
+            if (currency.length !== 3) return bad(`Rate ${i + 1}: the currency needs three letters, like USD.`);
+            if (!(r.priceMinor > 0)) return bad(`Rate ${i + 1}: enter a price above zero.`);
+            rates.push({ season, currency, priceMinor: r.priceMinor, extra: r.extraNightPriceMinor ?? null });
+          }
+          for (const [i, a] of rates.entries()) {
+            for (const b of rates.slice(i + 1)) {
+              if (a.currency !== b.currency) continue;
+              if (a.season.id === b.season.id) return bad(`${a.season.name} is listed twice in ${a.currency}.`);
+              if (a.season.ranges.some((x) => b.season.ranges.some((y) => x.start <= y.end && y.start <= x.end)))
+                return bad(
+                  `${a.season.name} and ${b.season.name} overlap, so a date could match two ${a.currency} prices.`,
+                );
+            }
+          }
+          pkg.rates = rates.map((r) => ({
+            id: randomUUID(),
+            seasonId: r.season.id,
+            seasonName: r.season.name,
+            currency: r.currency,
+            priceMinor: r.priceMinor,
+            extraNightPriceMinor: r.extra,
+          }));
+          return touch();
+        }
+
+        if (part === "add-ons" && method === "PUT") {
+          for (const [i, a] of list.entries()) {
+            if (!a.name?.trim()) return bad(`Add-on ${i + 1}: give it a name.`);
+            if (String(a.currency ?? "").trim().length !== 3)
+              return bad(`Add-on ${i + 1}: the currency needs three letters, like USD.`);
+            if (!(a.priceMinor >= 0)) return bad(`Add-on ${i + 1}: the price cannot be negative.`);
+            if (a.id && !pkg.addOns.some((x) => x.id === a.id))
+              return bad(`Add-on ${i + 1}: it does not belong to this package.`);
+          }
+          pkg.addOns = list.map((a, i) => ({
+            id: a.id ?? randomUUID(),
+            name: a.name.trim(),
+            description: a.description?.trim() || null,
+            unit: a.unit,
+            currency: String(a.currency).trim().toUpperCase(),
+            priceMinor: a.priceMinor,
+            sortOrder: i,
+          }));
+          return touch();
+        }
+      }
+
+      if (!isMedia) {
+        if (method === "GET") return send(res, 200, pkg);
+        if (method === "PATCH") {
+          const errors = {};
+          if (body.title !== undefined && !body.title.trim()) errors.Title = ["'Title' must not be empty."];
+          if (Object.keys(errors).length) return validation(errors);
+          for (const key of [
+            "title",
+            "subtitle",
+            "summary",
+            "description",
+            "category",
+            "nights",
+            "minNights",
+            "adults",
+            "children",
+            "pricingBasis",
+            "baseCurrency",
+            "featured",
+            "seoTitle",
+            "seoDescription",
+          ]) {
+            if (body[key] === undefined) continue;
+            pkg[key] =
+              typeof body[key] === "string" ? body[key].trim() || (key === "title" ? pkg[key] : null) : body[key];
+          }
+          if (body.category) pkg.category = body.category.toUpperCase();
+          if (body.baseCurrency) pkg.baseCurrency = body.baseCurrency.toUpperCase();
+          if (body.nights !== undefined && body.minNights === undefined)
+            pkg.minNights = Math.min(pkg.minNights, pkg.nights);
+          if (pkg.minNights > pkg.nights)
+            return problem(res, 400, "The minimum stay can't be longer than the package's nights.");
+          pkg.fromPriceMinor = fromPrice(pkg);
+          if (body.destinationId) {
+            const destination = CATALOGUE.destinations.find((d) => d.id === body.destinationId);
+            if (!destination) return problem(res, 400, "That destination doesn't exist.");
+            pkg.destination = destination;
+          }
+          pkg.updatedAt = new Date().toISOString();
+          return send(res, 200, pkg);
+        }
+      } else if (!mediaKey && method === "POST") {
+        const files = parseMultipart(raw, req.headers["content-type"]);
+        if (files.length === 0) return problem(res, 400, "Choose at least one photo.");
+        if (files.length > 20) return problem(res, 400, "Upload at most 20 photos at a time.");
+        for (const f of files) {
+          if (f.data.length > MAX_PHOTO_BYTES) return problem(res, 400, `${f.filename} is larger than 10 MB.`);
+          if (!sniff(f.data)) return problem(res, 400, `${f.filename} isn't a JPEG, PNG or WebP photo.`);
+        }
+        let sortKey = pkg.media.length ? Math.max(...pkg.media.map((m) => m.sortKey)) + 1 : 0;
+        let hasHero = pkg.media.some((m) => m.role === "Hero");
+        const added = files.map((f) => {
+          const type = sniff(f.data);
+          const path = `/media/packages/${pkg.id.replaceAll("-", "")}/${randomUUID().replaceAll("-", "")}.${type.split("/")[1].replace("jpeg", "jpg")}`;
+          db.files.set(path, { type, data: f.data });
+          const item = {
+            id: randomUUID(),
+            role: hasHero ? "Gallery" : "Hero",
+            path,
+            alt: f.filename.replace(/\.[^.]+$/, "").replace(/[-_.]+/g, " "),
+            caption: null,
+            width: null,
+            height: null,
+            videoProvider: null,
+            videoId: null,
+            sortKey: sortKey++,
+          };
+          hasHero = true;
+          return item;
+        });
+        pkg.media.push(...added);
+        pkg.updatedAt = new Date().toISOString();
+        return send(res, 201, added);
+      } else if (mediaKey === "order" && method === "PUT") {
+        const ids = body.ids ?? [];
+        if (
+          new Set(ids).size !== ids.length ||
+          ids.length !== pkg.media.length ||
+          !pkg.media.every((m) => ids.includes(m.id))
+        )
+          return problem(res, 400, "Send every photo of this package exactly once.");
+        ids.forEach((mid, i) => (pkg.media.find((m) => m.id === mid).sortKey = i));
+        return send(res, 200, sorted());
+      } else if (mediaKey && method === "PATCH") {
+        const item = pkg.media.find((m) => m.id === mediaKey);
+        if (!item) return problem(res, 404, "Photo not found.");
+        if (body.role === "Hero") pkg.media.forEach((m) => m.role === "Hero" && (m.role = "Gallery"));
+        if (body.role) item.role = body.role;
+        if (body.alt !== undefined) item.alt = body.alt?.trim() || null;
+        if (body.caption !== undefined) item.caption = body.caption?.trim() || null;
+        return send(res, 200, item);
+      } else if (mediaKey && method === "DELETE") {
+        const item = pkg.media.find((m) => m.id === mediaKey);
+        if (!item) return problem(res, 404, "Photo not found.");
+        pkg.media = pkg.media.filter((m) => m.id !== mediaKey);
+        db.files.delete(item.path);
+        if (item.role === "Hero") {
+          const next = sorted().find((m) => m.role === "Gallery" && !m.videoProvider);
+          if (next) next.role = "Hero";
+        }
+        return send(res, 204);
+      }
+    }
   }
 
   // ── Users ──

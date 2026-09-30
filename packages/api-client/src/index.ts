@@ -30,6 +30,48 @@ export type AuthResponse = Schemas["AuthResponse"];
 export type MeResponse = Schemas["MeResponse"];
 export type UserResponse = Schemas["UserResponse"];
 
+export type DestinationResponse = Schemas["DestinationResponse"];
+export type PackageCard = Schemas["PackageCardResponse"];
+export type PackageList = Schemas["PackageListResponse"];
+export type PackageDetail = Schemas["PackageDetailResponse"];
+export type PackageFeature = Schemas["FeatureResponse"];
+export type PackageAddOn = Schemas["AddOnResponse"];
+export type SeasonRate = Schemas["SeasonRateResponse"];
+export type Quote = Schemas["QuoteResponse"];
+export type PackageMedia = Schemas["MediaResponse"];
+
+export type AdminPackageSummary = Schemas["AdminPackageSummary"];
+export type AdminPackageList = Schemas["AdminPackageListResponse"];
+export type AdminPackageDetail = Schemas["AdminPackageDetail"];
+export type CreatePackageRequest = Schemas["CreatePackageRequest"];
+export type UpdatePackageRequest = Schemas["UpdatePackageRequest"];
+export type UpdateMediaRequest = Schemas["UpdateMediaRequest"];
+export type AdminStay = Schemas["AdminStay"];
+export type AdminFeature = Schemas["AdminFeature"];
+export type AdminRate = Schemas["AdminRate"];
+export type AdminAddOn = Schemas["AdminAddOn"];
+export type AdminReference = Schemas["AdminReferenceResponse"];
+export type PropertyOption = Schemas["PropertyOption"];
+export type SeasonOption = Schemas["SeasonOption"];
+export type FeatureOption = Schemas["FeatureOption"];
+export type StayInput = Schemas["StayInput"];
+export type FeatureInput = Schemas["FeatureInput"];
+export type RateInput = Schemas["RateInput"];
+export type AddOnInput = Schemas["AddOnInput"];
+
+export type EnquiryType = Schemas["EnquiryType"];
+export type EnquiryStatus = Schemas["EnquiryStatus"];
+export type CreateEnquiryRequest = Schemas["CreateEnquiryRequest"];
+export type CreateEnquiryResponse = Schemas["CreateEnquiryResponse"];
+export type EnquiryListItem = Schemas["EnquiryListItem"];
+export type EnquiryList = Schemas["EnquiryListResponse"];
+export type EnquiryStatusCounts = Schemas["EnquiryStatusCounts"];
+export type EnquiryDetail = Schemas["EnquiryDetail"];
+export type UpdateEnquiryRequest = Schemas["UpdateEnquiryRequest"];
+
+/** Query for GET /api/v1/packages (the public list: published packages only). */
+export type PackageListQuery = NonNullable<paths["/api/v1/packages"]["get"]["parameters"]["query"]>;
+
 /**
  * Every API error: RFC 9457 Problem Details plus the API's extensions. `code`
  * is stable (e.g. UNAUTHENTICATED, VALIDATION_FAILED, NO_RATE_FOR_DATE), so

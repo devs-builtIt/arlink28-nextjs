@@ -7,7 +7,7 @@ import { noDbImports } from "./eslint.boundaries.mjs";
 
 export default tseslint.config(
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/out/**", "**/dist/**", "**/public/**", "**/.turbo/**"],
+    ignores: ["**/node_modules/**", "**/.next/**", "**/.next-e2e/**", "**/out/**", "**/dist/**", "**/public/**", "**/.turbo/**"],
   },
   {
     files: [

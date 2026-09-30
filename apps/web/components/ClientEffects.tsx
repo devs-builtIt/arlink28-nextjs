@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
  *     globals.css) fade/slide into place the first time they enter
  *     the viewport, by toggling a `.visible` class.
  *
- *  2. Newsletter / contact forms: since this static export has no
+ *  2. Newsletter / booking forms: since this static export has no
  *     backend, submitting a form just shows a friendly inline
  *     confirmation instead of doing a real network request. Wire your
  *     own API route or form handler here when you're ready.
@@ -49,9 +49,7 @@ export default function ClientEffects() {
   }, [pathname]);
 
   useEffect(() => {
-    const forms = document.querySelectorAll<HTMLFormElement>(
-      "form.newsletter-form, form.booking-form, form.contact-form",
-    );
+    const forms = document.querySelectorAll<HTMLFormElement>("form.newsletter-form, form.booking-form");
 
     const handleSubmit = (e: SubmitEvent) => {
       e.preventDefault();

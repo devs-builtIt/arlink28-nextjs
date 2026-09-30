@@ -43,7 +43,13 @@ test.describe("on a phone", () => {
       expect(overflow, path).toBeLessThanOrEqual(0);
     }
     await signIn(page, SUPER_ADMIN);
-    for (const path of ["/admin/dashboard", "/admin/users/invite", "/admin/change-password"]) {
+    for (const path of [
+      "/admin/dashboard",
+      "/admin/users/invite",
+      "/admin/change-password",
+      "/admin/packages",
+      "/admin/packages/sala-mara-escape",
+    ]) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, path).toBeLessThanOrEqual(0);

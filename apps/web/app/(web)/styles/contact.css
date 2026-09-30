@@ -1,0 +1,435 @@
+/*
+ * The contact page (/contact) and the enquiry form on it.
+ *
+ * Same footing as the package pages: the site's dark header and footer stay, and the content
+ * between them sits on a light surface, because this is a form people fill in and trust.
+ * Outfit, and the site red for the one primary action. No glows, no blur, no entrance effects.
+ *
+ * Every rule hangs off a .ct-* class. The site's bare `header` and `nav` rules leak, so neither
+ * element is used here.
+ */
+
+.ct-top,
+.ct-page,
+.ct-faq {
+  --canvas: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #0b1726;
+  --body: #33425a;
+  --muted: #5b6b82;
+  --line: #e3e8ee;
+  --line-strong: #cdd5e0;
+  --red: #e61e2b;
+  --red-deep: #c91621;
+  --error: #8f111a;
+  --error-bg: #fdf0f1;
+  --gutter: max(4%, calc((100% - 1240px) / 2));
+}
+
+/* ── The dark band under the site header ─────────────────────────────── */
+
+.ct-top {
+  padding: 132px var(--gutter) 48px;
+  background: var(--bg-secondary, #0b121c);
+}
+.ct-top h1 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(32px, 4.6vw, 46px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.ct-top p {
+  max-width: 58ch;
+  margin: 0;
+  color: #dfe6f1;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+/* ── Form and side column ────────────────────────────────────────────── */
+
+.ct-page {
+  padding: 40px var(--gutter) 64px;
+  background: var(--canvas);
+  color: var(--body);
+  font-family: Outfit, sans-serif;
+}
+.ct-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: start;
+}
+.ct-card {
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.ct-card h2 {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.ct-card-lead {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.ct-page :focus-visible,
+.ct-faq :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* What the guest is enquiring about */
+.ct-about {
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--canvas);
+}
+.ct-about-label {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.ct-about-title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.ct-about-title a {
+  color: inherit;
+}
+.ct-about-meta {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.ct-about-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.ct-about-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
+  color: var(--muted);
+  font-size: 15px;
+}
+.ct-about-total strong {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 600;
+}
+.ct-about-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Fields */
+.ct-form {
+  display: grid;
+  gap: 18px;
+}
+.ct-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.ct-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.ct-field > label,
+.ct-field > .ct-label {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+.ct-optional {
+  color: var(--muted);
+  font-weight: 400;
+}
+.ct-field input,
+.ct-field select,
+.ct-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font:
+    400 16px Outfit,
+    sans-serif;
+}
+.ct-field textarea {
+  min-height: 132px;
+  padding: 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.ct-field input::placeholder,
+.ct-field textarea::placeholder {
+  color: #7a889c;
+}
+.ct-field [aria-invalid="true"] {
+  border-color: var(--error);
+}
+.ct-error {
+  margin: 0;
+  color: var(--error);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.ct-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.ct-consent input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--red);
+}
+.ct-consent a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+/* The honeypot: out of sight and out of reach for people, in the page for bots. */
+.ct-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ct-alert {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.ct-alert a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ct-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  background: var(--red);
+  color: #fff;
+  font:
+    600 16px/1 Outfit,
+    sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.ct-button:hover {
+  border-color: var(--red-deep);
+  background: var(--red-deep);
+  color: #fff;
+}
+.ct-button:disabled {
+  border-color: #b9c2cf;
+  background: #b9c2cf;
+  cursor: default;
+}
+.ct-button-plain {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+.ct-button-plain:hover {
+  border-color: var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+}
+.ct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* After sending */
+.ct-done:focus {
+  outline: none;
+}
+.ct-done h2 {
+  margin-bottom: 14px;
+}
+.ct-done p {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.ct-reference {
+  display: inline-block;
+  margin: 2px 0 18px;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Side column */
+.ct-aside {
+  display: grid;
+  gap: 20px;
+}
+.ct-aside .ct-card {
+  padding: 24px;
+}
+.ct-aside h2 {
+  margin-bottom: 14px;
+  font-size: 18px;
+}
+.ct-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ct-list li {
+  display: grid;
+  gap: 2px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.ct-list span {
+  color: var(--muted);
+  font-size: 14px;
+}
+.ct-list a {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  word-break: break-word;
+}
+.ct-list-lead a {
+  font-size: 18px;
+  font-weight: 600;
+}
+.ct-hours {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+}
+.ct-hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ct-hours dt {
+  color: var(--body);
+}
+.ct-hours dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 500;
+  text-align: right;
+}
+.ct-offices {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ── Questions ───────────────────────────────────────────────────────── */
+
+.ct-faq {
+  padding: 8px var(--gutter) 72px;
+  background: var(--canvas);
+  font-family: Outfit, sans-serif;
+}
+.ct-faq h2 {
+  margin: 0 0 20px;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 600;
+}
+.ct-faq-list {
+  max-width: 820px;
+  border-top: 1px solid var(--line-strong);
+}
+.ct-faq details {
+  border-bottom: 1px solid var(--line-strong);
+}
+.ct-faq summary {
+  padding: 18px 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ct-faq details p {
+  margin: 0 0 18px;
+  color: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .ct-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ct-top {
+    padding-top: 108px;
+  }
+  .ct-card {
+    padding: 22px 18px;
+  }
+  .ct-row,
+  .ct-about-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ct-actions .ct-button {
+    width: 100%;
+  }
+}

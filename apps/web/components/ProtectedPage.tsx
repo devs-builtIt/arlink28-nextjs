@@ -10,17 +10,21 @@ import Brand from "@/components/admin/Brand";
 interface Props {
   children: ReactNode;
   requireSuperAdmin?: boolean;
+  /** Use the whole width of the work area, for pages with their own layout (lists, forms). */
+  wide?: boolean;
 }
 
 type NavItem = { href: string; label: string; icon: string; superAdminOnly?: boolean };
 
 const NAV: NavItem[] = [
   { href: "/admin/dashboard", label: "Overview", icon: "fa-table-cells-large" },
+  { href: "/admin/packages", label: "Packages", icon: "fa-suitcase-rolling" },
+  { href: "/admin/enquiries", label: "Enquiries", icon: "fa-inbox" },
   { href: "/admin/users", label: "Staff", icon: "fa-user-group", superAdminOnly: true },
   { href: "/admin/change-password", label: "Password", icon: "fa-key" },
 ];
 
-export default function ProtectedPage({ children, requireSuperAdmin = false }: Props) {
+export default function ProtectedPage({ children, requireSuperAdmin = false, wide = false }: Props) {
   const { user, isLoading, isSuperAdmin, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -107,7 +111,7 @@ export default function ProtectedPage({ children, requireSuperAdmin = false }: P
         </div>
 
         <main className="main">
-          <div className="main-inner">
+          <div className={wide ? "main-inner main-wide" : "main-inner"}>
             {requireSuperAdmin && !isSuperAdmin ? (
               <div className="denied">
                 <p>Only super admins can open this page.</p>

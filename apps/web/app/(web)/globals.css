@@ -47,6 +47,10 @@ body {
   min-height: 100vh;
   display: flex;
 }
+/* Scroll-reveal starts elements 50px off to the side; without this they widen the page on a phone. */
+main {
+  overflow-x: clip;
+}
 ::-webkit-scrollbar {
   width: 10px;
 }

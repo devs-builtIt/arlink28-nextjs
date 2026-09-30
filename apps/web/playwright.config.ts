@@ -38,7 +38,7 @@ export default defineConfig({
     },
     {
       command: `pnpm build && pnpm start -p ${WEB_PORT}`,
-      env: { API_URL: `http://localhost:${API_PORT}`, NEXT_TELEMETRY_DISABLED: "1" },
+      env: { API_URL: `http://localhost:${API_PORT}`, NEXT_TELEMETRY_DISABLED: "1", NEXT_DIST_DIR: ".next-e2e" },
       port: WEB_PORT,
       timeout: 300_000,
       reuseExistingServer: false,

@@ -462,7 +462,7 @@ export default function HomePage() {
                     $9,664
                     <span>Per Family</span>
                   </div>
-                  <Link className="featured-travel-btn" href="/giraffe-manor">
+                  <Link className="featured-travel-btn" href="/packages?partner=giraffe-manor">
                     Enquire Now
                     <i className="fa-solid fa-arrow-right"></i>
                   </Link>
