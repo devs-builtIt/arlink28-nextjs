@@ -4,6 +4,12 @@
 export type EnquiryPackage = {
   slug: string;
   title: string;
+  /** HolidayPackage, Flight, HotelReservation or VisaSupport. Only holidays have nights, a party and a quote. */
+  kind: string;
+  /** Where the listing lives on the site. */
+  path: string;
+  /** For the other kinds: the route, the room or the country, in a line. */
+  summary: string;
   nights: number;
   adults: number;
   children: number;

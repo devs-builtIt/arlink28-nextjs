@@ -36,6 +36,21 @@ test.describe("on a phone", () => {
     await expect(menu).toHaveAttribute("aria-expanded", "false");
   });
 
+  test("the flight, hotel and visa pages don't scroll sideways", async ({ page }) => {
+    for (const path of [
+      "/flights",
+      "/flights/nairobi-to-zanzibar",
+      "/hotels/nairobi-city-hotel",
+      "/visas",
+      "/visas/kenya-eta#details",
+      "/contact?package=Nairobi+City+Hotel&slug=nairobi-city-hotel",
+    ]) {
+      await page.goto(path);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, path).toBeLessThanOrEqual(0);
+    }
+  });
+
   test("pages don't scroll sideways", async ({ page }) => {
     for (const path of ["/admin/login", "/admin/reset-password/request"]) {
       await page.goto(path);

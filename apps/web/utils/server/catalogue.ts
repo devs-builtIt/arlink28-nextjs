@@ -9,6 +9,8 @@ export const PAGE_SIZE = 12;
 export type ListQuery = {
   destination?: string;
   category?: string;
+  /** HolidayPackage (the API's default), Flight, HotelReservation or VisaSupport. */
+  type?: string;
   partner?: string;
   adults?: number;
   sort?: string;

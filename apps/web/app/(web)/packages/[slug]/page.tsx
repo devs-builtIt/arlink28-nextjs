@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { PackageDetail, PackageFeature } from "@arlink28/api-client";
 import Gallery, { type GalleryImage } from "@/components/packages/Gallery";
 import SectionTabs from "@/components/packages/SectionTabs";
 import BookingCard from "@/components/packages/BookingCard";
 import ReviewsSection from "@/components/packages/ReviewsSection";
+import { publicPath } from "@/utils/publicProducts";
 import { getPackage } from "@/utils/server/catalogue";
 import { isUploaded, testPhotosEnabled, testPhotosFor } from "@/utils/testPhotos";
 import {
@@ -24,6 +25,7 @@ type Params = { params: { slug: string } };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const pkg = await getPackage(params.slug).catch(() => null);
   if (!pkg) return { title: "Package not found | ARLink28" };
+  if (pkg.productType && pkg.productType !== "HolidayPackage") return { title: `${pkg.title} | ARLink28` };
   const hero = pkg.media.find((m) => m.role === "Hero" && !m.videoProvider);
   const description = pkg.seoDescription ?? pkg.summary ?? pkg.subtitle ?? undefined;
   return {
@@ -75,6 +77,8 @@ export default async function PackagePage({ params }: Params) {
     throw new Error("The package could not be loaded.");
   });
   if (!pkg) notFound();
+  // A flight, hotel or visa that was opened here belongs at its own address.
+  if (pkg.productType && pkg.productType !== "HolidayPackage") permanentRedirect(publicPath(pkg.productType, pkg.slug));
 
   // The hero first, then the gallery in order, then the poster. Videos are not shown yet.
   const ownImages: GalleryImage[] = [...pkg.media]

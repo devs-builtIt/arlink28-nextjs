@@ -82,8 +82,96 @@ const REFERENCE = buildReference();
 const seasonRanges = (slug) =>
   (CATALOGUE.seasons[slug] ?? []).map(([a, b]) => ({ start: `${REF_YEAR}-${a}`, end: `${REF_YEAR}-${b}` }));
 
+/**
+ * Published flights, hotel reservations and visa support, as the public API returns them. They live apart
+ * from the catalogue, so the admin's counts and the holiday pages are unaffected.
+ */
+const PRODUCTS = (() => {
+  const dest = (slug) => CATALOGUE.destinations.find((d) => d.slug === slug);
+  const make = (productType, slug, title, destination, summary, fromPriceMinor, details, more = {}) => {
+    const base = {
+      id: `prod-${slug}`,
+      slug,
+      title,
+      subtitle: null,
+      summary,
+      description: more.description ?? null,
+      category: productType.toUpperCase(),
+      destination: dest(destination),
+      nights: 0,
+      minNights: 0,
+      adults: 0,
+      children: 0,
+      pricingBasis: "PerParty",
+      baseCurrency: "USD",
+      fromPriceMinor,
+      featured: !!more.featured,
+      seoTitle: null,
+      seoDescription: null,
+      productType,
+      details,
+    };
+    return {
+      card: { ...base, heroImagePath: null, highlights: [], lodges: [] },
+      detail: { ...base, stays: [], features: more.features ?? [], addOns: [], media: [], rates: [] },
+    };
+  };
+  const feature = (section, label, sortOrder) => ({ section, label, icon: null, footnote: null, sortOrder });
+  return [
+    make(
+      "Flight",
+      "nairobi-to-zanzibar",
+      "Nairobi to Zanzibar",
+      "nairobi",
+      "Return fares on the coast run.",
+      18000,
+      {
+        origin: "Nairobi",
+        destination: "Zanzibar",
+        tripType: "Return",
+        cabin: "Economy",
+        airline: "Coastal Air",
+        baggage: "One 23 kg bag and hand luggage",
+        fareNotes: "Changes are free up to 48 hours before departure.",
+      },
+      { featured: true },
+    ),
+    make("Flight", "mara-to-nairobi", "Masai Mara to Nairobi", "masai-mara", "A short hop after your safari.", null, {
+      origin: "Masai Mara",
+      destination: "Nairobi",
+      tripType: "OneWay",
+    }),
+    make(
+      "HotelReservation",
+      "nairobi-city-hotel",
+      "Nairobi City Hotel",
+      "nairobi",
+      "A quiet room close to the park.",
+      9500,
+      {
+        hotelName: "Nairobi City Hotel",
+        roomType: "Deluxe double",
+        boardBasis: "BedAndBreakfast",
+        cancellationTerms: "Free cancellation up to 7 days before arrival.",
+      },
+      { features: [feature("Included", "Breakfast for two", 0), feature("Included", "Airport pickup", 1)] },
+    ),
+    make("VisaSupport", "kenya-eta", "Kenya eTA", "nairobi", "We apply for your Kenya eTA.", 2500, {
+      country: "Kenya",
+      visaType: "eTA",
+      processingTime: "3 working days",
+      validity: "90 days",
+      serviceFeeMinor: 2500,
+      governmentFeeMinor: 3000,
+      currency: "USD",
+      requirements: ["Passport valid for six months", "Return ticket"],
+    }),
+  ];
+})();
+
 /** A card: what the list shows, with three highlights and the lodges, as the API derives them. */
 function publicCard(card) {
+  if (card.productType) return card;
   const detail = CATALOGUE.details[card.slug];
   const label = (f) => f.label;
   const highlights = [
@@ -475,7 +563,11 @@ function seedEnquiries(now, packages) {
 
 /** What kind of listing an enquiry is about, from its package; null for a general message. */
 const enquiryKind = (packageTitle) =>
-  packageTitle ? (db.packages.find((p) => p.title === packageTitle)?.productType ?? "HolidayPackage") : null;
+  packageTitle
+    ? (db.packages.find((p) => p.title === packageTitle)?.productType ??
+      PRODUCTS.find((x) => x.detail.title === packageTitle)?.detail.productType ??
+      "HolidayPackage")
+    : null;
 
 const enquiryItem = ({
   id,
@@ -535,7 +627,7 @@ function createEnquiry(res, body) {
 
   let detail = null;
   if (type === "Package") {
-    detail = CATALOGUE.details[body.slug];
+    detail = CATALOGUE.details[body.slug] ?? PRODUCTS.find((x) => x.detail.slug === body.slug)?.detail;
     if (!detail) return problem(res, 400, `Package '${body.slug}' is not available for enquiries.`);
   }
   const now = new Date().toISOString();
@@ -768,11 +860,19 @@ const server = http.createServer(async (req, res) => {
   if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, CATALOGUE.destinations);
   if (method === "GET" && path === "/api/v1/packages") {
     const q = Object.fromEntries([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
-    let items = CATALOGUE.packages;
+    // Holidays unless another kind, or "all", is asked for: the API's rule.
+    const kind = q.type ?? "HolidayPackage";
+    const products = PRODUCTS.map((x) => x.card);
+    let items =
+      kind === "all"
+        ? [...CATALOGUE.packages, ...products]
+        : kind === "HolidayPackage"
+          ? CATALOGUE.packages
+          : products.filter((c) => c.productType === kind);
     if (q.destination) items = items.filter((p) => p.destination.slug === q.destination);
     if (q.category) items = items.filter((p) => p.category === q.category);
     if (q.partner)
-      items = items.filter((p) => CATALOGUE.details[p.slug].stays.some((st) => st.propertySlug === q.partner));
+      items = items.filter((p) => CATALOGUE.details[p.slug]?.stays.some((st) => st.propertySlug === q.partner));
     if (q.adults) items = items.filter((p) => p.adults >= Number(q.adults));
     if (q.q) {
       const term = q.q.toLowerCase();
@@ -801,7 +901,10 @@ const server = http.createServer(async (req, res) => {
   }
   const pkgMatch = path.match(/^\/api\/v1\/packages\/([^/]+)(\/quote)?$/);
   if (method === "GET" && pkgMatch) {
-    const detail = CATALOGUE.details[decodeURIComponent(pkgMatch[1])];
+    const slug = decodeURIComponent(pkgMatch[1]);
+    const product = PRODUCTS.find((x) => x.detail.slug === slug);
+    if (product && !pkgMatch[2]) return send(res, 200, product.detail);
+    const detail = CATALOGUE.details[slug];
     if (!detail) return problem(res, 404, `Package '${pkgMatch[1]}' not found.`);
     if (!pkgMatch[2]) return send(res, 200, publicDetail(detail));
     return quote(res, detail, url.searchParams);
