@@ -265,7 +265,9 @@ test.describe("a package", () => {
     const card = page.getByRole("complementary", { name: "Get a price" });
     await expect(card).toContainText("US$7,472");
     await card.getByRole("link", { name: "Enquire about this package" }).click();
-    await expect(page).toHaveURL(/\/contact\?package=Sala\+Mara\+Escape&slug=sala-mara-escape&checkIn=\d{4}-\d{2}-\d{2}&nights=2/);
+    await expect(page).toHaveURL(
+      /\/contact\?package=Sala\+Mara\+Escape&slug=sala-mara-escape&checkIn=\d{4}-\d{2}-\d{2}&nights=2/,
+    );
   });
 
   test("has sample reviews, labelled as such", async ({ page }) => {
