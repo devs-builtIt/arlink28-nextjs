@@ -64,6 +64,7 @@ export const adminPackagesApi = {
       search?: string;
       destination?: string;
       category?: string;
+      type?: string;
       page?: number;
       pageSize?: number;
     } = {},

@@ -21,7 +21,17 @@ import { SaveBar, useSaver } from "@/components/admin/SectionSave";
 import { Crumbs, Panel, Skeleton, Spinner, StatusBadge } from "@/components/admin/ui";
 import { adminPackagesApi, packagesApi } from "@/utils/api/packages";
 import { ApiError } from "@/utils/api/client";
-import { fullDate, isoDateFromToday, money, party, timeAgo, unitLabel } from "@/components/admin/format";
+import { fromMinor, fullDate, isoDateFromToday, money, party, timeAgo, unitLabel } from "@/components/admin/format";
+import {
+  detailsFromApi,
+  detailsProblem,
+  detailsSummary,
+  detailsToPayload,
+  fromPriceMinor,
+  isHoliday,
+  typeLabel,
+  type OtherType,
+} from "@/utils/productTypes";
 
 function QuoteChecker({ pkg }: { pkg: PackageDetail }) {
   const [checkIn, setCheckIn] = useState(isoDateFromToday(14));
@@ -141,6 +151,9 @@ function QuoteChecker({ pkg }: { pkg: PackageDetail }) {
 
 function toValues(pkg: AdminPackageDetail): PackageFormValues {
   return {
+    productType: pkg.productType as PackageFormValues["productType"],
+    fromPrice: fromMinor(pkg.fromPriceMinor),
+    details: isHoliday(pkg.productType) ? {} : detailsFromApi(pkg.productType as OtherType, pkg.details),
     title: pkg.title,
     destinationId: pkg.destination.id,
     category: pkg.category,
@@ -159,27 +172,36 @@ function toValues(pkg: AdminPackageDetail): PackageFormValues {
   };
 }
 
-type Part = "core" | "pricing" | "listing";
+type Part = "core" | "pricing" | "listing" | "offer";
 
 /** The fields each part of the package details owns. A part saves only its own. */
 const PART_FIELDS: Record<Part, (keyof PackageFormValues)[]> = {
   core: ["title", "destinationId", "category", "nights", "adults", "children", "subtitle", "summary"],
   pricing: ["minNights", "pricingBasis", "baseCurrency"],
   listing: ["description", "seoTitle", "seoDescription", "featured"],
+  // A flight, hotel reservation or visa: what is on offer, and what it costs.
+  offer: ["details", "fromPrice", "baseCurrency"],
 };
+/** Holiday-only facts (style, nights, party) aren't part of a flight, hotel reservation or visa. */
+const HOLIDAY_ONLY = new Set<keyof PackageFormValues>(["category", "nights", "adults", "children"]);
+
+const fieldsOf = (part: Part, type: string) =>
+  PART_FIELDS[part].filter((key) => isHoliday(type) || !HOLIDAY_ONLY.has(key));
 
 const pick = (values: PackageFormValues, part: Part) =>
-  Object.fromEntries(PART_FIELDS[part].map((key) => [key, values[key]]));
+  Object.fromEntries(fieldsOf(part, values.productType).map((key) => [key, values[key]]));
 
 /** One part of the package details, with its own Save. */
 function DetailsForm({
   pkg,
   part,
   onSaved,
+  properties,
 }: {
   pkg: AdminPackageDetail;
   part: Part;
   onSaved: (pkg: AdminPackageDetail) => void;
+  properties?: AdminReference["properties"];
 }) {
   const [destinations, setDestinations] = useState<DestinationResponse[]>([]);
   const [values, setValues] = useState(() => toValues(pkg));
@@ -197,8 +219,33 @@ function DetailsForm({
   const saved = toValues(pkg);
   const dirty = JSON.stringify(pick(values, part)) !== JSON.stringify(pick(saved, part));
 
+  const other = !isHoliday(pkg.productType);
+  const offerProblem =
+    part === "offer" && other ? detailsProblem(pkg.productType as OtherType, values.details) : undefined;
+
   function submit(e: FormEvent) {
     e.preventDefault();
+    if (offerProblem) {
+      saver.setFieldErrors({ details: [offerProblem] });
+      return;
+    }
+    if (part === "offer") {
+      const type = pkg.productType as OtherType;
+      saver.run(
+        () =>
+          adminPackagesApi.update(pkg.id, {
+            details: detailsToPayload(type, values.details, values.baseCurrency.trim()),
+            fromPriceMinor: fromPriceMinor(type, values.details, values.fromPrice),
+            baseCurrency: values.baseCurrency.trim(),
+          }),
+        (updated) => {
+          onSaved(updated);
+          setValues((current) => ({ ...current, ...pick(toValues(updated), part) }));
+        },
+        (err) => saver.setFieldErrors(err instanceof ApiError ? err.fieldErrors : undefined),
+      );
+      return;
+    }
     const own = pick(values, part) as Partial<PackageFormValues>;
     const trimmed = Object.fromEntries(
       Object.entries(own).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value]),
@@ -220,7 +267,8 @@ function DetailsForm({
   return (
     <form onSubmit={submit}>
       <PackageFields
-        part={part}
+        part={part === "offer" ? "typeDetails" : part}
+        properties={properties}
         values={values}
         onChange={(next) => {
           saver.clearSaved();
@@ -230,15 +278,17 @@ function DetailsForm({
         fieldErrors={saver.fieldErrors}
         disabled={saver.saving}
       />
+      {offerProblem && saver.fieldErrors?.details && <span className="field-error">{offerProblem}</span>}
       <SaveBar dirty={dirty} {...saver} />
     </form>
   );
 }
 
-type TabId = "details" | "stays" | "pricing" | "included" | "addons" | "photos" | "listing";
+type TabId = "details" | "offer" | "stays" | "pricing" | "included" | "addons" | "photos" | "listing";
 
 const TABS: { id: TabId; label: string; count?: (pkg: AdminPackageDetail) => number }[] = [
   { id: "details", label: "Details" },
+  { id: "offer", label: "Offer" },
   { id: "stays", label: "Stays", count: (p) => p.stays.length },
   { id: "pricing", label: "Pricing", count: (p) => p.rates.length },
   { id: "included", label: "Included", count: (p) => p.features.length },
@@ -247,8 +297,19 @@ const TABS: { id: TabId; label: string; count?: (pkg: AdminPackageDetail) => num
   { id: "listing", label: "Listing" },
 ];
 
+/** The tabs a kind of listing has: holidays build on stays and rates, the others on one "Offer" form. */
+const tabsFor = (type: string) =>
+  TABS.filter((t) => (isHoliday(type) ? t.id !== "offer" : !["stays", "pricing", "addons"].includes(t.id)));
+
 /** What a draft still needs before it can go live, and the tab where each is fixed. */
 function readiness(pkg: AdminPackageDetail): { label: string; met: boolean; tab: TabId }[] {
+  if (!isHoliday(pkg.productType)) {
+    return [
+      { label: "A summary", met: !!pkg.summary?.trim(), tab: "details" },
+      { label: `The ${typeLabel(pkg.productType).toLowerCase()} details`, met: !!pkg.details, tab: "offer" },
+      { label: "A main photo", met: pkg.media.filter((m) => m.role === "Hero").length === 1, tab: "photos" },
+    ];
+  }
   const placed = pkg.stays.reduce((sum, s) => sum + s.nights, 0);
   return [
     { label: "A summary", met: !!pkg.summary?.trim(), tab: "details" },
@@ -274,18 +335,19 @@ function TabStrip({
   onSelect: (id: TabId) => void;
 }) {
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const tabs = tabsFor(pkg.productType);
     const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
     if (!step) return;
     e.preventDefault();
-    const index = TABS.findIndex((t) => t.id === active);
-    const next = TABS[(index + step + TABS.length) % TABS.length];
+    const index = tabs.findIndex((t) => t.id === active);
+    const next = tabs[(index + step + tabs.length) % tabs.length];
     onSelect(next.id);
     document.getElementById(`tab-${next.id}`)?.focus();
   }
 
   return (
     <div className="pk-jump" role="tablist" aria-label="Sections" onKeyDown={onKeyDown}>
-      {TABS.map((t) => {
+      {tabsFor(pkg.productType).map((t) => {
         const count = t.count?.(pkg);
         return (
           <button
@@ -385,7 +447,8 @@ function PackageEditor() {
 
   // The address holds the tab, so a refresh or a shared link opens the same one.
   const requested = params.get("tab");
-  const tab: TabId = TABS.some((t) => t.id === requested) ? (requested as TabId) : "details";
+  const [kind, setKind] = useState("HolidayPackage");
+  const tab: TabId = tabsFor(kind).some((t) => t.id === requested) ? (requested as TabId) : "details";
   function selectTab(next: TabId) {
     const query = new URLSearchParams(params.toString());
     if (next === "details") query.delete("tab");
@@ -403,6 +466,7 @@ function PackageEditor() {
   useEffect(() => {
     Promise.all([adminPackagesApi.get(id), adminPackagesApi.reference()])
       .then(([detail, refs]) => {
+        setKind(detail.productType);
         setPkg(detail);
         setReference(refs);
       })
@@ -451,6 +515,7 @@ function PackageEditor() {
   }
 
   const setMedia = (media: PackageMedia[]) => setPkg({ ...pkg, media });
+  const holiday = isHoliday(pkg.productType);
   const checks = readiness(pkg);
   const outstanding = checks.filter((c) => !c.met);
 
@@ -465,11 +530,20 @@ function PackageEditor() {
               <StatusBadge status={pkg.status} />
             </div>
             <p className="pk-meta">
+              {!holiday && <span>{typeLabel(pkg.productType)}</span>}
               <span>{pkg.destination.name}</span>
-              <span>
-                {pkg.nights} {pkg.nights === 1 ? "night" : "nights"}
-              </span>
-              <span>{party(pkg.adults, pkg.children)}</span>
+              {holiday ? (
+                <>
+                  <span>
+                    {pkg.nights} {pkg.nights === 1 ? "night" : "nights"}
+                  </span>
+                  <span>{party(pkg.adults, pkg.children)}</span>
+                </>
+              ) : (
+                detailsSummary(pkg.productType, pkg.details) && (
+                  <span>{detailsSummary(pkg.productType, pkg.details)}</span>
+                )
+              )}
               <span>
                 {pkg.fromPriceMinor != null ? (
                   <>
@@ -494,48 +568,66 @@ function PackageEditor() {
               </Panel>
             </TabPanel>
 
-            <TabPanel id="stays" active={tab}>
-              <Panel
-                id="stays"
-                title="Where you stay"
-                description="The lodges and camps, in the order guests visit them."
-              >
-                <StaysEditor pkg={pkg} reference={reference} onSaved={setPkg} />
-              </Panel>
-            </TabPanel>
+            {!holiday && (
+              <TabPanel id="offer" active={tab}>
+                <Panel
+                  id="offer"
+                  title={`${typeLabel(pkg.productType)} details`}
+                  description="What the customer is being offered, and what it costs."
+                >
+                  <DetailsForm pkg={pkg} part="offer" onSaved={setPkg} properties={reference.properties} />
+                </Panel>
+              </TabPanel>
+            )}
 
-            <TabPanel id="pricing" active={tab}>
-              <Panel
-                id="pricing"
-                title="Pricing"
-                description="How the package is priced, and the shortest stay guests can book."
-              >
-                <DetailsForm pkg={pkg} part="pricing" onSaved={setPkg} />
-              </Panel>
-              <Panel
-                id="rates"
-                title="Season rates"
-                description="What it costs in each season. The from-price on the site comes from these."
-              >
-                <RatesEditor pkg={pkg} reference={reference} onSaved={setPkg} />
-              </Panel>
-            </TabPanel>
+            {holiday && (
+              <>
+                <TabPanel id="stays" active={tab}>
+                  <Panel
+                    id="stays"
+                    title="Where you stay"
+                    description="The lodges and camps, in the order guests visit them."
+                  >
+                    <StaysEditor pkg={pkg} reference={reference} onSaved={setPkg} />
+                  </Panel>
+                </TabPanel>
+
+                <TabPanel id="pricing" active={tab}>
+                  <Panel
+                    id="pricing"
+                    title="Pricing"
+                    description="How the package is priced, and the shortest stay guests can book."
+                  >
+                    <DetailsForm pkg={pkg} part="pricing" onSaved={setPkg} />
+                  </Panel>
+                  <Panel
+                    id="rates"
+                    title="Season rates"
+                    description="What it costs in each season. The from-price on the site comes from these."
+                  >
+                    <RatesEditor pkg={pkg} reference={reference} onSaved={setPkg} />
+                  </Panel>
+                </TabPanel>
+              </>
+            )}
 
             <TabPanel id="included" active={tab}>
               <Panel
                 id="included"
                 title="What's included"
-                description="Choose from the shared list, or write a line for this package only."
+                description="Choose from the shared list, or write a line for this one only."
               >
                 <FeaturesEditor pkg={pkg} reference={reference} onSaved={setPkg} />
               </Panel>
             </TabPanel>
 
-            <TabPanel id="addons" active={tab}>
-              <Panel id="addons" title="Add-ons" description="Extras guests can add when they get a price.">
-                <AddOnsEditor pkg={pkg} onSaved={setPkg} />
-              </Panel>
-            </TabPanel>
+            {holiday && (
+              <TabPanel id="addons" active={tab}>
+                <Panel id="addons" title="Add-ons" description="Extras guests can add when they get a price.">
+                  <AddOnsEditor pkg={pkg} onSaved={setPkg} />
+                </Panel>
+              </TabPanel>
+            )}
 
             <TabPanel id="photos" active={tab}>
               <Panel
@@ -591,7 +683,7 @@ function PackageEditor() {
               </section>
             )}
 
-            {live && (tab === "pricing" || tab === "addons") && <QuoteChecker pkg={live} />}
+            {live && holiday && (tab === "pricing" || tab === "addons") && <QuoteChecker pkg={live} />}
           </aside>
         </div>
       </div>

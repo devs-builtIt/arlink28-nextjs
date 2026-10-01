@@ -1024,3 +1024,45 @@
   text-align: left;
   color: var(--ink);
 }
+
+/* ── New: what kind of listing ──────────────────────────────────────── */
+
+.adm .pk-types {
+  margin: 0;
+  padding: 0;
+  max-width: 640px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--pk-line);
+  border-radius: 8px;
+}
+.adm .pk-types li + li {
+  border-top: 1px solid var(--pk-line);
+}
+.adm .pk-types a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.adm .pk-types a:hover {
+  background: var(--tile);
+}
+.adm .pk-types strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+}
+.adm .pk-types span > span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.adm .pk-types i {
+  color: var(--muted);
+  font-size: 12px;
+}

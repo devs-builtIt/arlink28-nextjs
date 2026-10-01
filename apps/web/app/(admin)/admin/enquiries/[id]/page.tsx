@@ -10,6 +10,7 @@ import { Crumbs, Panel, Skeleton } from "@/components/admin/ui";
 import { EnquiryStatusBadge, STATUSES, dayLabel, typeLabel } from "@/components/admin/EnquiryParts";
 import { fullDate, money, timeAgo } from "@/components/admin/format";
 import { ApiError } from "@/utils/api/client";
+import { isHoliday, typeLabel as kindLabel } from "@/utils/productTypes";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
 
 /** A phone number as WhatsApp wants it: digits only, and long enough to be one. */
@@ -256,6 +257,12 @@ export default function EnquiryDetailPage() {
                           )}
                         </dd>
                       </div>
+                      {enquiry.productType && !isHoliday(enquiry.productType) && (
+                        <div>
+                          <dt>Kind</dt>
+                          <dd>{kindLabel(enquiry.productType)}</dd>
+                        </div>
+                      )}
                       <div>
                         <dt>Check-in</dt>
                         <dd>

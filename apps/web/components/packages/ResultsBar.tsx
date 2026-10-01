@@ -14,13 +14,23 @@ const SORTS: [string, string][] = [
 
 type Props = {
   total: number | null;
+  /** What the results are called, singular and plural. Packages by default. */
+  noun?: [string, string];
+  /** The orderings offered. Everything but shortest-stay by default. */
+  sorts?: [string, string][];
   destinations: DestinationResponse[];
   /** The partner behind the ?partner= filter, when there is one. */
   partnerName?: string;
 };
 
 /** How many packages, what they are filtered by (each removable), and how they are ordered. */
-export default function ResultsBar({ total, destinations, partnerName }: Props) {
+export default function ResultsBar({
+  total,
+  destinations,
+  partnerName,
+  noun = ["package", "packages"],
+  sorts = SORTS,
+}: Props) {
   const { params, go, pending } = useListing();
 
   const chips: { key: keyof ListingParams; label: string }[] = [
@@ -41,7 +51,11 @@ export default function ResultsBar({ total, destinations, partnerName }: Props) 
     <div className="pkgs-resultsbar" id="results">
       <div className="pkgs-resultsbar-main">
         <h2 role="status">
-          {total === null ? "Packages" : total === 1 ? "1 package" : `${total} packages`}
+          {total === null
+            ? noun[1].charAt(0).toUpperCase() + noun[1].slice(1)
+            : total === 1
+              ? `1 ${noun[0]}`
+              : `${total} ${noun[1]}`}
           {pending && <span className="sr-only"> Updating</span>}
         </h2>
         {chips.length > 0 && (
@@ -71,7 +85,7 @@ export default function ResultsBar({ total, destinations, partnerName }: Props) 
       <label className="pkgs-sort">
         <span>Sort by</span>
         <select value={params.sort} onChange={(e) => go({ sort: e.target.value })}>
-          {SORTS.map(([value, label]) => (
+          {sorts.map(([value, label]) => (
             <option key={value || "featured"} value={value}>
               {label}
             </option>

@@ -7,6 +7,7 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { packagesApi } from "@/utils/api/packages";
 import { nightsLabel, partyLabel, priceLabel } from "@/utils/packages";
+import { PUBLIC, isPublicType } from "@/utils/publicProducts";
 
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "./types";
 
@@ -40,7 +41,7 @@ function fieldFromServer(key: string): Field | null {
 export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNights, initialType }: Props) {
   const [type, setType] = useState<GeneralType>(initialType);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
-  const [nights, setNights] = useState(initialNights ?? pkg?.nights ?? 0);
+  const [nights, setNights] = useState(initialNights ?? (pkg?.nights || 1));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -60,9 +61,13 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
   const done = useRef<HTMLDivElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
+  const holiday = pkg === null || !isPublicType(pkg.kind);
+  const more = pkg && isPublicType(pkg.kind) ? PUBLIC[pkg.kind] : { path: "/packages", plural: "packages" };
+
   // The price follows the date and length the guest picks, from the same rules the package page uses.
   useEffect(() => {
-    if (!pkg || !/^\d{4}-\d{2}-\d{2}$/.test(checkIn) || checkIn < isoToday()) {
+    // Only holiday packages have season rates to quote from.
+    if (!pkg || !holiday || !/^\d{4}-\d{2}-\d{2}$/.test(checkIn) || checkIn < isoToday()) {
       setQuote(null);
       setQuoteNote(null);
       return;
@@ -89,7 +94,7 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
         });
     }, 250);
     return () => clearTimeout(timer);
-  }, [pkg, checkIn, nights]);
+  }, [pkg, holiday, checkIn, nights]);
 
   useEffect(() => {
     if (reference) done.current?.focus();
@@ -124,7 +129,7 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
       type: isPackage ? "Package" : type,
       slug: pkg?.slug ?? null,
       checkIn: isPackage && checkIn ? checkIn : null,
-      nights: isPackage && checkIn ? nights : null,
+      nights: isPackage && checkIn && (holiday || pkg?.kind === "HotelReservation") ? nights : null,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim() || null,
@@ -176,8 +181,8 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
           <a className="ct-button" href={chat} target="_blank" rel="noopener noreferrer">
             Message us on WhatsApp
           </a>
-          <Link className="ct-button ct-button-plain" href="/packages">
-            Browse more packages
+          <Link className="ct-button ct-button-plain" href={more.path}>
+            Browse more {more.plural}
           </Link>
         </div>
       </div>
@@ -194,31 +199,49 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
         <div className="ct-about">
           <p className="ct-about-label">You are enquiring about</p>
           <p className="ct-about-title">
-            <Link href={`/packages/${pkg.slug}`}>{pkg.title}</Link>
+            <Link href={pkg.path}>{pkg.title}</Link>
           </p>
-          <p className="ct-about-meta">
-            {partyLabel(pkg.adults, pkg.children)}, {nightsLabel(nights)}
-          </p>
+          {(holiday || pkg.summary) && (
+            <p className="ct-about-meta">
+              {holiday ? `${partyLabel(pkg.adults, pkg.children)}, ${nightsLabel(nights)}` : pkg.summary}
+            </p>
+          )}
           <div className="ct-about-fields">
-            <div className="ct-field">
-              <label htmlFor="ct-checkin">Check-in date</label>
-              <input
-                id="ct-checkin"
-                name="checkIn"
-                type="date"
-                value={checkIn}
-                min={minToday}
-                onChange={(e) => setCheckIn(e.target.value)}
-                aria-invalid={err("checkIn") ? true : undefined}
-                aria-describedby={described("checkIn")}
-              />
-              {err("checkIn") && (
-                <p className="ct-error" id="ct-checkIn-error">
-                  {err("checkIn")}
-                </p>
-              )}
-            </div>
-            {pkg.extraNightsSold && (
+            {pkg.kind !== "VisaSupport" && (
+              <div className="ct-field">
+                <label htmlFor="ct-checkin">
+                  {holiday || pkg.kind === "HotelReservation" ? "Check-in date" : "Preferred travel date"}
+                </label>
+                <input
+                  id="ct-checkin"
+                  name="checkIn"
+                  type="date"
+                  value={checkIn}
+                  min={minToday}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  aria-invalid={err("checkIn") ? true : undefined}
+                  aria-describedby={described("checkIn")}
+                />
+                {err("checkIn") && (
+                  <p className="ct-error" id="ct-checkIn-error">
+                    {err("checkIn")}
+                  </p>
+                )}
+              </div>
+            )}
+            {pkg.kind === "HotelReservation" && (
+              <div className="ct-field">
+                <label htmlFor="ct-nights">Nights</label>
+                <select id="ct-nights" value={nights} onChange={(e) => setNights(Number(e.target.value))}>
+                  {Array.from({ length: 21 }, (_, i) => i + 1).map((n) => (
+                    <option key={n} value={n}>
+                      {nightsLabel(n)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {holiday && pkg.extraNightsSold && (
               <div className="ct-field">
                 <label htmlFor="ct-nights">Nights</label>
                 <select id="ct-nights" value={nights} onChange={(e) => setNights(Number(e.target.value))}>
@@ -243,7 +266,11 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
               {quoteNote}
             </p>
           )}
-          <p className="ct-about-note">Nothing is charged online. Our team confirms the details with you.</p>
+          <p className="ct-about-note">
+            {holiday
+              ? "Nothing is charged online. Our team confirms the details with you."
+              : "Nothing is charged online. Our team sends you a price and the next steps."}
+          </p>
         </div>
       )}
 

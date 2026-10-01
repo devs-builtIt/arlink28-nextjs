@@ -25,7 +25,12 @@ export default function Header() {
     setMenuOpen(false);
   }, [pathname]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isActive = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : href === "/packages"
+        ? ["/packages", "/flights", "/hotels", "/visas"].some((p) => pathname.startsWith(p))
+        : pathname.startsWith(href);
 
   return (
     <>

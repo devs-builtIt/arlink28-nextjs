@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import KindSwitcher from "@/components/products/KindSwitcher";
 import HeroSearch from "@/components/packages/HeroSearch";
 import { ListingProvider, type ListingParams } from "@/components/packages/ListingContext";
 import PackageCard from "@/components/packages/PackageCard";
@@ -60,6 +61,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Sea
     <ListingProvider params={params}>
       <section className="pkgs-hero">
         <div className="pkgs-hero-inner">
+          <KindSwitcher active="/packages" />
           <h1>Find your next safari</h1>
           <p>Safari and lodge packages across Africa, with the price up front.</p>
         </div>

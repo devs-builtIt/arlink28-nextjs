@@ -10,6 +10,7 @@ import { Pagination, Skeleton } from "@/components/admin/ui";
 import { EnquiryStatusBadge, STATUSES, tripLine, typeLabel } from "@/components/admin/EnquiryParts";
 import { fullDate, timeAgo } from "@/components/admin/format";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
+import { PRODUCT_TYPES, isHoliday, isProductType, typeLabel as kindLabel } from "@/utils/productTypes";
 
 const SIZES = [10, 25, 50, 100];
 const TABS: [EnquiryStatus | "", string][] = [
@@ -64,6 +65,8 @@ function EnquiriesList() {
   // The address holds the state, so a refresh or the back button lands where you were.
   const asked = params.get("status") ?? "";
   const status = (STATUSES as string[]).includes(asked) ? (asked as EnquiryStatus) : "";
+  const rawKind = params.get("type");
+  const kind = isProductType(rawKind) ? rawKind : "";
   const page = Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1);
   const requestedSize = Number.parseInt(params.get("size") ?? "25", 10);
   const size = SIZES.includes(requestedSize) ? requestedSize : 25;
@@ -89,14 +92,14 @@ function EnquiriesList() {
     setLoading(true);
     setError("");
     adminEnquiriesApi
-      .list({ status: status || undefined, page, pageSize: size })
+      .list({ status: status || undefined, type: kind || undefined, page, pageSize: size })
       .then((result) => !stale && setData(result))
       .catch((err) => !stale && setError(err instanceof Error ? err.message : "Enquiries couldn't be loaded."))
       .finally(() => !stale && setLoading(false));
     return () => {
       stale = true;
     };
-  }, [status, page, size, retry]);
+  }, [status, kind, page, size, retry]);
 
   // A page past the end (a shorter list, or an old link) goes to the last one.
   const lastPage = data ? Math.max(1, Math.ceil(data.total / size)) : 1;
@@ -156,6 +159,22 @@ function EnquiriesList() {
           })}
         </div>
 
+        <div className="pk-filters">
+          <select
+            className="input"
+            aria-label="Kind"
+            value={kind}
+            onChange={(e) => update({ type: e.target.value || undefined })}
+          >
+            <option value="">All kinds</option>
+            {PRODUCT_TYPES.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.plural}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {error && (
           <Notice tone="error">
             {error}{" "}
@@ -205,7 +224,14 @@ function EnquiriesList() {
                           {e.packageTitle ?? e.subject ?? typeLabel(e.type)}
                         </Link>
                         <span className="enq-sub">
-                          {e.packageTitle ? (trip ?? "No dates given") : typeLabel(e.type)}
+                          {e.packageTitle
+                            ? [
+                                e.productType && !isHoliday(e.productType) ? kindLabel(e.productType) : null,
+                                trip ?? "No dates given",
+                              ]
+                                .filter(Boolean)
+                                .join(", ")
+                            : typeLabel(e.type)}
                         </span>
                       </td>
                       <td>
@@ -225,11 +251,18 @@ function EnquiriesList() {
 
           {!firstLoad && items.length === 0 && !loading && !pastEnd && (
             <div className="pk-empty">
-              {status ? (
+              {status || kind ? (
                 <>
                   <h2>Nothing here</h2>
-                  <p>There are no {status.toLowerCase()} enquiries.</p>
-                  <button type="button" className="btn btn-quiet" onClick={() => update({ status: undefined })}>
+                  <p>
+                    There are no {status.toLowerCase()} enquiries{kind ? ` about ${kindLabel(kind).toLowerCase()}` : ""}
+                    .
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn-quiet"
+                    onClick={() => update({ status: undefined, type: undefined })}
+                  >
                     Show all enquiries
                   </button>
                 </>

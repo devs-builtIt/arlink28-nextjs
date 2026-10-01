@@ -1,7 +1,14 @@
 import type { ChangeEvent } from "react";
-import type { DestinationResponse } from "@arlink28/api-client";
+import type { DestinationResponse, PropertyOption } from "@arlink28/api-client";
+import TypeDetailsFields from "@/components/admin/TypeDetailsFields";
+import { isHoliday, type DetailValues, type OtherType, type ProductType } from "@/utils/productTypes";
 
 export type PackageFormValues = {
+  productType: ProductType;
+  /** Flights and hotels only: the from-price as typed. Holidays get theirs from their rates. */
+  fromPrice: string;
+  /** Flights, hotels and visas only: the type's own fields as typed. */
+  details: DetailValues;
   title: string;
   destinationId: string;
   category: string;
@@ -22,6 +29,9 @@ export type PackageFormValues = {
 
 /** What most packages are, so a new one starts one field away from done. */
 export const NEW_PACKAGE: PackageFormValues = {
+  productType: "HolidayPackage",
+  fromPrice: "",
+  details: {},
   title: "",
   destinationId: "",
   category: "SAFARI",
@@ -39,6 +49,19 @@ export const NEW_PACKAGE: PackageFormValues = {
   featured: false,
 };
 
+/** A new flight, hotel reservation or visa: no nights or party, and USD until told otherwise. */
+export const newProduct = (productType: ProductType): PackageFormValues =>
+  isHoliday(productType)
+    ? NEW_PACKAGE
+    : { ...NEW_PACKAGE, productType, category: "", nights: 0, adults: 0, minNights: 0 };
+
+/** The body fields of a holiday package's own form, without the ones only the other types have. */
+export function holidayBody(values: PackageFormValues) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { productType, fromPrice, details, ...rest } = values;
+  return rest;
+}
+
 const CATEGORIES: [string, string][] = [
   ["SAFARI", "Safari"],
   ["LODGE", "Lodge stay"],
@@ -52,14 +75,17 @@ type Props = {
   fieldErrors?: Record<string, string[]>;
   disabled?: boolean;
   autoFocus?: boolean;
+  /** Our properties, for a hotel reservation to point at. */
+  properties?: PropertyOption[];
   /** Adds pricing basis, minimum stay, currency, description, search listing and featured. */
   extended?: boolean;
   /**
    * Which fields to show. "core": name, destination, type, party, tagline, summary. "pricing": minimum
    * stay, pricing basis and currency. "listing": description, search listing and featured.
-   * "basics" is core and listing together (the create stepper). Leave out for the core fields.
+   * "basics" is core and listing together (the create stepper). "typeDetails": what a flight, hotel reservation
+   * or visa adds (route, room, fees, price). Leave out for the core fields.
    */
-  part?: "core" | "pricing" | "listing" | "basics";
+  part?: "core" | "pricing" | "listing" | "basics" | "typeDetails";
 };
 
 /** ASP.NET reports validation errors under the property name, capitalised. */
@@ -78,7 +104,9 @@ export default function PackageFields({
   autoFocus,
   extended,
   part,
+  properties,
 }: Props) {
+  const holiday = isHoliday(values.productType);
   const set = <K extends keyof PackageFormValues>(key: K, value: PackageFormValues[K]) =>
     onChange({ ...values, [key]: value });
   const number = (key: "nights" | "minNights" | "adults" | "children") => (e: ChangeEvent<HTMLInputElement>) =>
@@ -86,16 +114,31 @@ export default function PackageFields({
 
   return (
     <>
-      {part !== "pricing" && part !== "listing" && (
+      {part === "typeDetails" && !holiday && (
+        <TypeDetailsFields
+          type={values.productType as OtherType}
+          details={values.details}
+          onDetails={(details) => set("details", details)}
+          fromPrice={values.fromPrice}
+          onFromPrice={(fromPrice) => set("fromPrice", fromPrice)}
+          baseCurrency={values.baseCurrency}
+          onCurrency={(baseCurrency) => set("baseCurrency", baseCurrency)}
+          properties={properties}
+          fieldErrors={fieldErrors}
+          disabled={disabled}
+          autoFocus={autoFocus}
+        />
+      )}
+      {part !== "pricing" && part !== "listing" && part !== "typeDetails" && (
         <>
           <div className="field">
-            <label htmlFor="pkg-title">Package name</label>
+            <label htmlFor="pkg-title">{holiday ? "Package name" : "Name"}</label>
             <input
               id="pkg-title"
               className="input"
               value={values.title}
               onChange={(e) => set("title", e.target.value)}
-              placeholder="Giraffe Manor Luxury Escape"
+              placeholder={holiday ? "Giraffe Manor Luxury Escape" : undefined}
               maxLength={200}
               required
               autoFocus={autoFocus}
@@ -126,73 +169,77 @@ export default function PackageFields({
               </select>
               <FieldError name="destinationId" errors={fieldErrors} />
             </div>
-            <div className="field">
-              <label htmlFor="pkg-category">Type</label>
-              <select
-                id="pkg-category"
-                className="input"
-                value={values.category}
-                onChange={(e) => set("category", e.target.value)}
-                disabled={disabled}
-              >
-                {CATEGORIES.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {holiday && (
+              <div className="field">
+                <label htmlFor="pkg-category">Style</label>
+                <select
+                  id="pkg-category"
+                  className="input"
+                  value={values.category}
+                  onChange={(e) => set("category", e.target.value)}
+                  disabled={disabled}
+                >
+                  {CATEGORIES.map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
-          <div className="field-row field-row-3">
-            <div className="field">
-              <label htmlFor="pkg-nights">Nights</label>
-              <input
-                id="pkg-nights"
-                className="input"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                max={60}
-                value={values.nights || ""}
-                onChange={number("nights")}
-                required
-                disabled={disabled}
-              />
-              <FieldError name="nights" errors={fieldErrors} />
+          {holiday && (
+            <div className="field-row field-row-3">
+              <div className="field">
+                <label htmlFor="pkg-nights">Nights</label>
+                <input
+                  id="pkg-nights"
+                  className="input"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={60}
+                  value={values.nights || ""}
+                  onChange={number("nights")}
+                  required
+                  disabled={disabled}
+                />
+                <FieldError name="nights" errors={fieldErrors} />
+              </div>
+              <div className="field">
+                <label htmlFor="pkg-adults">Adults</label>
+                <input
+                  id="pkg-adults"
+                  className="input"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={20}
+                  value={values.adults || ""}
+                  onChange={number("adults")}
+                  required
+                  disabled={disabled}
+                />
+                <FieldError name="adults" errors={fieldErrors} />
+              </div>
+              <div className="field">
+                <label htmlFor="pkg-children">Children</label>
+                <input
+                  id="pkg-children"
+                  className="input"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={20}
+                  value={values.children}
+                  onChange={number("children")}
+                  disabled={disabled}
+                />
+                <FieldError name="children" errors={fieldErrors} />
+              </div>
             </div>
-            <div className="field">
-              <label htmlFor="pkg-adults">Adults</label>
-              <input
-                id="pkg-adults"
-                className="input"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                max={20}
-                value={values.adults || ""}
-                onChange={number("adults")}
-                required
-                disabled={disabled}
-              />
-              <FieldError name="adults" errors={fieldErrors} />
-            </div>
-            <div className="field">
-              <label htmlFor="pkg-children">Children</label>
-              <input
-                id="pkg-children"
-                className="input"
-                type="number"
-                inputMode="numeric"
-                min={0}
-                max={20}
-                value={values.children}
-                onChange={number("children")}
-                disabled={disabled}
-              />
-              <FieldError name="children" errors={fieldErrors} />
-            </div>
-          </div>
+          )}
 
           <div className="field">
             <label htmlFor="pkg-subtitle">
@@ -227,7 +274,7 @@ export default function PackageFields({
           </div>
         </>
       )}
-      {(extended || part === "pricing") && (
+      {holiday && (extended || part === "pricing") && (
         <>
           <div className="field-row field-row-3">
             <div className="field">

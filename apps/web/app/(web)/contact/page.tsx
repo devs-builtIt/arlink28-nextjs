@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
+import { headline, publicPath } from "@/utils/publicProducts";
 import { getPackage } from "@/utils/server/catalogue";
 import "../styles/contact.css";
 
@@ -46,6 +47,9 @@ export default async function ContactPage({ searchParams }: Search) {
   const pkg: EnquiryPackage | null = detail && {
     slug: detail.slug,
     title: detail.title,
+    kind: detail.productType,
+    path: publicPath(detail.productType, detail.slug),
+    summary: headline(detail.productType, detail.details)?.replace(detail.title, "").trim() ?? "",
     nights: detail.nights,
     adults: detail.adults,
     children: detail.children,
@@ -67,7 +71,7 @@ export default async function ContactPage({ searchParams }: Search) {
         <h1>Contact us</h1>
         <p>
           {pkg
-            ? "Tell us who you are and we will come back to you about this package."
+            ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
             : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us on WhatsApp."}
         </p>
       </div>

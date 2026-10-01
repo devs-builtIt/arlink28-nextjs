@@ -15,6 +15,7 @@ export interface paths {
             parameters: {
                 query?: {
                     status?: string;
+                    type?: string;
                     page?: number;
                     pageSize?: number;
                 };
@@ -161,6 +162,7 @@ export interface paths {
                     search?: string;
                     destination?: string;
                     category?: string;
+                    type?: string;
                     page?: number;
                     pageSize?: number;
                 };
@@ -1435,6 +1437,7 @@ export interface paths {
                     Page?: number;
                     Sort?: string;
                     Q?: string;
+                    Type?: string;
                 };
                 header?: never;
                 path?: never;
@@ -2077,6 +2080,8 @@ export interface components {
             rates: components["schemas"]["AdminRate"][];
             addOns: components["schemas"]["AdminAddOn"][];
             media: components["schemas"]["MediaResponse"][];
+            productType: string;
+            details?: unknown;
         };
         AdminPackageListResponse: {
             items: components["schemas"]["AdminPackageSummary"][];
@@ -2110,6 +2115,8 @@ export interface components {
             mediaCount: number;
             /** Format: date-time */
             updatedAt: string;
+            productType: string;
+            details?: unknown;
         };
         AdminRate: {
             /** Format: uuid */
@@ -2195,6 +2202,10 @@ export interface components {
             description?: string | null;
             pricingBasis?: components["schemas"]["PricingBasis"];
             baseCurrency?: string | null;
+            productType?: components["schemas"]["ProductType"];
+            details?: unknown;
+            /** Format: int64 */
+            fromPriceMinor?: number | null;
         };
         DateRangeResponse: {
             /** Format: date */
@@ -2239,6 +2250,7 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+            productType?: string | null;
         };
         EnquiryListItem: {
             /** Format: uuid */
@@ -2259,6 +2271,7 @@ export interface components {
             email: string;
             /** Format: date-time */
             createdAt: string;
+            productType?: string | null;
         };
         EnquiryListResponse: {
             items: components["schemas"]["EnquiryListItem"][];
@@ -2365,6 +2378,8 @@ export interface components {
             heroImagePath?: string | null;
             highlights: string[];
             lodges: string[];
+            productType: string;
+            details?: unknown;
         };
         PackageDetailResponse: {
             /** Format: uuid */
@@ -2396,6 +2411,8 @@ export interface components {
             addOns: components["schemas"]["AddOnResponse"][];
             media: components["schemas"]["MediaResponse"][];
             rates: components["schemas"]["SeasonRateResponse"][];
+            productType: string;
+            details?: unknown;
         };
         PackageListResponse: {
             items: components["schemas"]["PackageCardResponse"][];
@@ -2427,6 +2444,8 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** @enum {string} */
+        ProductType: "HolidayPackage" | "Flight" | "HotelReservation" | "VisaSupport";
         PropertyOption: {
             /** Format: uuid */
             id: string;
@@ -2550,6 +2569,9 @@ export interface components {
             featured?: boolean | null;
             seoTitle?: string | null;
             seoDescription?: string | null;
+            details?: unknown;
+            /** Format: int64 */
+            fromPriceMinor?: number | null;
         };
         UserResponse: {
             /** Format: uuid */

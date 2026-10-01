@@ -14,6 +14,20 @@ test.describe("the enquiries list", () => {
     await expect(page).toHaveURL(/\/admin\/enquiries$/);
   });
 
+  test("can be narrowed to the kind of listing asked about, and the tabs follow", async ({ page }) => {
+    await page.getByLabel("Kind").selectOption("HolidayPackage");
+    await expect(rows(page)).toHaveCount(1);
+    await expect(rows(page).first()).toContainText("Sala Mara Escape");
+    await expect(tab(page, /^All/)).toContainText("1");
+    await expect(page).toHaveURL(/type=HolidayPackage/);
+
+    await page.getByLabel("Kind").selectOption("Flight");
+    await expect(page.getByRole("heading", { name: "Nothing here" })).toBeVisible();
+    await expect(page.getByText("about flight")).toBeVisible();
+    await page.getByRole("button", { name: "Show all enquiries" }).click();
+    await expect(rows(page)).toHaveCount(3);
+  });
+
   test("shows every enquiry, newest first, with the counts and how many wait", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Enquiries", level: 1 })).toBeVisible();
     await expect(page.getByText("1 enquiry is waiting for a reply.")).toBeVisible();
