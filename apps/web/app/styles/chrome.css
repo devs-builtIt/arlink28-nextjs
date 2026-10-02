@@ -471,28 +471,6 @@
 .sf-bottom a:hover {
   color: var(--ink);
 }
-.sf-offices {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 5vw, 72px);
-  margin-top: clamp(40px, 6vw, 72px);
-  padding-top: 28px;
-  border-top: 1px solid var(--hairline);
-}
-.sf-offices address {
-  font-style: normal;
-  color: var(--ink-2);
-  line-height: 1.6;
-  max-width: 46ch;
-}
-.sf-offices strong {
-  display: block;
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 1.2rem;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
 .sf-bottom {
   display: flex;
   flex-wrap: wrap;
@@ -519,9 +497,6 @@
   }
 }
 @media (max-width: 560px) {
-  .sf-offices {
-    grid-template-columns: 1fr;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .sh,

@@ -115,17 +115,6 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="sf-offices">
-          <address>
-            <strong>Lagos</strong>
-            2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233
-          </address>
-          <address>
-            <strong>London</strong>
-            71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom
-          </address>
-        </div>
-
         <div className="sf-bottom">
           <p>© 2026 ARLink28. All rights reserved.</p>
           <ul>
