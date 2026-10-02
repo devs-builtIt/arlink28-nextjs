@@ -2445,7 +2445,7 @@ export interface components {
             [key: string]: unknown;
         };
         /** @enum {string} */
-        ProductType: "HolidayPackage" | "Flight" | "HotelReservation" | "VisaSupport";
+        ProductType: "HolidayPackage" | "Flight" | "HotelReservation" | "VisaSupport" | "PrivateCharter";
         PropertyOption: {
             /** Format: uuid */
             id: string;

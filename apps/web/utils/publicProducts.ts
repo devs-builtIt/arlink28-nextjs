@@ -77,7 +77,11 @@ export const PUBLIC: Record<PublicType, Copy> = {
 
 /** The customer-facing address of a listing of any kind. */
 export const publicPath = (type: string, slug: string) =>
-  isPublicType(type) ? `${PUBLIC[type].path}/${slug}` : `/packages/${slug}`;
+  type === "PrivateCharter"
+    ? `/elite-jets#${slug}`
+    : isPublicType(type)
+      ? `${PUBLIC[type].path}/${slug}`
+      : `/packages/${slug}`;
 
 const TRIP: Record<string, string> = { OneWay: "One way", Return: "Return", MultiCity: "Multi-city" };
 const CABIN: Record<string, string> = {
@@ -107,6 +111,7 @@ export function headline(type: string, details: unknown): string | null {
   if (type === "Flight") return [text(d.origin), text(d.destination)].filter(Boolean).join(" to ") || null;
   if (type === "HotelReservation") return text(d.hotelName) ?? text(d.roomType);
   if (type === "VisaSupport") return [text(d.country), text(d.visaType)].filter(Boolean).join(", ") || null;
+  if (type === "PrivateCharter") return text(d.tagline) ?? text(d.tier);
   return null;
 }
 

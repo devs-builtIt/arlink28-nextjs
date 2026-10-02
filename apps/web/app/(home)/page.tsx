@@ -22,6 +22,7 @@ import {
 } from "@/content/home-proof";
 import { priceLabel } from "@/utils/packages";
 import { listPackages } from "@/utils/server/catalogue";
+import { loadEliteTiers } from "@/utils/server/elite";
 import { isUploaded, testPhotosEnabled, testPhotosFor } from "@/utils/testPhotos";
 
 const SITE = "https://arlink28.com";
@@ -118,33 +119,6 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const JETS = [
-  {
-    title: "Business trips",
-    chip: "Charter",
-    text: "Flexible departure times for you and your team.",
-    image: "/images/home/jet-tarmac-900.webp",
-    alt: "A private jet on the apron under a sunset sky",
-    h: 1350,
-  },
-  {
-    title: "Family and leisure",
-    chip: "Charter",
-    text: "Fly private to the lodge or island you are heading for.",
-    image: "/images/home/jet-sunset-900.webp",
-    alt: "A private jet parked on the tarmac at golden hour",
-    h: 575,
-  },
-  {
-    title: "Groups and events",
-    chip: "Charter",
-    text: "Travel together, in a cabin sized to your party.",
-    image: "/images/home/jet-cabin-900.webp",
-    alt: "The leather seats and oval windows of a private jet cabin",
-    h: 675,
-  },
-];
-
 // Blog teasers. There are no published posts yet, so the cards say "Coming soon" and link to the blog page.
 const POSTS = [
   {
@@ -176,7 +150,7 @@ function Title({ sticker, children, id }: { sticker: string; children: React.Rea
 }
 
 export default async function HomePage() {
-  const packages = await loadPackages();
+  const [packages, tiers] = await Promise.all([loadPackages(), loadEliteTiers()]);
 
   return (
     <div className="hm">
@@ -455,26 +429,26 @@ export default async function HomePage() {
               Private charter, arranged around you.
             </h2>
             <div className="hm-jets-side" data-rv>
-              <p>Tell us where you want to fly, when, and with how many people. The team comes back with options.</p>
-              <Link className="hm-btn hm-btn-primary" href="/contact?type=Booking">
-                Book a charter
+              <p>Three ways to fly private, from the essentials to a journey designed entirely around you.</p>
+              <Link className="hm-btn hm-btn-primary" href="/elite-jets">
+                See the tiers
               </Link>
             </div>
           </div>
           <ul className="hm-pkgs">
-            {JETS.map((jet, i) => (
-              <li key={jet.title} data-rv style={{ ["--i" as string]: i }}>
-                <Link href="/contact?type=Booking">
-                  <img src={jet.image} alt={jet.alt} loading="lazy" decoding="async" width={900} height={jet.h} />
-                  <span className="hm-chip">{jet.chip}</span>
+            {tiers.map((t, i) => (
+              <li key={t.slug} data-rv style={{ ["--i" as string]: i }}>
+                <Link href={`/elite-jets#${t.slug}`}>
+                  <img src={t.image} alt={t.alt} loading="lazy" decoding="async" width={900} height={675} />
+                  <span className="hm-chip">Elite</span>
                   <span className="hm-go" aria-hidden="true">
                     <svg viewBox="0 0 16 16">
                       <path d="M4 12 12 4M5.5 4H12v6.5" />
                     </svg>
                   </span>
                   <span className="hm-pkg-text">
-                    <strong>{jet.title}</strong>
-                    <span>{jet.text}</span>
+                    <strong>{t.title}</strong>
+                    <span>{t.tagline}</span>
                   </span>
                 </Link>
               </li>
