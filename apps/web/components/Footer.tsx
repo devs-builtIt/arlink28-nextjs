@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PHONES, WHATSAPP_URL } from "@/content/home-proof";
+import { PHONES } from "@/content/home-proof";
 import FooterMark from "./FooterMark";
 
 const TRAVEL = [
@@ -64,9 +64,6 @@ export default function Footer() {
               >
                 <i className="fa-brands fa-tiktok" aria-hidden="true"></i>
               </a>
-              <a href={WHATSAPP_URL} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
-                <i className="fa-brands fa-whatsapp" aria-hidden="true"></i>
-              </a>
             </div>
           </div>
 
@@ -95,11 +92,6 @@ export default function Footer() {
           <div className="sf-col">
             <h2>Talk to us</h2>
             <ul>
-              <li>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                  WhatsApp
-                </a>
-              </li>
               {PHONES.map((p) => (
                 <li key={p.href}>
                   <a href={p.href}>{p.label}</a>

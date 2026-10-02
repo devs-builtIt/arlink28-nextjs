@@ -49,10 +49,7 @@ test.describe("enquiring about a package", () => {
     await expect(done).toContainText(/ENQ-\d{4}-\d{4}/);
     await expect(done).toContainText("jane@example.com");
     await expect(done).toBeFocused();
-    await expect(done.getByRole("link", { name: "Message us on WhatsApp" })).toHaveAttribute(
-      "href",
-      /wa\.me\/2347047009128\?text=.*ENQ-/,
-    );
+    await expect(done.getByRole("link", { name: /WhatsApp/ })).toHaveCount(0);
     await expect(form(page)).toHaveCount(0);
   });
 
@@ -131,7 +128,7 @@ test.describe("a general message", () => {
 });
 
 test.describe("when sending fails", () => {
-  test("keeps what was typed, says so, and offers WhatsApp", async ({ page }) => {
+  test("keeps what was typed, and says so", async ({ page }) => {
     await page.route("**/api/v1/enquiries", (route) =>
       route.fulfill({
         status: 500,
@@ -145,7 +142,7 @@ test.describe("when sending fails", () => {
 
     const alert = form(page).getByRole("alert");
     await expect(alert).toContainText("Something went wrong on our side");
-    await expect(alert.getByRole("link", { name: "message us on WhatsApp" })).toBeVisible();
+    await expect(alert.getByRole("link", { name: /WhatsApp/ })).toHaveCount(0);
     await expect(form(page).getByLabel("Your name")).toHaveValue("Jane Doe");
     await expect(form(page).getByRole("button", { name: "Send enquiry" })).toBeEnabled();
   });
@@ -195,7 +192,7 @@ test.describe("the rest of the page", () => {
     const aside = page.getByRole("complementary", { name: "Other ways to reach us" });
     await expect(aside.getByRole("link", { name: "+234 704 700 9128" }).first()).toHaveAttribute(
       "href",
-      "https://wa.me/2347047009128",
+      "tel:+2347047009128",
     );
     await expect(aside.getByRole("link", { name: "support@arlinks.com" })).toBeVisible();
     await expect(aside).toContainText("Ikoyi, Lagos");

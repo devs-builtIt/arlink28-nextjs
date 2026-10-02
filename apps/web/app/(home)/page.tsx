@@ -19,7 +19,6 @@ import {
   REVIEWS,
   REVIEW_SUMMARY,
   SAMPLE,
-  WHATSAPP_URL,
   WHY,
 } from "@/content/home-proof";
 import { priceLabel } from "@/utils/packages";
@@ -57,7 +56,7 @@ const STEPS = [
   {
     icon: "person",
     title: "We come back with a price",
-    text: "A member of the team replies by email or WhatsApp with options, and checks the details with you.",
+    text: "A member of the team replies by email or phone with options, and checks the details with you.",
   },
   {
     icon: "shield",

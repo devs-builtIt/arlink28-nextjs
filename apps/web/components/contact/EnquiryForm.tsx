@@ -21,7 +21,6 @@ type Props = {
   initialType: GeneralType;
 };
 
-const WHATSAPP = "https://wa.me/2347047009128";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const isoToday = () => {
@@ -160,27 +159,23 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
       setFailure(
         err instanceof ApiError
           ? err.message
-          : "We couldn't send your enquiry. Check your connection and try again, or message us on WhatsApp.",
+          : "We couldn't send your enquiry. Check your connection and try again, or call us.",
       );
     }
     setSending(false);
   }
 
   if (reference) {
-    const chat = `${WHATSAPP}?text=${encodeURIComponent(`Hello, my enquiry reference is ${reference}.`)}`;
     return (
       <div className="ct-done" ref={done} tabIndex={-1} role="status">
         <h2>We have your enquiry</h2>
         <p>Your reference is</p>
         <span className="ct-reference">{reference}</span>
         <p>
-          Our team will contact you at <strong>{email.trim()}</strong>. If it is urgent, message us on WhatsApp and
-          quote the reference.
+          Our team will contact you at <strong>{email.trim()}</strong>. If it is urgent, call us and quote the
+          reference.
         </p>
         <div className="ct-actions">
-          <a className="ct-button" href={chat} target="_blank" rel="noopener noreferrer">
-            Message us on WhatsApp
-          </a>
           <Link className="ct-button ct-button-plain" href={more.path}>
             Browse more {more.plural}
           </Link>
@@ -339,7 +334,7 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
 
       <div className="ct-field">
         <label htmlFor="ct-phone">
-          Phone or WhatsApp <span className="ct-optional">(optional)</span>
+          Phone number <span className="ct-optional">(optional)</span>
         </label>
         <input
           id="ct-phone"
@@ -436,11 +431,7 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
 
       {failure && (
         <p className="ct-alert" role="alert">
-          {failure} You can also{" "}
-          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">
-            message us on WhatsApp
-          </a>
-          .
+          {failure} You can also call us.
         </p>
       )}
 
