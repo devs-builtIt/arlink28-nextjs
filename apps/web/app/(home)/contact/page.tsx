@@ -3,7 +3,8 @@ import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
 import { headline, publicPath } from "@/utils/publicProducts";
 import { getPackage } from "@/utils/server/catalogue";
-import "../styles/contact.css";
+import "../../styles/home.css";
+import "../../(web)/styles/contact.css";
 
 export const metadata: Metadata = {
   title: "Contact | ARLink28",
@@ -66,141 +67,149 @@ export default async function ContactPage({ searchParams }: Search) {
   const initialType: GeneralType = GENERAL_TYPES.find((t) => t.value.toLowerCase() === asked)?.value ?? "General";
 
   return (
-    <>
-      <div className="ct-top">
-        <h1>Contact us</h1>
-        <p>
-          {pkg
-            ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
-            : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us on WhatsApp."}
-        </p>
-      </div>
-
-      <div className="ct-page">
-        <div className="ct-layout">
-          <section className="ct-card" id="form" aria-labelledby="ct-form-title">
-            <h2 id="ct-form-title">{pkg ? "Send an enquiry" : "Send a message"}</h2>
-            <p className="ct-card-lead">
+    <div className="hm hm-ct">
+      <section className="hm-qp hm-wrap" aria-labelledby="hm-qp-h">
+        <div className="hm-qp-side">
+          <img src="/images/home/hero-night-1920.webp" alt="" width={1920} height={1080} />
+          <div className="hm-qp-copy">
+            <h1 id="hm-qp-h">Contact us</h1>
+            <p>
               {pkg
-                ? "We will confirm dates, availability and the price with you. Nothing is charged online."
-                : "We reply by email, usually within one business day."}
+                ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
+                : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone or WhatsApp."}
             </p>
-            <EnquiryForm
-              pkg={pkg}
-              aboutTitle={aboutTitle}
-              initialCheckIn={pkg ? checkIn : ""}
-              initialNights={pkg ? nights : null}
-              initialType={initialType}
-            />
-          </section>
-
-          <aside className="ct-aside" aria-label="Other ways to reach us">
-            <div className="ct-card">
-              <h2>Talk to us</h2>
-              <ul className="ct-list ct-list-lead">
-                <li>
-                  <span>WhatsApp</span>
+          </div>
+          <aside aria-label="Other ways to reach us">
+            <ul className="hm-qp-contacts">
+              <li>
+                <span className="hm-qp-icon" aria-hidden="true">
+                  <i className="fa-solid fa-phone"></i>
+                </span>
+                <div>
+                  <span>Phone and WhatsApp</span>
                   <a href="https://wa.me/2347047009128">+234 704 700 9128</a>
-                </li>
-                <li>
-                  <span>Phone, Nigeria</span>
-                  <a href="tel:+2347047009128">+234 704 700 9128</a>
-                </li>
-                <li>
-                  <span>Phone, United Kingdom</span>
                   <a href="tel:+447539071257">+44 753 907 1257</a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="ct-card">
-              <h2>Email</h2>
-              <ul className="ct-list">
-                <li>
+                </div>
+              </li>
+              <li>
+                <span className="hm-qp-icon" aria-hidden="true">
+                  <i className="fa-solid fa-envelope"></i>
+                </span>
+                <div>
                   <span>Bookings and support</span>
                   <a href="mailto:support@arlinks.com">support@arlinks.com</a>
-                </li>
-                <li>
-                  <span>Partnerships</span>
-                  <a href="mailto:partners@arlink28.com">partners@arlink28.com</a>
-                </li>
-                <li>
-                  <span>Investors</span>
-                  <a href="mailto:investors@arlink28.com">investors@arlink28.com</a>
-                </li>
-                <li>
-                  <span>Careers</span>
-                  <a href="mailto:careers@arlink28.com">careers@arlink28.com</a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="ct-card">
-              <h2>Support hours</h2>
-              <dl className="ct-hours">
-                <div>
-                  <dt>Monday to Friday</dt>
-                  <dd>08:00 to 20:00 WAT</dd>
                 </div>
+              </li>
+              <li>
+                <span className="hm-qp-icon" aria-hidden="true">
+                  <i className="fa-solid fa-location-dot"></i>
+                </span>
                 <div>
-                  <dt>Saturday</dt>
-                  <dd>09:00 to 18:00 WAT</dd>
+                  <span>Offices</span>
+                  <strong>Ikoyi, Lagos</strong>
+                  <strong>Covent Garden, London</strong>
                 </div>
-                <div>
-                  <dt>Sunday</dt>
-                  <dd>Urgent support only</dd>
-                </div>
-                <div>
-                  <dt>Emergency line</dt>
-                  <dd>24 hours</dd>
-                </div>
-              </dl>
-            </div>
-
-            <div className="ct-card">
-              <h2>Offices</h2>
-              <div className="ct-offices">
-                <p>2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233</p>
-                <p>71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom</p>
-              </div>
-            </div>
+              </li>
+            </ul>
           </aside>
         </div>
-      </div>
 
-      <section className="ct-faq" id="faq" aria-labelledby="ct-faq-title">
-        <h2 id="ct-faq-title">Common questions</h2>
-        <div className="ct-faq-list">
-          {FAQ.map((item) => (
-            <details key={item.q}>
-              <summary>{item.q}</summary>
-              <p>{item.a}</p>
-            </details>
-          ))}
+        <section className="hm-qp-card" id="form" aria-labelledby="ct-form-title">
+          <h2 id="ct-form-title" className="hm-qp-title">
+            {pkg ? "Send an enquiry" : "Send a message"}
+          </h2>
+          <p className="hm-qp-sub">
+            {pkg
+              ? "We will confirm dates, availability and the price with you. Nothing is charged online."
+              : "We reply by email, usually within one business day."}
+          </p>
+          <EnquiryForm
+            pkg={pkg}
+            aboutTitle={aboutTitle}
+            initialCheckIn={pkg ? checkIn : ""}
+            initialNights={pkg ? nights : null}
+            initialType={initialType}
+          />
+        </section>
+      </section>
+
+      <section className="hm-sec hm-sec-tight" aria-labelledby="ct-more-title">
+        <div className="hm-wrap hm-ct-more">
+          <div>
+            <h2 id="ct-more-title">Support hours</h2>
+            <dl className="hm-ct-hours">
+              <div>
+                <dt>Monday to Friday</dt>
+                <dd>08:00 to 20:00 WAT</dd>
+              </div>
+              <div>
+                <dt>Saturday</dt>
+                <dd>09:00 to 18:00 WAT</dd>
+              </div>
+              <div>
+                <dt>Sunday</dt>
+                <dd>Urgent support only</dd>
+              </div>
+              <div>
+                <dt>Emergency line</dt>
+                <dd>24 hours</dd>
+              </div>
+            </dl>
+          </div>
+          <div>
+            <h2>Other contacts</h2>
+            <dl className="hm-ct-hours">
+              <div>
+                <dt>Partnerships</dt>
+                <dd>
+                  <a href="mailto:partners@arlink28.com">partners@arlink28.com</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Investors</dt>
+                <dd>
+                  <a href="mailto:investors@arlink28.com">investors@arlink28.com</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Careers</dt>
+                <dd>
+                  <a href="mailto:careers@arlink28.com">careers@arlink28.com</a>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div>
+            <h2>Offices</h2>
+            <dl className="hm-ct-hours">
+              <div>
+                <dt>Lagos</dt>
+                <dd>2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233</dd>
+              </div>
+              <div>
+                <dt>London</dt>
+                <dd>71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom</dd>
+              </div>
+            </dl>
+          </div>
         </div>
       </section>
 
-      <section className="newsletter-bar" id="register">
-        <div className="newsletter-container">
-          <div className="newsletter-info reveal-left">
-            <i className="fa-regular fa-envelope-open newsletter-icon"></i>
-            <div className="newsletter-text">
-              <h4>Stay in the loop</h4>
-              <p>Get the latest deals, destinations, and travel tips delivered straight to your inbox.</p>
-            </div>
-          </div>
-          <div className="newsletter-form-container reveal-right">
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email address" required aria-label="Email for newsletter" />
-              <button type="submit">Subscribe</button>
-            </form>
-            <div className="newsletter-agree">
-              <input type="checkbox" id="newsletter-check" required />
-              <label htmlFor="newsletter-check">I agree to terms & privacy policy</label>
-            </div>
+      <section className="hm-sec hm-sec-white" data-tone="light" id="faq" aria-labelledby="ct-faq-title">
+        <div className="hm-wrap">
+          <h2 className="hm-title" id="ct-faq-title">
+            Common questions
+          </h2>
+          <div className="hm-faq">
+            {FAQ.map((item) => (
+              <details key={item.q}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
