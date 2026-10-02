@@ -5,7 +5,6 @@ import type { CreateEnquiryRequest } from "@arlink28/api-client";
 import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
-import { WHATSAPP_URL } from "@/content/home-proof";
 import Dropdown, { PARTY_SIZES } from "./Dropdown";
 
 const SERVICES = ["Flight", "Hotel reservation", "Visa support", "Holiday package", "Private charter"] as const;
@@ -85,25 +84,20 @@ export default function QuoteForm() {
       setFailure(
         err instanceof ApiError
           ? err.message
-          : "We couldn't send that. Check your connection and try again, or message us on WhatsApp.",
+          : "We couldn't send that. Check your connection and try again, or call us.",
       );
     }
     setSending(false);
   }
 
   if (reference) {
-    const chat = `${WHATSAPP_URL}?text=${encodeURIComponent(`Hello, my quote reference is ${reference}.`)}`;
     return (
       <div className="qf qf-done" ref={done} tabIndex={-1} role="status">
         <h2>Reference {reference}</h2>
         <p>
-          We will reply to <strong>{email.trim()}</strong> with options and a price. For anything urgent, message us on
-          WhatsApp and quote the reference.
+          We will reply to <strong>{email.trim()}</strong> with options and a price. For anything urgent, call us and
+          quote the reference.
         </p>
-        <a className="hm-btn hm-btn-quiet" href={chat} target="_blank" rel="noopener noreferrer">
-          <i className="fa-brands fa-whatsapp" aria-hidden="true"></i>
-          Message us on WhatsApp
-        </a>
       </div>
     );
   }

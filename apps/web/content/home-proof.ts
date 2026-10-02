@@ -155,7 +155,7 @@ export const WHY: {
   },
   {
     icon: "message",
-    title: "WhatsApp and phone support",
+    title: "Phone and email support",
     text: "Message or call the same team that quoted you, before and after you travel.",
   },
   {
@@ -189,6 +189,6 @@ export const FAQ = [
   },
   {
     q: "How do I reach someone quickly?",
-    a: "Message us on WhatsApp or call. Replies depend on our staffed hours, which are shown on the contact page.",
+    a: "Call or email us. Replies depend on our staffed hours, which are shown on the contact page.",
   },
 ];

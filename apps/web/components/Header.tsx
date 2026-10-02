@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Icon, { type IconName } from "@/components/home/Icon";
-import { PHONES } from "@/content/home-proof";
 import { track } from "@/utils/track";
 
 // What a traveller comes to do, then Essentials (the company) and Elite Jets (private charter).
@@ -200,16 +199,9 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                   <img src="/images/home/proof-harare.webp" alt="" decoding="async" width={900} height={1200} />
                   <p className="sh-mega-title">ARLink28 on the road</p>
                   <p className="sh-mega-text">Find the team at aviation and travel events across Africa and the UK.</p>
-                  <ul className="sh-mega-links">
-                    <li>
-                      <a href={PHONES[0].href}>
-                        Call {PHONES[0].label}
-                        <svg viewBox="0 0 16 16" aria-hidden="true">
-                          <path d="M3 8h10M9 4l4 4-4 4" />
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
+                  <Link className="sh-cta sh-cta-quiet sh-mega-btn" href="/contact">
+                    Contact us
+                  </Link>
                 </div>
               </div>
             )}

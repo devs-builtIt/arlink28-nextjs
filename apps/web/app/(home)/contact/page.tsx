@@ -9,8 +9,7 @@ import "../../(web)/styles/contact.css";
 
 export const metadata: Metadata = {
   title: "Contact | ARLink28",
-  description:
-    "Ask about a safari package, a booking, a partnership or a career. Send an enquiry or message ARLink28 on WhatsApp.",
+  description: "Ask about a safari package, a booking, a partnership or a career. Send an enquiry or call ARLink28.",
 };
 
 type Search = { searchParams: { [key: string]: string | string[] | undefined } };
@@ -75,7 +74,7 @@ export default async function ContactPage({ searchParams }: Search) {
         text={
           pkg
             ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
-            : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone or WhatsApp."
+            : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone."
         }
         image="/images/home/hero-safari-1920.webp"
         position="50% 70%"
@@ -96,8 +95,8 @@ export default async function ContactPage({ searchParams }: Search) {
                     <i className="fa-solid fa-phone"></i>
                   </span>
                   <div>
-                    <span>Phone and WhatsApp</span>
-                    <a href="https://wa.me/2347047009128">+234 704 700 9128</a>
+                    <span>Phone number</span>
+                    <a href="tel:+2347047009128">+234 704 700 9128</a>
                     <a href="tel:+447539071257">+44 753 907 1257</a>
                   </div>
                 </li>

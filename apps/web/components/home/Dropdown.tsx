@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import "./dropdown.css";
 
 export type DropdownOption = { value: string; label: string };
 
@@ -27,13 +28,23 @@ type Props = {
   onChange: (value: string) => void;
   placeholder?: string;
   invalid?: boolean;
+  ariaLabel?: string;
 };
 
 /**
  * A select with our own list, so it looks the same in every browser and theme. It follows the listbox
  * pattern: the button opens the list; arrows, Home, End and letters move; Enter or Space chooses; Escape closes.
  */
-export default function Dropdown({ id, name, value, options, onChange, placeholder = "Choose", invalid }: Props) {
+export default function Dropdown({
+  id,
+  name,
+  value,
+  options,
+  onChange,
+  placeholder = "Choose",
+  invalid,
+  ariaLabel,
+}: Props) {
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -114,6 +125,7 @@ export default function Dropdown({ id, name, value, options, onChange, placehold
         aria-controls={listId}
         aria-activedescendant={open ? `${listId}-${active}` : undefined}
         aria-invalid={invalid ? true : undefined}
+        aria-label={ariaLabel}
         onClick={() => (open ? setOpen(false) : show())}
         onKeyDown={onKey}
       >
@@ -125,7 +137,14 @@ export default function Dropdown({ id, name, value, options, onChange, placehold
         </svg>
       </button>
       {open && (
-        <ul className="dd-list" id={listId} role="listbox" ref={list} aria-labelledby={id}>
+        <ul
+          className="dd-list"
+          id={listId}
+          role="listbox"
+          ref={list}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabel ? undefined : id}
+        >
           {options.map((o, i) => (
             <li
               key={o.value}

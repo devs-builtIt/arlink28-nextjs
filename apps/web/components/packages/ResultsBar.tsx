@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Dropdown from "@/components/home/Dropdown";
 import type { DestinationResponse } from "@arlink28/api-client";
 import { CATEGORIES, GUESTS } from "@/components/packages/HeroSearch";
 import { useListing, type ListingParams } from "@/components/packages/ListingContext";
@@ -82,16 +83,17 @@ export default function ResultsBar({
         )}
       </div>
 
-      <label className="pkgs-sort">
+      <div className="pkgs-sort">
         <span>Sort by</span>
-        <select value={params.sort} onChange={(e) => go({ sort: e.target.value })}>
-          {sorts.map(([value, label]) => (
-            <option key={value || "featured"} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <Dropdown
+          id="pkgs-sort"
+          name="sort"
+          ariaLabel="Sort by"
+          value={params.sort}
+          onChange={(v) => go({ sort: v })}
+          options={sorts.map(([value, label]) => ({ value, label }))}
+        />
+      </div>
     </div>
   );
 }

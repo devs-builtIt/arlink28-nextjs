@@ -27,10 +27,7 @@ test.describe("the homepage quote request", () => {
     await quote(page).getByRole("button", { name: "Send my request" }).click();
 
     await expect(quote(page).getByRole("status")).toContainText(/Reference ENQ-\d{4}-\d{4}/);
-    await expect(quote(page).getByRole("link", { name: "Continue on WhatsApp" })).toHaveAttribute(
-      "href",
-      /^https:\/\/wa\.me\/\d+\?text=/,
-    );
+    await expect(quote(page).getByRole("link", { name: /WhatsApp/ })).toHaveCount(0);
   });
 
   test("asks for what is missing instead of sending", async ({ page }) => {

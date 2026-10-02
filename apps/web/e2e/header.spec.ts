@@ -21,8 +21,9 @@ test.describe("getting to the portal from the public site", () => {
     const main = page.getByRole("navigation", { name: "Main" });
     await main.getByRole("button", { name: "Essentials" }).click();
     for (const name of ["About us", "Team", "Blogs", "Contact"]) {
-      await expect(main.getByRole("link", { name: new RegExp(`^${name}`) })).toBeVisible();
+      await expect(main.getByRole("link", { name: new RegExp(`^${name}`) }).first()).toBeVisible();
     }
+    await expect(main.getByRole("link", { name: "Contact us" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(main.getByRole("link", { name: /^Blogs/ })).toHaveCount(0);
 

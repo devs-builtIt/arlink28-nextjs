@@ -5,7 +5,6 @@ import type { CreateEnquiryRequest } from "@arlink28/api-client";
 import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
-import { WHATSAPP_URL } from "@/content/home-proof";
 import Dropdown, { PARTY_SIZES, PARTY_SIZES_SHORT } from "./Dropdown";
 import AirportField, { airportLabel, findAirport } from "./AirportField";
 
@@ -180,33 +179,23 @@ export default function QuoteWidget() {
       setFailure(
         err instanceof ApiError
           ? err.message
-          : "We couldn't send that. Check your connection and try again, or message us on WhatsApp.",
+          : "We couldn't send that. Check your connection and try again, or call us.",
       );
     }
     setSending(false);
   }
 
   if (reference) {
-    const chat = `${WHATSAPP_URL}?text=${encodeURIComponent(`Hello, my quote reference is ${reference}.`)}`;
     return (
       <div className="hm-quote hm-glass" ref={root} id="quote">
         <div className="hm-done" ref={done} tabIndex={-1} role="status">
           <p className="hm-eyebrow">Request received</p>
           <h2>Reference {reference}</h2>
           <p>
-            We will reply to <strong>{email.trim()}</strong> with options and a price. For anything urgent, message us
-            on WhatsApp and quote the reference.
+            We will reply to <strong>{email.trim()}</strong> with options and a price. For anything urgent, call us and
+            quote the reference.
           </p>
           <div className="hm-actions">
-            <a
-              className="hm-btn hm-btn-primary"
-              href={chat}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track("whatsapp_click", { placement: "quote_done" })}
-            >
-              Continue on WhatsApp
-            </a>
             <button
               type="button"
               className="hm-btn hm-btn-quiet"
@@ -403,7 +392,7 @@ export default function QuoteWidget() {
               {errors.name && <p className="hm-error">{errors.name}</p>}
             </div>
             <div className="hm-field">
-              <label htmlFor="hm-phone">WhatsApp or phone</label>
+              <label htmlFor="hm-phone">Phone number</label>
               <input
                 id="hm-phone"
                 name="phone"

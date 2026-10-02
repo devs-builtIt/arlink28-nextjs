@@ -284,10 +284,6 @@ export default function AboutPage() {
                   <span>Instant Phone Support</span>
                 </div>
                 <div className="support-feature-item">
-                  <i className="fa-brands fa-whatsapp"></i>
-                  <span>WhatsApp Live Chat</span>
-                </div>
-                <div className="support-feature-item">
                   <i className="fa-solid fa-envelope"></i>
                   <span>Email Assistance</span>
                 </div>

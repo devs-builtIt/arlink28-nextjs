@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { DestinationResponse } from "@arlink28/api-client";
 import { useListing } from "@/components/packages/ListingContext";
+import Dropdown from "@/components/home/Dropdown";
 
 export const CATEGORIES: [string, string][] = [
   ["", "Any type"],
@@ -50,39 +51,44 @@ export default function HeroSearch({ destinations }: { destinations: Destination
         </span>
       </label>
 
-      <label className="pkgs-seg">
+      <div className="pkgs-seg">
         <span className="pkgs-seg-label">Destination</span>
-        <select value={draft.destination} onChange={(e) => setDraft({ ...draft, destination: e.target.value })}>
-          <option value="">All destinations</option>
-          {destinations.map((d) => (
-            <option key={d.slug} value={d.slug}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-      </label>
+        <Dropdown
+          id="pkgs-destination"
+          name="destination"
+          ariaLabel="Destination"
+          value={draft.destination}
+          onChange={(v) => setDraft({ ...draft, destination: v })}
+          options={[
+            { value: "", label: "All destinations" },
+            ...destinations.map((d) => ({ value: d.slug, label: d.name })),
+          ]}
+        />
+      </div>
 
-      <label className="pkgs-seg">
+      <div className="pkgs-seg">
         <span className="pkgs-seg-label">Type</span>
-        <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })}>
-          {CATEGORIES.map(([value, label]) => (
-            <option key={value || "any"} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <Dropdown
+          id="pkgs-category"
+          name="category"
+          ariaLabel="Type"
+          value={draft.category}
+          onChange={(v) => setDraft({ ...draft, category: v })}
+          options={CATEGORIES.map(([value, label]) => ({ value, label }))}
+        />
+      </div>
 
-      <label className="pkgs-seg">
+      <div className="pkgs-seg">
         <span className="pkgs-seg-label">Party</span>
-        <select value={draft.adults} onChange={(e) => setDraft({ ...draft, adults: e.target.value })}>
-          {GUESTS.map(([value, label]) => (
-            <option key={value || "any"} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <Dropdown
+          id="pkgs-adults"
+          name="adults"
+          ariaLabel="Party"
+          value={draft.adults}
+          onChange={(v) => setDraft({ ...draft, adults: v })}
+          options={GUESTS.map(([value, label]) => ({ value, label }))}
+        />
+      </div>
 
       <button type="submit" className="pkgs-search-button" disabled={pending}>
         {pending ? <span className="pkgs-spinner pkgs-spinner-light" aria-hidden="true"></span> : null}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "../../styles/home.css";
-import { WHATSAPP_URL } from "@/content/home-proof";
 
 export const metadata: Metadata = {
   title: "Elite Jets | ARLink28",
@@ -20,10 +19,6 @@ export default function EliteJetsPage() {
           <Link className="hm-btn hm-btn-primary" href="/contact?type=Booking">
             Make an enquiry
           </Link>
-          <a className="hm-btn hm-btn-quiet" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-            <i className="fa-brands fa-whatsapp" aria-hidden="true"></i>
-            WhatsApp
-          </a>
         </div>
       </section>
     </div>
