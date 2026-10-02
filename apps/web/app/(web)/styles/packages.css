@@ -242,7 +242,7 @@
 
 .pkgs-searchwrap {
   position: relative;
-  z-index: 2;
+  z-index: 20;
   padding-top: 0;
   padding-bottom: 0;
   /* The bar straddles the photo's edge: the photo ends halfway down it. */
