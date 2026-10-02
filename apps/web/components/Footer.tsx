@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PHONES, WHATSAPP_URL } from "@/content/home-proof";
+import FooterMark from "./FooterMark";
 
 const TRAVEL = [
   { href: "/flights", label: "Flights" },
@@ -141,6 +142,7 @@ export default function Footer() {
             </li>
           </ul>
         </div>
+        <FooterMark />
       </div>
     </footer>
   );

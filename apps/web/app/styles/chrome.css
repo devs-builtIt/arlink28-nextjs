@@ -412,6 +412,7 @@
 .sf-inner {
   max-width: var(--container);
   margin: 0 auto;
+  container-type: inline-size;
 }
 .sf-top {
   display: grid;
@@ -750,4 +751,47 @@ body:has(.hm-phero) .sh:not(.is-scrolled) {
   --btn2-ink: #f5f7fa;
   --btn2-line: rgba(255, 255, 255, 0.16);
   color-scheme: dark;
+}
+
+/* ---- Footer watermark ------------------------------------------------------------------------ */
+.sf-mark {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 4vw, 56px);
+  /* The word is 4.22em wide, so this size makes it span its container exactly. */
+  font-size: 21vw;
+  font-size: 23.6cqw;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  user-select: none;
+  overflow: hidden;
+}
+.sf-mark span {
+  display: block;
+  padding-bottom: 0.04em;
+  color: transparent;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ink) 24%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 3%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: translateY(70%);
+  opacity: 0;
+  transition:
+    transform 1.1s var(--ease) calc(var(--i) * 70ms),
+    opacity 0.9s var(--ease) calc(var(--i) * 70ms);
+}
+.sf-mark.is-in span {
+  transform: none;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-mark span {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
 }
