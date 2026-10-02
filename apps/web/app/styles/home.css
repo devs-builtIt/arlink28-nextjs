@@ -49,6 +49,23 @@
   --ty: 10px;
 }
 
+/* The tilted pill on each section title pops in after its heading: it grows from small and drops into
+   place with a slight overshoot. It uses the individual scale and translate properties, so the pill's
+   own tilt is left alone. */
+.hm .hm-sticker {
+  scale: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.5s var(--ease) 0.25s,
+    scale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s,
+    translate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+}
+.hm.rv-ready [data-rv]:not(.is-in) .hm-sticker {
+  opacity: 0;
+  scale: 0.6;
+  translate: -14px 14px;
+}
+
 /* The closing call to action moves further than the rest: the copy rises in line by line, and the three
    photos drop in from below and settle one after another. */
 .hm .hm-deals [data-rv] {
