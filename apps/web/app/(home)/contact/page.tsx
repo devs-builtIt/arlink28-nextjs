@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/home/PageHero";
 import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
 import { headline, publicPath } from "@/utils/publicProducts";
@@ -68,69 +69,79 @@ export default async function ContactPage({ searchParams }: Search) {
 
   return (
     <div className="hm hm-ct">
-      <section className="hm-qp hm-wrap" aria-labelledby="hm-qp-h">
-        <div className="hm-qp-side">
-          <img src="/images/home/hero-night-1920.webp" alt="" width={1920} height={1080} />
-          <div className="hm-qp-copy">
-            <h1 id="hm-qp-h">Contact us</h1>
-            <p>
-              {pkg
-                ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
-                : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone or WhatsApp."}
-            </p>
-          </div>
-          <aside aria-label="Other ways to reach us">
-            <ul className="hm-qp-contacts">
-              <li>
-                <span className="hm-qp-icon" aria-hidden="true">
-                  <i className="fa-solid fa-phone"></i>
-                </span>
-                <div>
-                  <span>Phone and WhatsApp</span>
-                  <a href="https://wa.me/2347047009128">+234 704 700 9128</a>
-                  <a href="tel:+447539071257">+44 753 907 1257</a>
-                </div>
-              </li>
-              <li>
-                <span className="hm-qp-icon" aria-hidden="true">
-                  <i className="fa-solid fa-envelope"></i>
-                </span>
-                <div>
-                  <span>Bookings and support</span>
-                  <a href="mailto:support@arlinks.com">support@arlinks.com</a>
-                </div>
-              </li>
-              <li>
-                <span className="hm-qp-icon" aria-hidden="true">
-                  <i className="fa-solid fa-location-dot"></i>
-                </span>
-                <div>
-                  <span>Offices</span>
-                  <strong>Ikoyi, Lagos</strong>
-                  <strong>Covent Garden, London</strong>
-                </div>
-              </li>
-            </ul>
-          </aside>
-        </div>
+      <PageHero
+        id="hm-qp-h"
+        title="Contact us"
+        text={
+          pkg
+            ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
+            : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone or WhatsApp."
+        }
+        image="/images/home/hero-safari-1920.webp"
+        position="50% 70%"
+      />
 
-        <section className="hm-qp-card" id="form" aria-labelledby="ct-form-title">
-          <h2 id="ct-form-title" className="hm-qp-title">
-            {pkg ? "Send an enquiry" : "Send a message"}
-          </h2>
-          <p className="hm-qp-sub">
-            {pkg
-              ? "We will confirm dates, availability and the price with you. Nothing is charged online."
-              : "We reply by email, usually within one business day."}
-          </p>
-          <EnquiryForm
-            pkg={pkg}
-            aboutTitle={aboutTitle}
-            initialCheckIn={pkg ? checkIn : ""}
-            initialNights={pkg ? nights : null}
-            initialType={initialType}
-          />
-        </section>
+      <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Send a message">
+        <div className="hm-qp hm-wrap">
+          <div className="hm-qp-side">
+            <img src="/images/home/route-lhr.webp" alt="" width={800} height={1000} />
+            <div className="hm-qp-copy">
+              <h2>Prefer to talk?</h2>
+              <p>Call us, write to us, or visit one of our offices. The team answers every request personally.</p>
+            </div>
+            <aside aria-label="Other ways to reach us">
+              <ul className="hm-qp-contacts">
+                <li>
+                  <span className="hm-qp-icon" aria-hidden="true">
+                    <i className="fa-solid fa-phone"></i>
+                  </span>
+                  <div>
+                    <span>Phone and WhatsApp</span>
+                    <a href="https://wa.me/2347047009128">+234 704 700 9128</a>
+                    <a href="tel:+447539071257">+44 753 907 1257</a>
+                  </div>
+                </li>
+                <li>
+                  <span className="hm-qp-icon" aria-hidden="true">
+                    <i className="fa-solid fa-envelope"></i>
+                  </span>
+                  <div>
+                    <span>Bookings and support</span>
+                    <a href="mailto:support@arlinks.com">support@arlinks.com</a>
+                  </div>
+                </li>
+                <li>
+                  <span className="hm-qp-icon" aria-hidden="true">
+                    <i className="fa-solid fa-location-dot"></i>
+                  </span>
+                  <div>
+                    <span>Offices</span>
+                    <strong>Ikoyi, Lagos</strong>
+                    <strong>Covent Garden, London</strong>
+                  </div>
+                </li>
+              </ul>
+            </aside>
+          </div>
+
+          <section className="hm-qp-card" id="form" aria-labelledby="ct-form-title">
+            <h2 id="ct-form-title" className="hm-qp-title">
+              {pkg ? "Send an enquiry" : "Send a message"}
+            </h2>
+            <p className="hm-qp-sub">
+              {pkg
+                ? "We will confirm dates, availability and the price with you. Nothing is charged online."
+                : "We reply by email, usually within one business day."}
+            </p>
+            <EnquiryForm
+              pkg={pkg}
+              aboutTitle={aboutTitle}
+              initialCheckIn={pkg ? checkIn : ""}
+              initialNights={pkg ? nights : null}
+              initialType={initialType}
+            />
+          </section>
+        </div>
       </section>
 
       <section className="hm-sec hm-sec-tight" aria-labelledby="ct-more-title">
