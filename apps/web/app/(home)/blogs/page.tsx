@@ -17,7 +17,7 @@ export default function BlogsPage() {
         <p>Travel stories and guides for the routes our travellers ask about are on their way.</p>
         <div className="hm-actions">
           <Link className="hm-btn hm-btn-primary" href="/quote">
-            Get a quote
+            Book now
           </Link>
           <Link className="hm-btn hm-btn-quiet" href="/destinations">
             Browse destinations

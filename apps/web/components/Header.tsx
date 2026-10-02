@@ -234,7 +234,7 @@ export default function Header({ themable = false }: { themable?: boolean }) {
             Sign in
           </Link>
           <Link className="sh-cta" href="/quote" onClick={quote}>
-            Get a quote
+            Book now
           </Link>
           <button
             type="button"
@@ -280,7 +280,7 @@ export default function Header({ themable = false }: { themable?: boolean }) {
               </span>
             )}
             <Link className="sh-cta" href="/quote" onClick={quote}>
-              Get a quote
+              Book now
             </Link>
             <Link className="sh-cta sh-cta-quiet" href="/admin/login">
               Sign in

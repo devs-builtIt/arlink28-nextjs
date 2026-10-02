@@ -264,14 +264,14 @@ export default async function HomePage() {
                 width={800}
                 height={1000}
               />
-              <a className="hm-ring" href="/quote" aria-label="Get a quote">
+              <a className="hm-ring" href="/quote" aria-label="Book now">
                 <svg viewBox="0 0 120 120" aria-hidden="true">
                   <defs>
                     <path id="hm-ring-path" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
                   </defs>
                   <text>
                     <textPath href="#hm-ring-path" textLength="270" lengthAdjust="spacing">
-                      TRAVEL ACROSS AFRICA · GET A QUOTE ·{" "}
+                      TRAVEL ACROSS AFRICA · BOOK NOW ·{" "}
                     </textPath>
                   </text>
                 </svg>
@@ -459,7 +459,7 @@ export default async function HomePage() {
             <div className="hm-jets-side" data-rv>
               <p>Tell us where you want to fly, when, and with how many people. The team comes back with options.</p>
               <Link className="hm-btn hm-btn-primary" href="/contact?type=Booking">
-                Get a charter quote
+                Book a charter
               </Link>
             </div>
           </div>
@@ -523,7 +523,7 @@ export default async function HomePage() {
               </p>
               <div className="hm-actions" data-rv style={{ ["--i" as string]: 3 }}>
                 <a className="hm-btn hm-btn-primary" href="/quote">
-                  Get my quote
+                  Book now
                 </a>
               </div>
             </div>

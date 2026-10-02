@@ -12,7 +12,7 @@ export default function ContactBar() {
         href="/quote"
         onClick={() => track("hero_cta_click", { cta: "sticky_quote" })}
       >
-        Get a quote
+        Book now
       </a>
       <a
         className="hm-btn hm-btn-wa"
