@@ -4450,7 +4450,8 @@
           "HolidayPackage",
           "Flight",
           "HotelReservation",
-          "VisaSupport"
+          "VisaSupport",
+          "PrivateCharter"
         ],
         "type": "string"
       },
