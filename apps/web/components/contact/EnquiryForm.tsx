@@ -60,8 +60,13 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
   const done = useRef<HTMLDivElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
-  const holiday = pkg === null || !isPublicType(pkg.kind);
-  const more = pkg && isPublicType(pkg.kind) ? PUBLIC[pkg.kind] : { path: "/packages", plural: "packages" };
+  const charter = pkg?.kind === "PrivateCharter";
+  const holiday = pkg === null || (!isPublicType(pkg.kind) && !charter);
+  const more = charter
+    ? { path: "/elite-jets", plural: "Elite tiers" }
+    : pkg && isPublicType(pkg.kind)
+      ? PUBLIC[pkg.kind]
+      : { path: "/packages", plural: "packages" };
 
   // The price follows the date and length the guest picks, from the same rules the package page uses.
   useEffect(() => {

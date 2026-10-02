@@ -14,10 +14,11 @@ test.describe("flights, hotel reservations and visa support", () => {
     await signIn(page, SUPER_ADMIN);
   });
 
-  test("the chooser lists the four kinds", async ({ page }) => {
+  test("the chooser lists the five kinds", async ({ page }) => {
     await page.goto("/admin/packages/new");
     const links = page.locator(".pk-types a");
-    await expect(links).toHaveCount(4);
+    await expect(links).toHaveCount(5);
+    await expect(links.nth(4)).toContainText("Elite tier");
     await expect(links.nth(1)).toContainText("Flight");
     await links.nth(1).click();
     await expect(page).toHaveURL(/type=Flight$/);

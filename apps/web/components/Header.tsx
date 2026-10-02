@@ -159,6 +159,14 @@ export default function Header({ themable = false }: { themable?: boolean }) {
               {link.label}
             </Link>
           ))}
+          <Link
+            href={ELITE.href}
+            className={isActive(ELITE.href) ? "is-active" : undefined}
+            onMouseEnter={() => setEssentialsOpen(false)}
+            aria-current={isActive(ELITE.href) ? "page" : undefined}
+          >
+            {ELITE.label}
+          </Link>
           <div
             className="sh-drop"
             ref={essentialsRef}
@@ -206,14 +214,6 @@ export default function Header({ themable = false }: { themable?: boolean }) {
               </div>
             )}
           </div>
-          <Link
-            href={ELITE.href}
-            className={isActive(ELITE.href) ? "is-active" : undefined}
-            onMouseEnter={() => setEssentialsOpen(false)}
-            aria-current={isActive(ELITE.href) ? "page" : undefined}
-          >
-            {ELITE.label}
-          </Link>
         </nav>
 
         <div className="sh-actions">

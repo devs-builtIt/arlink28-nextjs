@@ -2,7 +2,7 @@
 // Holiday packages keep their data in stays, rates and add-ons; the other kinds keep a flat `details` object.
 import { fromMinor, toMinor } from "@/components/admin/format";
 
-export type ProductType = "HolidayPackage" | "Flight" | "HotelReservation" | "VisaSupport";
+export type ProductType = "HolidayPackage" | "Flight" | "HotelReservation" | "VisaSupport" | "PrivateCharter";
 export type OtherType = Exclude<ProductType, "HolidayPackage">;
 
 export const PRODUCT_TYPES: { id: ProductType; label: string; plural: string; blurb: string }[] = [
@@ -29,6 +29,12 @@ export const PRODUCT_TYPES: { id: ProductType; label: string; plural: string; bl
     label: "Visa support",
     plural: "Visa support",
     blurb: "Help getting a visa for one country, with its fees and requirements.",
+  },
+  {
+    id: "PrivateCharter",
+    label: "Elite tier",
+    plural: "Elite tiers",
+    blurb: "A private aviation tier: what it includes, quoted on request.",
   },
 ];
 
@@ -70,6 +76,37 @@ const BOARD: [string, string][] = [
   ["HalfBoard", "Half board"],
   ["FullBoard", "Full board"],
   ["AllInclusive", "All inclusive"],
+];
+
+const CHARTER_FIELDS: DetailField[] = [
+  {
+    key: "tier",
+    label: "Tier",
+    kind: "text",
+    required: true,
+    need: "the tier's name",
+    placeholder: "Elite",
+    max: 60,
+    pair: true,
+  },
+  {
+    key: "basedOn",
+    label: "Builds on (slug)",
+    kind: "text",
+    max: 120,
+    placeholder: "elite",
+    hint: "Leave empty unless this tier adds to another.",
+  },
+  { key: "tagline", label: "One-line description", kind: "text", max: 300 },
+  { key: "audience", label: "Who it is for", kind: "textarea", max: 600 },
+  {
+    key: "includes",
+    label: "What it includes",
+    kind: "lines",
+    required: true,
+    need: "what it includes",
+    hint: "One item per line. For a tier that builds on another, list only what it adds.",
+  },
 ];
 
 export const DETAIL_FIELDS: Record<OtherType, DetailField[]> = {
@@ -119,6 +156,7 @@ export const DETAIL_FIELDS: Record<OtherType, DetailField[]> = {
     { key: "boardBasis", label: "Board", kind: "select", options: BOARD },
     { key: "cancellationTerms", label: "Cancellation terms", kind: "textarea", max: 2000 },
   ],
+  PrivateCharter: CHARTER_FIELDS,
   VisaSupport: [
     {
       key: "country",
@@ -164,6 +202,7 @@ export const PRICE_LABEL: Record<OtherType, string | null> = {
   Flight: "Fares from",
   HotelReservation: "Per night from",
   VisaSupport: null,
+  PrivateCharter: null,
 };
 
 export type DetailValues = Record<string, string>;
@@ -226,5 +265,6 @@ export function detailsSummary(type: string, details: unknown): string {
   if (type === "Flight") return [d.origin, d.destination].filter(Boolean).join(" to ");
   if (type === "HotelReservation") return [d.hotelName, d.roomType].filter(Boolean).join(", ");
   if (type === "VisaSupport") return [d.country, d.visaType].filter(Boolean).join(", ");
+  if (type === "PrivateCharter") return String(d.tagline ?? d.tier ?? "");
   return "";
 }

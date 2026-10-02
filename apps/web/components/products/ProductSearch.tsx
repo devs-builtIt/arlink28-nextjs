@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import Dropdown from "@/components/home/Dropdown";
 import type { DestinationResponse } from "@arlink28/api-client";
 import { useListing } from "@/components/packages/ListingContext";
 
@@ -42,17 +43,20 @@ export default function ProductSearch({
         </span>
       </label>
 
-      <label className="pkgs-seg">
+      <div className="pkgs-seg">
         <span className="pkgs-seg-label">Destination</span>
-        <select value={draft.destination} onChange={(e) => setDraft({ ...draft, destination: e.target.value })}>
-          <option value="">All destinations</option>
-          {destinations.map((d) => (
-            <option key={d.slug} value={d.slug}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-      </label>
+        <Dropdown
+          id="prod-destination"
+          name="destination"
+          ariaLabel="Destination"
+          value={draft.destination}
+          onChange={(v) => setDraft({ ...draft, destination: v })}
+          options={[
+            { value: "", label: "All destinations" },
+            ...destinations.map((d) => ({ value: d.slug, label: d.name })),
+          ]}
+        />
+      </div>
 
       <button type="submit" className="pkgs-search-button" disabled={pending}>
         {pending ? <span className="pkgs-spinner pkgs-spinner-light" aria-hidden="true"></span> : null}

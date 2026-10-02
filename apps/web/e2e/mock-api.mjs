@@ -166,6 +166,20 @@ const PRODUCTS = (() => {
       currency: "USD",
       requirements: ["Passport valid for six months", "Return ticket"],
     }),
+    make(
+      "PrivateCharter",
+      "arlink28-elite-signature",
+      "ARLink28 Elite Signature",
+      "nairobi",
+      "A tier from the catalogue.",
+      0,
+      {
+        tier: "Signature",
+        tagline: "Signature as the catalogue words it.",
+        basedOn: "arlink28-elite",
+        includes: ["Catalogue catering item", "Catalogue welcome item"],
+      },
+    ),
   ];
 })();
 
@@ -207,6 +221,7 @@ const DETAIL_RULES = {
     ["country", "Say which country the visa is for."],
     ["visaType", "Say which kind of visa this is."],
   ],
+  PrivateCharter: [["tier", "Name the tier, for example Elite or Signature."]],
 };
 const DETAIL_KEYS = {
   Flight: ["origin", "destination", "tripType", "airline", "cabin", "baggage", "fareNotes", "validUntil"],
@@ -221,6 +236,7 @@ const DETAIL_KEYS = {
     "currency",
     "requirements",
   ],
+  PrivateCharter: ["tier", "tagline", "audience", "basedOn", "includes"],
 };
 /** The details to store, or an error message. Unknown fields are dropped, as the API does. */
 function normalizeDetails(type, raw) {
