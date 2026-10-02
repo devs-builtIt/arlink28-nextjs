@@ -37,24 +37,31 @@
   opacity: 0.78;
 }
 
+/* A gentler curve than the site's quick one: slow start, long even glide, soft landing. */
+.hm {
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-glide: cubic-bezier(0.25, 0.46, 0.2, 1);
+}
+
 /* ---- Motion: appear on scroll (opacity and transform only) ---------------------------------- */
 .hm [data-rv] {
   transform: translateY(var(--ty, 0px));
   transition:
-    opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
-    transform 1s var(--ease) calc(var(--i, 0) * 90ms);
+    opacity 1.4s var(--ease-soft) calc(var(--i, 0) * 150ms),
+    transform 1.6s var(--ease-glide) calc(var(--i, 0) * 150ms);
 }
 .hm.rv-ready [data-rv]:not(.is-in) {
   opacity: 0.001;
-  --ty: 28px;
+  --ty: 36px;
+  will-change: transform, opacity;
 }
 /* A photo card's picture settles from slightly zoomed-in as the card arrives, so the card seems to focus. */
 .hm .hm-routes li img,
 .hm .hm-pkgs li img {
   scale: 1;
   transition:
-    scale 1.4s var(--ease) calc(var(--i, 0) * 90ms),
-    transform 0.9s var(--ease);
+    scale 2s var(--ease-glide) calc(var(--i, 0) * 140ms),
+    transform 1.3s var(--ease-glide);
 }
 .hm.rv-ready .hm-routes li[data-rv]:not(.is-in) img,
 .hm.rv-ready .hm-pkgs li[data-rv]:not(.is-in) img {
@@ -2280,48 +2287,53 @@ html:has(.hm) {
 
 /* ---- Card hover: a slow zoom, the card rising a little and its text following ----------------- */
 @media (hover: hover) {
-  .hm-routes li,
-  .hm-pkgs li,
-  .hm-process li,
-  .hm-rv-card {
+  .hm .hm-routes li,
+  .hm .hm-pkgs li,
+  .hm .hm-process li,
+  .hm .hm-rv-card {
     translate: 0 0;
-    transition-property: opacity, transform, translate, background-color;
   }
-  .hm-routes li:hover,
-  .hm-pkgs li:hover {
+  .hm .hm-routes li:hover,
+  .hm .hm-pkgs li:hover {
     translate: 0 -6px;
   }
-  .hm-routes li,
-  .hm-pkgs li {
+  .hm .hm-routes li,
+  .hm .hm-pkgs li {
     transition:
-      opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
-      transform 1s var(--ease) calc(var(--i, 0) * 90ms),
-      translate 0.6s var(--ease);
+      opacity 1.4s var(--ease-soft) calc(var(--i, 0) * 150ms),
+      transform 1.6s var(--ease-glide) calc(var(--i, 0) * 150ms),
+      translate 0.9s var(--ease-glide);
+  }
+  .hm .hm-routes li img,
+  .hm .hm-pkgs li img {
+    transition:
+      scale 2s var(--ease-glide) calc(var(--i, 0) * 150ms),
+      transform 1.4s var(--ease-glide);
   }
   .hm-routes button:hover img,
   .hm-pkgs a:hover img {
-    transform: scale(1.07);
+    transform: scale(1.06);
   }
-  .hm-routes-text,
-  .hm-pkg-text {
-    transition: translate 0.6s var(--ease);
+  .hm .hm-routes-text,
+  .hm .hm-pkg-text {
+    transition: translate 0.9s var(--ease-glide);
   }
-  .hm-routes li:hover .hm-routes-text,
-  .hm-pkgs li:hover .hm-pkg-text {
+  .hm .hm-routes li:hover .hm-routes-text,
+  .hm .hm-pkgs li:hover .hm-pkg-text {
     translate: 0 -6px;
   }
-  .hm-process li:hover,
-  .hm-rv-card:hover {
+  .hm .hm-process li:hover,
+  .hm .hm-rv-card:hover {
     translate: 0 -4px;
     background: var(--chip);
   }
-  .hm-process li,
-  .hm-rv-card {
+  .hm .hm-process li,
+  .hm .hm-rv-card {
     transition:
-      opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
-      transform 1s var(--ease) calc(var(--i, 0) * 90ms),
-      translate 0.5s var(--ease),
-      background-color 0.5s var(--ease);
+      opacity 1.4s var(--ease-soft) calc(var(--i, 0) * 150ms),
+      transform 1.6s var(--ease-glide) calc(var(--i, 0) * 150ms),
+      translate 0.8s var(--ease-glide),
+      background-color 0.8s var(--ease-soft);
   }
 }
 /* Buttons press in a touch when clicked. */
