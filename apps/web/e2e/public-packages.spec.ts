@@ -140,7 +140,7 @@ test.describe("the packages list", () => {
 
   test("is in the site menu", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("navigation").getByRole("link", { name: "Packages", exact: true }).first().click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Holidays", exact: true }).click();
     await expect(page).toHaveURL(/\/packages$/);
   });
 
@@ -264,7 +264,10 @@ test.describe("a package", () => {
     await page.goto("/packages/sala-mara-escape");
     const card = page.getByRole("complementary", { name: "Get a price" });
     await expect(card).toContainText("US$7,472");
-    await card.getByRole("link", { name: "Enquire about this package" }).click();
+    const enquire = card.getByRole("link", { name: "Enquire about this package" });
+    // The dates are added to this link once the page's script has run; clicking sooner would lose them.
+    await expect(enquire).toHaveAttribute("href", /checkIn=/);
+    await enquire.click();
     await expect(page).toHaveURL(
       /\/contact\?package=Sala\+Mara\+Escape&slug=sala-mara-escape&checkIn=\d{4}-\d{2}-\d{2}&nights=2/,
     );

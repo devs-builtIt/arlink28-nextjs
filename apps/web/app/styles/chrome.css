@@ -1,0 +1,772 @@
+/* The site header and footer, on every public page. Colours come from tokens.css, so on the homepage they
+   follow light or dark, and on the older pages (wrapped in data-theme="dark") they stay dark. */
+
+.sh,
+.sf {
+  font-family: var(--font);
+  color: var(--ink);
+}
+
+/* ---- Header --------------------------------------------------------------------------------- */
+.sh {
+  position: fixed;
+  z-index: 160;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+/* Only the bar itself takes clicks, so the transparent strip around the pill never blocks the page. */
+.sh > * {
+  pointer-events: auto;
+}
+/* No backdrop-filter here: it would make the header the containing block of the fixed menu sheet and clip it. */
+.sh.is-open:not(.is-scrolled) {
+  background: var(--canvas);
+  border-bottom: 1px solid var(--hairline);
+}
+.sh-skip {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 5;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--canvas);
+  font-weight: 700;
+}
+.sh-skip:focus {
+  top: 12px;
+}
+.sh-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  max-width: 2000px;
+  height: var(--header-h);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition:
+    max-width 0.45s var(--ease),
+    height 0.3s ease,
+    margin 0.45s var(--ease),
+    padding 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+/* Scrolled: the bar floats as a rounded pill, still pinned to the top. */
+.sh.is-scrolled .sh-bar {
+  max-width: min(1120px, calc(100% - 2 * var(--gutter)));
+  height: 62px;
+  margin-top: 12px;
+  padding: 0 10px 0 22px;
+  background: var(--header-bg);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-color: var(--hairline);
+  box-shadow: var(--shadow-sticker);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sh.is-scrolled .sh-bar {
+    background: var(--canvas);
+  }
+}
+.sh-logo,
+.sf-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+.sh-logo img,
+.sf-logo img {
+  width: auto;
+  height: 50px;
+  transition: height 0.3s ease;
+}
+.sh.is-scrolled .sh-logo img {
+  height: 38px;
+}
+.sh-logo span,
+.sf-logo span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: var(--track);
+  line-height: 1;
+}
+.sh-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 2.6vw, 36px);
+}
+.sh-nav a,
+.sh-drop-btn,
+.sh-signin {
+  white-space: nowrap;
+}
+.sh-nav a {
+  color: var(--ink);
+  opacity: 0.78;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+.sh-nav a:hover {
+  opacity: 1;
+  color: var(--ink);
+}
+.sh-nav a.is-active {
+  opacity: 1;
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.sh-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sh-wa,
+.sh-theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius);
+  border: 1px solid var(--btn2-line);
+  background: var(--btn2-bg);
+  color: var(--btn2-ink);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.sh-wa:hover,
+.sh-theme:hover {
+  background: var(--fill-soft);
+}
+.sh-theme svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sh-signin {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+.sh-signin:hover {
+  background: var(--fill-soft);
+}
+.sh-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: var(--red);
+  color: #fff;
+  font: 700 14px/1 var(--font);
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+.sh-cta:hover {
+  background: var(--red-hover);
+}
+.sh-cta::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9.2'/><path d='m15.8 8.2-2.1 5.5-5.5 2.1 2.1-5.5z' fill='black'/></svg>")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9.2'/><path d='m15.8 8.2-2.1 5.5-5.5 2.1 2.1-5.5z' fill='black'/></svg>")
+    center / contain no-repeat;
+  transition: transform 0.6s var(--ease);
+}
+.sh-cta:hover::before,
+.sh-cta:focus-visible::before {
+  transform: rotate(180deg);
+}
+.sh-cta-quiet {
+  background: var(--btn2-bg);
+  color: var(--btn2-ink);
+  border-color: var(--btn2-line);
+}
+.sh-cta-quiet:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--canvas);
+}
+.sh a:focus-visible,
+.sh button:focus-visible,
+.sf a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sh-toggle {
+  display: none;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius);
+  border: 1px solid var(--btn2-line);
+  background: var(--btn2-bg);
+  cursor: pointer;
+}
+.sh-toggle span {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  height: 1.5px;
+  background: var(--btn2-ink);
+  transition:
+    transform 0.25s ease,
+    top 0.25s ease;
+}
+.sh-toggle span:first-child {
+  top: 17px;
+}
+.sh-toggle span:last-child {
+  top: 24px;
+}
+.sh.is-open .sh-toggle span:first-child {
+  top: 20.5px;
+  transform: rotate(45deg);
+}
+.sh.is-open .sh-toggle span:last-child {
+  top: 20.5px;
+  transform: rotate(-45deg);
+}
+
+/* Menu sheet (phones and tablets) */
+.sh-sheet {
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+  overflow-y: auto;
+  padding: 100px var(--gutter) 40px;
+  background: var(--canvas);
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.sh-sheet-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sh-sheet-main a {
+  font-size: clamp(2.4rem, 11vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: var(--track);
+  line-height: 1.1;
+  color: var(--ink);
+  opacity: 1;
+  padding: 4px 0;
+}
+.sh-sheet-company {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+}
+.sh-sheet-company p {
+  grid-column: 1 / -1;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+}
+.sh-sheet-company a {
+  color: var(--ink-2);
+  font-size: 1rem;
+  opacity: 1;
+}
+.sh-sheet-actions {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 10px;
+  margin-top: auto;
+}
+.sh-sheet-actions .sh-cta {
+  min-height: 52px;
+}
+
+@media (max-width: 960px) {
+  .sh-nav,
+  .sh-signin {
+    display: none;
+  }
+  .sh-toggle {
+    display: inline-block;
+  }
+  .sh-bar > .sh-actions > .sh-cta {
+    min-height: 42px;
+    padding: 0 14px;
+  }
+}
+/* Between phone and wide desktop the bar is tight: smaller gaps keep every item on one line. */
+@media (min-width: 961px) and (max-width: 1180px) {
+  .sh-nav {
+    gap: 16px;
+  }
+  .sh-bar {
+    gap: 12px;
+  }
+  .sh-nav a,
+  .sh-drop-btn {
+    font-size: 15px;
+  }
+  .sh-signin {
+    padding: 0 8px;
+    font-size: 15px;
+  }
+  .sh-logo span {
+    font-size: 1.3rem;
+  }
+}
+/* On phones the bar has no room for the theme toggle next to the CTA and menu button, so it moves into the menu. */
+.sh-theme-bar {
+  display: contents;
+}
+.sh-theme-sheet {
+  display: none;
+}
+@media (max-width: 480px) {
+  .sh-theme-bar {
+    display: none;
+  }
+  .sh-theme-sheet {
+    display: contents;
+  }
+  .sh-sheet-actions:has(.sh-theme-sheet) {
+    grid-template-columns: 42px 1.4fr 1fr;
+  }
+  .sh-sheet-actions .sh-theme {
+    height: 52px;
+    width: 42px;
+  }
+}
+/* The scrolled pill is only 100% minus two gutters wide, so on narrow phones the bar tightens to keep the menu button inside it. */
+@media (max-width: 480px) {
+  .sh-bar {
+    gap: 8px;
+  }
+  .sh.is-scrolled .sh-bar {
+    padding: 0 8px 0 14px;
+  }
+  .sh-logo span {
+    font-size: 1.25rem;
+  }
+  .sh-logo {
+    gap: 6px;
+  }
+}
+@media (max-width: 350px) {
+  .sh-bar > .sh-actions > .sh-cta {
+    display: none;
+  }
+}
+
+/* ---- Footer --------------------------------------------------------------------------------- */
+.sf {
+  background: var(--footer-bg);
+  border-top: 1px solid var(--hairline);
+  padding: clamp(56px, 7vw, 96px) var(--gutter) 28px;
+}
+.sf-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  container-type: inline-size;
+}
+.sf-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
+}
+.sf-brand p {
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 38ch;
+  margin: 20px 0 22px;
+}
+.sf-social {
+  display: flex;
+  gap: 10px;
+}
+.sf-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius);
+  border: 1px solid var(--btn2-line);
+  background: var(--btn2-bg);
+  color: var(--btn2-ink);
+  transition: background-color 0.2s ease;
+}
+.sf-social a:hover {
+  background: var(--fill-soft);
+}
+.sf-col {
+  display: block;
+}
+.sf-col h2 {
+  font: 700 16px/1 var(--font);
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.sf-col ul,
+.sf-bottom ul {
+  list-style: none;
+}
+.sf-col li + li {
+  margin-top: 12px;
+}
+.sf-col a,
+.sf-bottom a {
+  color: var(--ink-2);
+  opacity: 1;
+  font-size: 15px;
+  transition: color 0.2s ease;
+}
+.sf-col a:hover,
+.sf-bottom a:hover {
+  color: var(--ink);
+}
+.sf-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px 32px;
+  margin-top: clamp(32px, 5vw, 56px);
+  padding-top: 22px;
+  border-top: 1px solid var(--hairline);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.sf-bottom ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+@media (max-width: 960px) {
+  .sf-top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sf-brand {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 560px) {
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh,
+  .sh *,
+  .sf * {
+    transition: none !important;
+  }
+}
+
+/* Inside the pill, the controls round off to match. */
+.sh.is-scrolled .sh-signin,
+.sh.is-scrolled .sh-cta,
+.sh.is-scrolled .sh-wa,
+.sh.is-scrolled .sh-theme,
+.sh.is-scrolled .sh-toggle {
+  border-radius: 999px;
+}
+
+/* Essentials mega menu: the header surface grows into one rounded panel holding a grid of cards and a
+   feature card. The panel sits behind the bar's own content and starts at the top of the bar. */
+.sh-drop {
+  /* not positioned, so the panel is placed against the bar */
+  display: block;
+}
+.sh-drop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  color: var(--ink);
+  opacity: 0.78;
+  font: 500 16px var(--font);
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+.sh-drop-btn:hover {
+  opacity: 1;
+}
+/* As on the reference, the open trigger dims while its panel is showing. */
+.sh-drop-btn[aria-expanded="true"] {
+  opacity: 0.55;
+}
+.sh-drop-btn.is-active {
+  opacity: 1;
+  border-bottom-color: var(--ink);
+}
+.sh-drop-btn svg {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s var(--ease);
+}
+.sh-drop-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.sh-drop-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sh-mega {
+  --bar: var(--header-h);
+  position: absolute;
+  z-index: -1;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  gap: 20px;
+  padding: calc(var(--bar) - 4px) 20px 20px;
+  border: 1px solid var(--hairline);
+  border-radius: 28px;
+  background: var(--canvas);
+  box-shadow: var(--shadow-float);
+  animation: sh-mega-in 0.22s var(--ease) both;
+}
+.sh.is-scrolled .sh-mega {
+  --bar: 62px;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+@keyframes sh-mega-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sh-mega-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  list-style: none;
+}
+.sh-mega-cards a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 176px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--canvas-2);
+  color: var(--ink);
+  opacity: 1;
+  border-bottom: 0;
+  transition: background-color 0.2s ease;
+}
+.sh-mega-cards a:hover,
+.sh-mega-cards a[aria-current="page"] {
+  background: var(--chip);
+}
+.sh-mega-cards .hm-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: auto;
+  color: var(--ink-2);
+}
+.sh-mega-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.sh-mega-title svg,
+.sh-mega-links svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s var(--ease);
+}
+.sh-mega-cards a:hover svg,
+.sh-mega-links a:hover svg {
+  transform: translateX(3px);
+}
+.sh-mega-text {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.sh-mega-feature {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sh-mega-feature img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+}
+.sh-mega-links {
+  margin-top: auto;
+  padding-top: 14px;
+  list-style: none;
+}
+.sh-mega-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--ink-2);
+  opacity: 1;
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom: 0;
+}
+.sh-mega-links a:hover {
+  color: var(--ink);
+}
+/* Cards appear one after another. */
+.sh-mega-cards li,
+.sh-mega-feature {
+  animation: sh-mega-in 0.35s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 40ms);
+}
+.sh-mega a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+@media (max-width: 960px) {
+  .sh-mega {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-mega,
+  .sh-mega-cards li,
+  .sh-mega-feature {
+    animation: none;
+  }
+}
+
+/* Pages that open with a photo hero: until the visitor scrolls, the header sits on the photo, so it
+   uses the dark theme's colours whatever theme the page is in. */
+body:has(.hm-phero) .sh:not(.is-scrolled) {
+  --ink: #f5f7fa;
+  --canvas: #0a0d12;
+  --header-bg: rgba(10, 13, 18, 0.72);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --fill-soft: rgba(255, 255, 255, 0.06);
+  --btn2-bg: rgba(255, 255, 255, 0.08);
+  --btn2-ink: #f5f7fa;
+  --btn2-line: rgba(255, 255, 255, 0.16);
+  color-scheme: dark;
+}
+
+/* ---- Footer watermark ------------------------------------------------------------------------ */
+.sf-mark {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 4vw, 56px);
+  /* The word is 4.22em wide, so this size makes it span its container exactly. */
+  font-size: 21vw;
+  font-size: 23.6cqw;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.82;
+  user-select: none;
+  overflow: hidden;
+}
+.sf-mark span {
+  display: block;
+  padding-bottom: 0.04em;
+  color: transparent;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ink) 24%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 3%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: translateY(70%);
+  opacity: 0;
+  transition:
+    transform 1.1s var(--ease) calc(var(--i) * 70ms),
+    opacity 0.9s var(--ease) calc(var(--i) * 70ms);
+}
+.sf-mark.is-in span {
+  transform: none;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-mark span {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}

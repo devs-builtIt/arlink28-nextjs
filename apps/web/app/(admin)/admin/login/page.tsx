@@ -63,6 +63,12 @@ export default function LoginPage() {
           Forgot your password?
         </Link>
       </p>
+      <p className="auth-register">
+        No account yet?{" "}
+        <a className="link" href="/contact">
+          Request access
+        </a>
+      </p>
     </AuthFrame>
   );
 }
