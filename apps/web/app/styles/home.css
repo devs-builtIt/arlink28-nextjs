@@ -41,12 +41,34 @@
 .hm [data-rv] {
   transform: translateY(var(--ty, 0px));
   transition:
-    opacity 0.6s var(--ease) calc(var(--i, 0) * 70ms),
-    transform 0.6s var(--ease) calc(var(--i, 0) * 70ms);
+    opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
+    transform 1s var(--ease) calc(var(--i, 0) * 90ms);
 }
 .hm.rv-ready [data-rv]:not(.is-in) {
   opacity: 0.001;
-  --ty: 10px;
+  --ty: 28px;
+}
+/* A photo card's picture settles from slightly zoomed-in as the card arrives, so the card seems to focus. */
+.hm .hm-routes li img,
+.hm .hm-pkgs li img {
+  scale: 1;
+  transition:
+    scale 1.4s var(--ease) calc(var(--i, 0) * 90ms),
+    transform 0.9s var(--ease);
+}
+.hm.rv-ready .hm-routes li[data-rv]:not(.is-in) img,
+.hm.rv-ready .hm-pkgs li[data-rv]:not(.is-in) img {
+  scale: 1.14;
+}
+
+/* Smooth anchor and in-page scrolling, kept off for people who ask for less motion. */
+html:has(.hm) {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.hm) {
+    scroll-behavior: auto;
+  }
 }
 
 /* The tilted pill on each section title pops in after its heading: it grows from small and drops into
@@ -2253,5 +2275,66 @@
 @media (max-width: 640px) {
   .hm-phero {
     min-height: 300px;
+  }
+}
+
+/* ---- Card hover: a slow zoom, the card rising a little and its text following ----------------- */
+@media (hover: hover) {
+  .hm-routes li,
+  .hm-pkgs li,
+  .hm-process li,
+  .hm-rv-card {
+    translate: 0 0;
+    transition-property: opacity, transform, translate, background-color;
+  }
+  .hm-routes li:hover,
+  .hm-pkgs li:hover {
+    translate: 0 -6px;
+  }
+  .hm-routes li,
+  .hm-pkgs li {
+    transition:
+      opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
+      transform 1s var(--ease) calc(var(--i, 0) * 90ms),
+      translate 0.6s var(--ease);
+  }
+  .hm-routes button:hover img,
+  .hm-pkgs a:hover img {
+    transform: scale(1.07);
+  }
+  .hm-routes-text,
+  .hm-pkg-text {
+    transition: translate 0.6s var(--ease);
+  }
+  .hm-routes li:hover .hm-routes-text,
+  .hm-pkgs li:hover .hm-pkg-text {
+    translate: 0 -6px;
+  }
+  .hm-process li:hover,
+  .hm-rv-card:hover {
+    translate: 0 -4px;
+    background: var(--chip);
+  }
+  .hm-process li,
+  .hm-rv-card {
+    transition:
+      opacity 0.9s var(--ease) calc(var(--i, 0) * 90ms),
+      transform 1s var(--ease) calc(var(--i, 0) * 90ms),
+      translate 0.5s var(--ease),
+      background-color 0.5s var(--ease);
+  }
+}
+/* Buttons press in a touch when clicked. */
+.hm-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-routes li:hover,
+  .hm-pkgs li:hover,
+  .hm-process li:hover,
+  .hm-rv-card:hover,
+  .hm-routes li:hover .hm-routes-text,
+  .hm-pkgs li:hover .hm-pkg-text {
+    translate: none;
   }
 }
