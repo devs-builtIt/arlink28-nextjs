@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Sign from "./Sign";
 import Brand from "./Brand";
 
 type Props = {
@@ -9,31 +8,31 @@ type Props = {
 };
 
 /**
- * Signed-out pages (sign in, password reset, accepting an invite): the navy
- * "Staff only" gantry sign beside a single light form.
+ * Signed-out pages (sign in, password reset, accepting an invite): the homepage photograph on the left and the
+ * form on the right (hidden on narrow screens).
  */
 export default function AuthFrame({ title, intro, children }: Props) {
   return (
     <div className="auth">
-      <div className="auth-gantry">
+      <main className="auth-main">
         {/* A full page load back to the public site, so its styles load cleanly. */}
         <a className="auth-logo" href="/" aria-label="ARLink28 home">
           <Brand size="l" />
         </a>
-        <div className="gantry-band">
-          <Sign icon="fa-id-badge" size="hero" as="p">
-            Staff only
-          </Sign>
-        </div>
-      </div>
-
-      <main className="auth-panel">
-        <div className="auth-body">
+        <div className="auth-card">
           <h1 className="auth-title">{title}</h1>
           {intro && <p className="auth-intro">{intro}</p>}
           {children}
         </div>
+        <p className="auth-back">
+          <a href="/">Back to arlink28.com</a>
+        </p>
       </main>
+      {/* The same photograph and line as the public homepage, so signing in feels like the same place. */}
+      <aside className="auth-photo" aria-hidden="true">
+        <img src="/images/home/hero-zanzibar-1920.webp" alt="" width={1920} height={1280} />
+        <p>Travel across Africa with people who know the routes.</p>
+      </aside>
     </div>
   );
 }
