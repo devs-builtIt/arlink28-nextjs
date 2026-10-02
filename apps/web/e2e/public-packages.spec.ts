@@ -10,14 +10,20 @@ const pager = (page: Page) => page.getByRole("navigation", { name: "Pages" });
 const search = (page: Page) => page.getByRole("search").getByRole("button", { name: "Search" });
 const filters = (page: Page) => page.getByRole("list", { name: "Filters in use" });
 
+/** Chooses an option in one of our dropdowns, by the name it shows. */
+async function choose(page: Page, field: string, option: string | RegExp) {
+  await page.getByRole("combobox", { name: field }).click();
+  await page.getByRole("option", { name: option }).click();
+}
+
 test.describe("the packages list", () => {
   test("has a hero with a search bar, and a grid of the published packages", async ({ page }) => {
     await page.goto("/packages");
     await expect(page.getByRole("heading", { name: "Find your next safari", level: 1 })).toBeVisible();
     const bar = page.getByRole("search");
-    await expect(bar.getByLabel("Destination")).toBeVisible();
-    await expect(bar.getByLabel("Type")).toBeVisible();
-    await expect(bar.getByLabel("Party")).toBeVisible();
+    await expect(bar.getByRole("combobox", { name: "Destination" })).toBeVisible();
+    await expect(bar.getByRole("combobox", { name: "Type" })).toBeVisible();
+    await expect(bar.getByRole("combobox", { name: "Party" })).toBeVisible();
     await expect(search(page)).toBeVisible();
 
     await expect(cards(page)).toHaveCount(10);
@@ -66,8 +72,8 @@ test.describe("the packages list", () => {
 
   test("filters by destination and type from the search bar, and the address holds them", async ({ page }) => {
     await page.goto("/packages");
-    await page.getByLabel("Destination").selectOption("masai-mara");
-    await page.getByLabel("Type").selectOption("SAFARI");
+    await choose(page, "Destination", "Masai Mara");
+    await choose(page, "Type", "Safari");
     await search(page).click();
     await expect(page).toHaveURL(/destination=masai-mara/);
     await expect(page).toHaveURL(/category=SAFARI/);
@@ -75,7 +81,7 @@ test.describe("the packages list", () => {
     await expect(filters(page).locator(".pkgs-chip")).toHaveCount(2);
 
     await page.reload();
-    await expect(page.getByLabel("Destination")).toHaveValue("masai-mara");
+    await expect(page.getByRole("combobox", { name: "Destination" })).toHaveText("Masai Mara");
     await expect(cards(page)).toHaveCount(3);
 
     // Each filter in use can be removed on its own.
@@ -83,7 +89,7 @@ test.describe("the packages list", () => {
       .getByRole("button", { name: /Safari/ })
       .click();
     await expect(page).not.toHaveURL(/category=/);
-    await expect(page.getByLabel("Type")).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Type" })).toHaveText("Any type");
 
     await page.getByRole("button", { name: "Clear all" }).click();
     await expect(cards(page)).toHaveCount(10);
@@ -91,13 +97,13 @@ test.describe("the packages list", () => {
 
   test("filters by party size", async ({ page }) => {
     await page.goto("/packages");
-    await page.getByLabel("Party").selectOption("2");
+    await choose(page, "Party", "2 or more adults");
     await search(page).click();
     await expect(page).toHaveURL(/adults=2/);
     await expect(cards(page)).toHaveCount(10);
 
     // Every package here is for two adults, so a party of four finds none.
-    await page.getByLabel("Party").selectOption("4");
+    await choose(page, "Party", "4 or more adults");
     await search(page).click();
     await expect(page.getByRole("heading", { name: "No packages found" })).toBeVisible();
     await expect(page.getByRole("status").filter({ hasText: "0 packages" })).toBeVisible();
@@ -119,10 +125,10 @@ test.describe("the packages list", () => {
 
   test("sorts by price, lowest or highest first", async ({ page }) => {
     await page.goto("/packages");
-    await page.getByLabel("Sort by").selectOption("price");
+    await choose(page, "Sort by", "Price, lowest first");
     await expect(page).toHaveURL(/sort=price/);
     await expect(cards(page).first()).toContainText("US$5,896");
-    await page.getByLabel("Sort by").selectOption("-price");
+    await choose(page, "Sort by", "Price, highest first");
     await expect(cards(page).first()).toContainText("US$30,889");
   });
 
