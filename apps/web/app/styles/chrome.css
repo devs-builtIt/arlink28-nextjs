@@ -737,3 +737,17 @@
     animation: none;
   }
 }
+
+/* Pages that open with a photo hero: until the visitor scrolls, the header sits on the photo, so it
+   uses the dark theme's colours whatever theme the page is in. */
+body:has(.hm-phero) .sh:not(.is-scrolled) {
+  --ink: #f5f7fa;
+  --canvas: #0a0d12;
+  --header-bg: rgba(10, 13, 18, 0.72);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --fill-soft: rgba(255, 255, 255, 0.06);
+  --btn2-bg: rgba(255, 255, 255, 0.08);
+  --btn2-ink: #f5f7fa;
+  --btn2-line: rgba(255, 255, 255, 0.16);
+  color-scheme: dark;
+}
