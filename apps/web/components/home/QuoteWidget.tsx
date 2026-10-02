@@ -6,6 +6,7 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import { WHATSAPP_URL } from "@/content/home-proof";
+import Dropdown from "./Dropdown";
 import AirportField, { airportLabel, findAirport } from "./AirportField";
 
 type Kind = "Flight" | "Hotel" | "Visa" | "Holiday";
@@ -353,19 +354,16 @@ export default function QuoteWidget() {
             ) : (
               <div className="hm-field">
                 <label htmlFor="hm-trav">{kind === "Hotel" ? "Guests" : "Travellers"}</label>
-                <select
+                <Dropdown
                   id="hm-trav"
                   name="travellers"
-                  value={travellers}
-                  onChange={(e) => setTravellers(Number(e.target.value))}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                  <option value={10}>10 or more</option>
-                </select>
+                  value={String(travellers)}
+                  onChange={(v) => setTravellers(Number(v))}
+                  options={[
+                    ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => ({ value: String(n), label: String(n) })),
+                    { value: "10", label: "10 or more" },
+                  ]}
+                />
               </div>
             )}
           </div>
@@ -373,13 +371,13 @@ export default function QuoteWidget() {
           {(kind === "Hotel" || kind === "Holiday") && (
             <div className="hm-field">
               <label htmlFor="hm-nights">Nights</label>
-              <select id="hm-nights" name="nights" value={nights} onChange={(e) => setNights(Number(e.target.value))}>
-                {[1, 2, 3, 4, 5, 6, 7, 10, 14].map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
+              <Dropdown
+                id="hm-nights"
+                name="nights"
+                value={String(nights)}
+                onChange={(v) => setNights(Number(v))}
+                options={[1, 2, 3, 4, 5, 6, 7, 10, 14].map((n) => ({ value: String(n), label: String(n) }))}
+              />
             </div>
           )}
 

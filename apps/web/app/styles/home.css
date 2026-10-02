@@ -2238,3 +2238,119 @@
     min-height: 300px;
   }
 }
+
+/* ---- Dropdown: our own select list ---------------------------------------------------------- */
+.dd {
+  position: relative;
+  --dd-bg: var(--canvas);
+  --dd-ink: var(--ink);
+  --dd-mute: var(--ink-2);
+  --dd-hover: var(--canvas-2);
+  --dd-line: var(--hairline);
+}
+.hm-quote .dd {
+  --dd-bg: #1b212b;
+  --dd-ink: #fff;
+  --dd-mute: rgba(255, 255, 255, 0.6);
+  --dd-hover: rgba(255, 255, 255, 0.1);
+  --dd-line: rgba(255, 255, 255, 0.18);
+}
+.dd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 400 16px var(--font);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.hm-quote .dd-btn {
+  min-height: 46px;
+  padding: 11px 14px;
+  border-color: var(--p-line);
+  background: var(--p-field);
+  color: #fff;
+}
+.dd-btn:focus-visible,
+.dd-btn[aria-expanded="true"] {
+  outline: none;
+  border-color: var(--ink);
+}
+.hm-quote .dd-btn:focus-visible,
+.hm-quote .dd-btn[aria-expanded="true"] {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+.dd-btn[aria-invalid="true"] {
+  border-color: #c4161f;
+}
+.dd-placeholder {
+  color: var(--ink-2);
+  opacity: 0.8;
+}
+.hm-quote .dd-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+.dd-btn svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s var(--ease);
+}
+.dd-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.dd-list {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow: auto;
+  padding: 6px;
+  list-style: none;
+  border-radius: var(--radius);
+  background: var(--dd-bg);
+  border: 1px solid var(--dd-line);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+.dd-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: var(--dd-ink);
+  font-size: 16px;
+  cursor: pointer;
+}
+.dd-list li.is-active {
+  background: var(--dd-hover);
+}
+.dd-list li[aria-selected="true"] {
+  font-weight: 700;
+}
+.dd-list li svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

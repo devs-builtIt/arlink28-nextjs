@@ -6,9 +6,15 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import { WHATSAPP_URL } from "@/content/home-proof";
+import Dropdown from "./Dropdown";
 
 const SERVICES = ["Flight", "Hotel reservation", "Visa support", "Holiday package", "Private charter"] as const;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const TRAVELLERS = [
+  ...Array.from({ length: 9 }, (_, i) => ({ value: String(i + 1), label: i === 0 ? "1 person" : `${i + 1} people` })),
+  { value: "10+", label: "10 or more" },
+];
 
 type Field = "name" | "email" | "service" | "destination" | "consent";
 
@@ -151,18 +157,15 @@ export default function QuoteForm() {
         </div>
         <div className="qf-field">
           <label htmlFor="qf-service">Service</label>
-          <select
+          <Dropdown
             id="qf-service"
             name="service"
             value={service}
-            onChange={(e) => setService(e.target.value)}
-            aria-invalid={errors.service ? true : undefined}
-          >
-            <option value="">Choose a service</option>
-            {SERVICES.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
+            onChange={setService}
+            placeholder="Choose a service"
+            options={SERVICES.map((v) => ({ value: v, label: v }))}
+            invalid={!!errors.service}
+          />
           {errors.service && <p className="qf-error">{errors.service}</p>}
         </div>
         <div className="qf-field">
@@ -179,19 +182,13 @@ export default function QuoteForm() {
         </div>
         <div className="qf-field">
           <label htmlFor="qf-travellers">Number of travellers</label>
-          <select
+          <Dropdown
             id="qf-travellers"
             name="travellers"
             value={travellers}
-            onChange={(e) => setTravellers(e.target.value)}
-          >
-            {Array.from({ length: 9 }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                {n === 1 ? "1 person" : `${n} people`}
-              </option>
-            ))}
-            <option value="10+">10 or more</option>
-          </select>
+            onChange={setTravellers}
+            options={TRAVELLERS}
+          />
         </div>
         <div className="qf-field qf-wide">
           <label htmlFor="qf-message">Your message</label>
