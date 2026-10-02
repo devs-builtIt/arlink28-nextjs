@@ -1,25 +1,28 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import "../styles/tokens.css";
+import "../styles/chrome.css";
+import { siteMetadata } from "../site";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ClientEffects from "@/components/ClientEffects";
 import BackToTop from "@/components/BackToTop";
 
-export const metadata: Metadata = {
-  title: "ARLinks - Premium African Aviation",
-  description: "Connecting you to the world with affordable, premium flights. ARLink28 — Africa's next great airline.",
-  icons: {
-    icon: [{ url: "/favicon.ico" }, { url: "/favicon.png", type: "image/png" }],
-    apple: "/apple-touch-icon.png",
-  },
-};
+export const metadata = siteMetadata;
 
+// The pages in this group are still dark-only, so their header and footer stay dark whatever the visitor's
+// theme is. display: contents keeps the wrapper out of the layout.
 export default function WebLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
-      <main style={{ flex: 1 }}>{children}</main>
-      <Footer />
+      <div data-theme="dark" style={{ display: "contents" }}>
+        <Header />
+      </div>
+      <main id="main" style={{ flex: 1 }}>
+        {children}
+      </main>
+      <div data-theme="dark" style={{ display: "contents" }}>
+        <Footer />
+      </div>
       <ClientEffects />
       <BackToTop />
     </>

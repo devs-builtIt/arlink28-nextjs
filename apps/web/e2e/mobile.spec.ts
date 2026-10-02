@@ -18,11 +18,13 @@ test.describe("on a phone", () => {
     await expect(nav).not.toBeInViewport();
   });
 
-  test("Sign in in the site's menu opens the staff sign-in", async ({ page }) => {
+  test("the site's menu opens, shows the main links, and the footer reaches the staff sign-in", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("#header-signin-btn")).toBeHidden();
-    await page.getByRole("button", { name: "Toggle Menu" }).click();
-    await page.locator(".nav-signin-btn").click();
+    await page.getByRole("button", { name: "Menu" }).click();
+    await expect(page.getByRole("navigation", { name: "Menu" }).getByRole("link", { name: "Flights" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("navigation", { name: "Menu" })).toHaveCount(0);
+    await page.locator("#footer-signin").click();
 
     await expect(page).toHaveURL(/\/admin\/login$/);
     await expect(page.getByRole("heading", { name: "Sign in", level: 1 })).toBeVisible();

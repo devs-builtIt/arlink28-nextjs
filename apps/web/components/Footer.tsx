@@ -1,169 +1,146 @@
 import Link from "next/link";
+import { PHONES, WHATSAPP_URL } from "@/content/home-proof";
+
+const TRAVEL = [
+  { href: "/flights", label: "Flights" },
+  { href: "/hotels", label: "Hotel reservations" },
+  { href: "/visas", label: "Visa support" },
+  { href: "/packages", label: "Holiday packages" },
+  { href: "/elite-jets", label: "Elite Jets" },
+  { href: "/destinations", label: "Destinations" },
+  { href: "/services", label: "All services" },
+];
+
+const COMPANY = [
+  { href: "/about", label: "About" },
+  { href: "/team", label: "Team" },
+  { href: "/blogs", label: "Blogs" },
+  { href: "/connect", label: "Connect" },
+  { href: "/travel", label: "Travel" },
+  { href: "/engagement", label: "Engagement" },
+  { href: "/opportunities#careers", label: "Careers" },
+  { href: "/opportunities#invest", label: "Investors" },
+  { href: "/opportunities#partnerships", label: "Partnerships" },
+];
+
+const LEGAL = [
+  { href: "/terms-of-service", label: "Terms" },
+  { href: "/privacy-policy", label: "Privacy" },
+  { href: "/refund-policy", label: "Refunds and cancellations" },
+  { href: "/affiliate-disclosure", label: "Affiliate disclosure" },
+  { href: "/cookie-policy", label: "Cookies" },
+  { href: "/disclaimer", label: "Disclaimer" },
+];
 
 export default function Footer() {
   return (
-    <footer id="contact">
-      <div className="footer-top">
-        <div className="footer-brand">
-          <Link className="logo-container" href="/">
-            <img
-              alt="ARLinks Logo"
-              loading="lazy"
-              width="120"
-              height="35"
-              decoding="async"
-              src="/images/logo.png"
-              style={{ color: "transparent", height: "35px", width: "auto" }}
-            />
-          </Link>
-          <p>Connecting African journeys through travel, tourism and the future of aviation.</p>
-          <div className="social-links">
-            <a
-              href="https://www.instagram.com/fly_arlink28?igsh=dnpyYTkzcXZrc3J0"
-              className="social-icon"
-              aria-label="Instagram"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa-brands fa-instagram"></i>
-            </a>
-            <a
-              href="https://www.tiktok.com/@fly_arlink28?_r=1&_t=ZS-97TMxBPfuAU"
-              className="social-icon"
-              aria-label="TikTok"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa-brands fa-tiktok"></i>
-            </a>
+    <footer className="sf" id="contact">
+      <div className="sf-inner">
+        <div className="sf-top">
+          <div className="sf-brand">
+            <Link className="sf-logo" href="/" aria-label="ARLink28 home">
+              <img alt="" loading="lazy" width={62} height={50} decoding="async" src="/images/logo.png" />
+              <span>ARLink28</span>
+            </Link>
+            <p>
+              Flights, hotels, visas and holidays across Africa and beyond. A travel agency today, building towards an
+              airline of our own.
+            </p>
+            <div className="sf-social">
+              <a
+                href="https://www.instagram.com/fly_arlink28?igsh=dnpyYTkzcXZrc3J0"
+                aria-label="Instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fa-brands fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a
+                href="https://www.tiktok.com/@fly_arlink28?_r=1&_t=ZS-97TMxBPfuAU"
+                aria-label="TikTok"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fa-brands fa-tiktok" aria-hidden="true"></i>
+              </a>
+              <a href={WHATSAPP_URL} aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                <i className="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <nav className="sf-col" aria-label="Travel">
+            <h2>Travel</h2>
+            <ul>
+              {TRAVEL.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav className="sf-col" aria-label="Company">
+            <h2>Company</h2>
+            <ul>
+              {COMPANY.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="sf-col">
+            <h2>Talk to us</h2>
+            <ul>
+              <li>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                  WhatsApp
+                </a>
+              </li>
+              {PHONES.map((p) => (
+                <li key={p.href}>
+                  <a href={p.href}>{p.label}</a>
+                </li>
+              ))}
+              <li>
+                <Link href="/contact">Contact form</Link>
+              </li>
+              <li>
+                <Link href="/contact#faq">Questions</Link>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="footer-col">
-          <h5>Quick Links</h5>
+
+        <div className="sf-offices">
+          <address>
+            <strong>Lagos</strong>
+            2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233
+          </address>
+          <address>
+            <strong>London</strong>
+            71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom
+          </address>
+        </div>
+
+        <div className="sf-bottom">
+          <p>© 2026 ARLink28. All rights reserved.</p>
           <ul>
+            {LEGAL.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href}>{l.label}</Link>
+              </li>
+            ))}
             <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/about">About</Link>
-            </li>
-            <li>
-              <Link href="/connect">Connect</Link>
-            </li>
-            <li>
-              <Link href="/services">Services</Link>
-            </li>
-            <li>
-              <Link href="/travel">Travel</Link>
-            </li>
-            <li>
-              <Link href="/opportunities">Opportunities</Link>
-            </li>
-            <li>
-              <Link href="/engagement">Engagement</Link>
+              {/* A plain <a> (full page load), so the public site's CSS doesn't carry into the admin. */}
+              <a id="footer-signin" href="/admin/login">
+                Staff sign in
+              </a>
             </li>
           </ul>
         </div>
-        <div className="footer-col">
-          <h5>Opportunities</h5>
-          <ul>
-            <li>
-              <Link href="/opportunities#careers">Careers</Link>
-            </li>
-            <li>
-              <Link href="/opportunities#invest">Investor Relations</Link>
-            </li>
-            <li>
-              <Link href="/opportunities#partnerships">Partnerships</Link>
-            </li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <h5>Services</h5>
-          <ul>
-            <li>
-              <Link href="/services#flight-booking">Flight Booking</Link>
-            </li>
-            <li>
-              <Link href="/services#hotel-reservations">Hotel Booking</Link>
-            </li>
-            <li>
-              <Link href="/services#travel-insurance">Travel Insurance</Link>
-            </li>
-            <li>
-              <Link href="/services#airport-transfers">Airport Transfers</Link>
-            </li>
-            <li>
-              <Link href="/services#holiday-packages">Holiday Packages</Link>
-            </li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <h5>Support</h5>
-          <ul>
-            <li>
-              <Link href="/contact">Contact Us</Link>
-            </li>
-            <li>
-              <Link href="/contact#faq">Help & FAQs</Link>
-            </li>
-            <li>
-              <Link href="/terms-of-service">Terms of Service</Link>
-            </li>
-            <li>
-              <Link href="/privacy-policy">Privacy Policy</Link>
-            </li>
-            <li>
-              <Link href="/refund-policy">Refund & Cancellation Policy</Link>
-            </li>
-            <li>
-              <Link href="/affiliate-disclosure">Affiliate Disclosure</Link>
-            </li>
-            <li>
-              <Link href="/cookie-policy">Cookie Policy</Link>
-            </li>
-            <li>
-              <Link href="/disclaimer">Disclaimer</Link>
-            </li>
-          </ul>
-        </div>
-        <div className="footer-col" style={{ gridColumn: "span 1" }}>
-          <h5>Contact Us</h5>
-          <ul className="contact-info">
-            <li>
-              <i className="fa-solid fa-location-dot"></i>
-              <span>
-                <strong>Nigeria</strong>
-                <br />
-                2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233
-              </span>
-            </li>
-            <li>
-              <i className="fa-solid fa-location-dot"></i>
-              <span>
-                <strong>UK</strong>
-                <br />
-                71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom
-              </span>
-            </li>
-            <li>
-              <i className="fa-solid fa-phone"></i>
-              <a href="tel:+2347047009128">+234 704 700 9128</a>
-            </li>
-            <li>
-              <i className="fa-solid fa-phone"></i>
-              <a href="tel:+447539071257">+44 753 907 1257</a>
-            </li>
-            <li>
-              <i className="fa-brands fa-whatsapp"></i>
-              <a href="https://wa.me/2347047009128">+234 704 700 9128</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <p>© 2026 ARLinks. All rights reserved.</p>
-        <p>Designed with excellence for a seamless traveler experience.</p>
       </div>
     </footer>
   );
