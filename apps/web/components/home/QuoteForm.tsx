@@ -6,15 +6,10 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import { WHATSAPP_URL } from "@/content/home-proof";
-import Dropdown from "./Dropdown";
+import Dropdown, { PARTY_SIZES } from "./Dropdown";
 
 const SERVICES = ["Flight", "Hotel reservation", "Visa support", "Holiday package", "Private charter"] as const;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const TRAVELLERS = [
-  ...Array.from({ length: 9 }, (_, i) => ({ value: String(i + 1), label: i === 0 ? "1 person" : `${i + 1} people` })),
-  { value: "10+", label: "10 or more" },
-];
 
 type Field = "name" | "email" | "service" | "destination" | "consent";
 
@@ -25,7 +20,7 @@ export default function QuoteForm() {
   const [email, setEmail] = useState("");
   const [service, setService] = useState("");
   const [destination, setDestination] = useState("");
-  const [travellers, setTravellers] = useState("1");
+  const [travellers, setTravellers] = useState(PARTY_SIZES[0].value);
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
   const [trap, setTrap] = useState("");
@@ -187,7 +182,7 @@ export default function QuoteForm() {
             name="travellers"
             value={travellers}
             onChange={setTravellers}
-            options={TRAVELLERS}
+            options={PARTY_SIZES}
           />
         </div>
         <div className="qf-field qf-wide">

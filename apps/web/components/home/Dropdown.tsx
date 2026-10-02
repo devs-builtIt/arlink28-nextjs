@@ -4,6 +4,21 @@ import { useEffect, useId, useRef, useState } from "react";
 
 export type DropdownOption = { value: string; label: string };
 
+/** Party sizes as ranges, so the list stays short. The value is what the team reads in the request. */
+export const PARTY_SIZES: DropdownOption[] = [
+  { value: "1 person", label: "1 person" },
+  { value: "2 people", label: "2 people" },
+  { value: "3 to 5 people", label: "3 to 5 people" },
+  { value: "6 to 9 people", label: "6 to 9 people" },
+  { value: "10 or more", label: "10 or more" },
+];
+
+/** The same ranges with short labels, for narrow fields. */
+export const PARTY_SIZES_SHORT: DropdownOption[] = PARTY_SIZES.map((o, i) => ({
+  value: o.value,
+  label: ["1", "2", "3 to 5", "6 to 9", "10+"][i],
+}));
+
 type Props = {
   id: string;
   name: string;

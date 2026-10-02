@@ -6,7 +6,7 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import { WHATSAPP_URL } from "@/content/home-proof";
-import Dropdown from "./Dropdown";
+import Dropdown, { PARTY_SIZES, PARTY_SIZES_SHORT } from "./Dropdown";
 import AirportField, { airportLabel, findAirport } from "./AirportField";
 
 type Kind = "Flight" | "Hotel" | "Visa" | "Holiday";
@@ -33,7 +33,7 @@ export default function QuoteWidget() {
   const [to, setTo] = useState("");
   const [depart, setDepart] = useState("");
   const [back, setBack] = useState("");
-  const [travellers, setTravellers] = useState(1);
+  const [travellers, setTravellers] = useState(PARTY_SIZES[0].value);
   // Hotel, visa and holiday share one "where".
   const [place, setPlace] = useState("");
   const [nationality, setNationality] = useState("");
@@ -357,12 +357,9 @@ export default function QuoteWidget() {
                 <Dropdown
                   id="hm-trav"
                   name="travellers"
-                  value={String(travellers)}
-                  onChange={(v) => setTravellers(Number(v))}
-                  options={[
-                    ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => ({ value: String(n), label: String(n) })),
-                    { value: "10", label: "10 or more" },
-                  ]}
+                  value={travellers}
+                  onChange={setTravellers}
+                  options={PARTY_SIZES_SHORT}
                 />
               </div>
             )}
