@@ -1,0 +1,21 @@
+/* Base for the redesigned pages. Scoped to .home-root so nothing here can leak onto the older pages. */
+html:has(.home-root),
+body:has(.home-root) {
+  background: var(--canvas);
+}
+.home-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+.home-root a {
+  transition: none;
+}
+.home-root ::selection {
+  background: var(--red);
+  color: #fff;
+}
