@@ -17,10 +17,10 @@ async function fillGuest(page: Page) {
 test.describe("enquiring about a package", () => {
   test("Enquire opens a form that knows the package and dates, and sending gives a reference", async ({ page }) => {
     await page.goto("/packages/sala-mara-escape");
-    await page
-      .getByRole("complementary", { name: "Get a price" })
-      .getByRole("link", { name: /Enquire/ })
-      .click();
+    const enquire = page.getByRole("complementary", { name: "Get a price" }).getByRole("link", { name: /Enquire/ });
+    // The dates are added to this link once the page's script has run; clicking sooner would lose them.
+    await expect(enquire).toHaveAttribute("href", /checkIn=/);
+    await enquire.click();
 
     await expect(page).toHaveURL(
       /\/contact\?package=Sala\+Mara\+Escape&slug=sala-mara-escape&checkIn=\d{4}-\d{2}-\d{2}&nights=2/,

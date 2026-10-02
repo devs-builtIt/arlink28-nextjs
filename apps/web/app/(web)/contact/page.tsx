@@ -18,7 +18,7 @@ const one = (value: string | string[] | undefined) => (Array.isArray(value) ? va
 const FAQ = [
   {
     q: "How do I book a flight with ARLinks?",
-    a: 'You can book directly through our homepage booking widget. Select your departure, destination, date, and seat type, then click "Search Flight." Our team will confirm your booking and send ticket details to your email within minutes.',
+    a: "Send a quote request from the homepage with your route and dates. A member of our team replies with options and a price, and books it once you agree.",
   },
   {
     q: "Can I change or cancel my booking?",
