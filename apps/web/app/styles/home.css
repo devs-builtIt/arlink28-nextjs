@@ -1867,94 +1867,319 @@
   text-underline-offset: 3px;
 }
 
-/* ---- Quote page: the form beside a short explanation ---------------------------------------- */
+/* ---- Quote and contact pages: a photo panel with contact details beside the form ------------- */
 .hm-qp {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
-  gap: clamp(32px, 6vw, 96px);
-  align-items: start;
-  padding-top: calc(var(--header-h) + 72px);
-  padding-bottom: 96px;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px;
+  align-items: stretch;
+  padding-top: calc(var(--header-h) + 40px);
+  padding-bottom: 80px;
 }
-.hm-qp-eyebrow {
-  margin-bottom: 20px;
-  color: var(--ink-2);
-  font-size: 15px;
-  font-weight: 500;
+.hm-qp-side {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  min-height: 640px;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: #fff;
 }
-.hm-qp h1 {
-  max-width: 11em;
-  font-size: clamp(40px, 5.4vw, 80px);
-  line-height: 1;
+.hm-qp-side > img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 50%;
+}
+.hm-qp-side::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(5, 9, 15, 0.66);
+}
+.hm-qp-copy h1 {
+  max-width: 10em;
+  font-size: clamp(32px, 3.4vw, 46px);
+  line-height: 1.05;
   margin: 0;
 }
-.hm-qp-lead {
-  max-width: 44ch;
-  margin: 24px 0 48px;
-  color: var(--ink-2);
-  font-size: clamp(18px, 1.6vw, 21px);
+.hm-qp-copy p {
+  max-width: 34ch;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.5;
 }
-.hm-qp-steps {
+.hm-qp-contacts {
   display: grid;
-  gap: 28px;
-  max-width: 480px;
+  gap: 10px;
   list-style: none;
 }
-.hm-qp-steps li {
+.hm-qp-contacts li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.14);
+}
+.hm-qp-icon {
+  flex: none;
   display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 16px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #fff;
+  color: #212121;
+  font-size: 16px;
 }
-.hm-qp-steps li > span {
-  color: var(--ink-2);
-  font-size: 15px;
-  font-weight: 500;
-  padding-top: 3px;
+.hm-qp-contacts li > div {
+  display: grid;
+  min-width: 0;
 }
-.hm-qp-steps strong {
-  display: block;
-  font-size: 20px;
+.hm-qp-contacts li span:not(.hm-qp-icon) {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+.hm-qp-contacts a,
+.hm-qp-contacts strong {
+  font-size: 17px;
+  font-weight: 700;
   letter-spacing: var(--track);
+  color: #fff;
 }
-.hm-qp-steps p {
-  margin-top: 6px;
+.hm-qp-card {
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius);
+  background: var(--canvas-2);
+}
+.qf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.qf-field {
+  min-width: 0;
+}
+.qf-wide {
+  grid-column: 1 / -1;
+}
+.qf-field label {
+  display: block;
+  margin-bottom: 8px;
   color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+}
+.qf-field input,
+.qf-field select,
+.qf-field textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 400 16px var(--font);
+  transition: border-color 0.2s ease;
+}
+.qf-field textarea {
+  resize: vertical;
+}
+.qf-field input::placeholder,
+.qf-field textarea::placeholder {
+  color: var(--ink-2);
+  opacity: 0.7;
+}
+.qf-field input:focus,
+.qf-field select:focus,
+.qf-field textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+.qf-field [aria-invalid="true"] {
+  border-color: #c4161f;
+}
+.qf-error {
+  margin-top: 6px;
+  color: #c4161f;
+  font-size: 14px;
+}
+:root[data-theme="dark"] .qf-error,
+:root:not([data-theme="light"]) .qf-error {
+  color: #ff9ba1;
+}
+.qf-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.qf-consent {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 20px;
+  color: var(--ink-2);
+  font-size: 14px;
   line-height: 1.5;
 }
-.hm-qp-direct {
-  max-width: 480px;
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid var(--hairline);
-  color: var(--ink-2);
-  line-height: 1.6;
+.qf-consent input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--ink);
 }
-.hm-qp-direct a {
+.qf-consent a {
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-/* The form sits on a solid dark panel in both themes, as it does on the hero photo. */
-.hm-qp-form {
-  position: sticky;
-  top: calc(var(--header-h) + 24px);
-  border-radius: var(--radius);
-  background: #11151c;
+.qf > .hm-btn {
+  margin-top: 4px;
 }
-.hm-qp-form .hm-quote {
-  background: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border: 0;
-  padding: clamp(20px, 3vw, 32px);
+.qf-done h2 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.qf-done p {
+  max-width: 46ch;
+  margin-bottom: 24px;
+  color: var(--ink-2);
+  line-height: 1.5;
 }
 @media (max-width: 1024px) {
   .hm-qp {
     grid-template-columns: 1fr;
-    padding-top: calc(var(--header-h) + 40px);
   }
-  .hm-qp-form {
-    position: static;
+  .hm-qp-side {
+    min-height: 0;
+  }
+}
+@media (max-width: 640px) {
+  .qf-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Contact page: the enquiry form takes the home page's colours ----------------------------- */
+.hm-ct .hm-qp-card {
+  --surface: var(--canvas);
+  --body: var(--ink);
+  --muted: var(--ink-2);
+  --line: var(--hairline);
+  --line-strong: transparent;
+  --error: #c4161f;
+  --error-bg: rgba(196, 22, 31, 0.1);
+  --red-deep: var(--red-hover);
+}
+:root[data-theme="dark"] .hm-ct .hm-qp-card,
+:root:not([data-theme="light"]) .hm-ct .hm-qp-card {
+  --error: #ff9ba1;
+  --error-bg: rgba(255, 155, 161, 0.12);
+}
+.hm-qp-title {
+  font-size: 28px;
+  line-height: 1.15;
+}
+.hm-qp-sub {
+  margin: 8px 0 28px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.hm-ct .ct-form {
+  gap: 20px;
+}
+.hm-ct .ct-field > label,
+.hm-ct .ct-field > .ct-label {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.hm-ct .ct-field input,
+.hm-ct .ct-field select,
+.hm-ct .ct-field textarea {
+  min-height: 52px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  font: 400 16px var(--font);
+}
+.hm-ct .ct-field textarea {
+  min-height: 132px;
+}
+.hm-ct .ct-field input:focus,
+.hm-ct .ct-field select:focus,
+.hm-ct .ct-field textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+.hm-ct .ct-button {
+  min-height: 46px;
+  border-radius: var(--radius);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--canvas);
+  font: 700 14px/1 var(--font);
+}
+.hm-ct .ct-button:hover {
+  border-color: var(--ink-2);
+  background: var(--ink-2);
+  color: var(--canvas);
+}
+.hm-ct .ct-button:disabled {
+  opacity: 0.5;
+}
+.hm-ct .ct-button-plain {
+  border-color: var(--hairline);
+  background: transparent;
+  color: var(--ink);
+}
+.hm-ct .ct-consent {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.hm-ct .ct-consent a {
+  color: var(--ink);
+}
+.hm-ct .ct-reference {
+  border-color: var(--hairline);
+}
+.hm-ct-more {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+}
+.hm-ct-more h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+.hm-ct-hours {
+  display: grid;
+  gap: 14px;
+}
+.hm-ct-hours dt {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.hm-ct-hours dd {
+  margin: 2px 0 0;
+  line-height: 1.5;
+}
+.hm-ct-hours a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 900px) {
+  .hm-ct-more {
+    grid-template-columns: 1fr;
   }
 }

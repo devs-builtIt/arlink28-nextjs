@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "../../styles/home.css";
-import QuoteWidget from "@/components/home/QuoteWidget";
+import QuoteForm from "@/components/home/QuoteForm";
 import Reveal from "@/components/home/Reveal";
-import { PHONES, WHATSAPP_URL } from "@/content/home-proof";
+import { PHONES } from "@/content/home-proof";
 
 export const metadata: Metadata = {
   title: "Get a quote | ARLink28",
@@ -10,18 +10,21 @@ export const metadata: Metadata = {
     "Tell us your route and dates, or the trip you have in mind. A member of the ARLink28 team replies with options and a price. Nothing is charged until you agree.",
 };
 
-const STEPS = [
+const CONTACTS = [
   {
-    title: "Tell us what you need",
-    text: "Pick flight, hotel, visa or holiday and fill in the short form. It takes about a minute.",
+    label: "Phone number",
+    icon: "fa-phone",
+    lines: PHONES.map((p) => ({ text: p.label, href: p.href })),
   },
   {
-    title: "We come back with a price",
-    text: "A member of the team replies by email or WhatsApp with options and checks the details with you.",
+    label: "Lagos office",
+    icon: "fa-location-dot",
+    lines: [{ text: "Mulliner Towers, Ikoyi", href: undefined }],
   },
   {
-    title: "You decide",
-    text: "Nothing is charged until you agree. Once you do, we arrange the booking and stay on hand until you fly.",
+    label: "London office",
+    icon: "fa-location-dot",
+    lines: [{ text: "Shelton Street, Covent Garden", href: undefined }],
   },
 ];
 
@@ -30,36 +33,39 @@ export default function QuotePage() {
     <div className="hm">
       <Reveal />
       <section className="hm-qp hm-wrap" aria-labelledby="hm-qp-h">
-        <div className="hm-qp-copy">
-          <p className="hm-qp-eyebrow">Get a quote</p>
-          <h1 id="hm-qp-h">Tell us where, and we will price it.</h1>
-          <p className="hm-qp-lead">
-            Send us your route and dates, or just the idea. A person replies with options and a price.
-          </p>
-          <ol className="hm-qp-steps">
-            {STEPS.map((s, i) => (
-              <li key={s.title}>
-                <span>0{i + 1}</span>
+        <div className="hm-qp-side">
+          <img src="/images/home/hero-zanzibar-1920.webp" alt="" width={1920} height={1280} />
+          <div className="hm-qp-copy">
+            <h1 id="hm-qp-h">Tell us where, and we will price it.</h1>
+            <p>
+              Send us your route and dates, or just the idea. A person replies with options and a price, and nothing is
+              charged until you agree.
+            </p>
+          </div>
+          <ul className="hm-qp-contacts">
+            {CONTACTS.map((c) => (
+              <li key={c.label}>
+                <span className="hm-qp-icon" aria-hidden="true">
+                  <i className={`fa-solid ${c.icon}`}></i>
+                </span>
                 <div>
-                  <strong>{s.title}</strong>
-                  <p>{s.text}</p>
+                  <span>{c.label}</span>
+                  {c.lines.map((l) =>
+                    l.href ? (
+                      <a key={l.text} href={l.href}>
+                        {l.text}
+                      </a>
+                    ) : (
+                      <strong key={l.text}>{l.text}</strong>
+                    ),
+                  )}
                 </div>
               </li>
             ))}
-          </ol>
-          <p className="hm-qp-direct">
-            Prefer to talk? Call{" "}
-            {PHONES.map((p, i) => (
-              <span key={p.href}>
-                {i > 0 && " or "}
-                <a href={p.href}>{p.label}</a>
-              </span>
-            ))}
-            , or <a href={WHATSAPP_URL}>message us on WhatsApp</a>.
-          </p>
+          </ul>
         </div>
-        <div className="hm-qp-form" data-theme="dark">
-          <QuoteWidget />
+        <div className="hm-qp-card">
+          <QuoteForm />
         </div>
       </section>
     </div>
