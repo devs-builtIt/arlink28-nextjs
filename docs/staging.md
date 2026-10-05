@@ -4,7 +4,7 @@ Staging is three hosted services. Nothing here is the VPS production setup from 
 
 | Layer | Host | Identifier |
 | --- | --- | --- |
-| Web (this repo, `apps/web`) | Vercel | `arlink28website-lkmxfs503-developers-4380.vercel.app` (a per-deployment URL; use the project's stable alias for sharing). Project ID `prj_JFrzlov7oK2klcRNF08bwJ9mTSJl` |
+| Web (this repo, `apps/web`) | Vercel | `https://arlink28website.vercel.app` (stable Production alias; the `...-lkmxfs503-...` URLs are per-deployment and keep the env vars they were built with, so don't use them). Project ID `prj_JFrzlov7oK2klcRNF08bwJ9mTSJl` |
 | API (`arlink28-api`, Docker) | Render | service `srv-daumsmvlk1mc73dglcdg`, `https://arlink28-api.onrender.com` |
 | Database | Supabase (Postgres) | the same remote database the API uses in development |
 
@@ -35,11 +35,11 @@ Environment tab of `srv-daumsmvlk1mc73dglcdg`. ASP.NET Core reads `Section__Key`
 | `AppSettings__Secret` | A random string of 32+ characters. Signs the admin tokens. Never reuse the dev value. |
 | `AppSettings__ValidIssuer` / `AppSettings__ValidAudience` | `https://arlink28-api.onrender.com` |
 | `AppSettings__WebUrl` | `https://arlink28-api.onrender.com` |
-| `AppSettings__FrontendBaseUrl` | The Vercel stable URL (used in links and the CORS policy). |
+| `AppSettings__FrontendBaseUrl` | `https://arlink28website.vercel.app` (used in links and the CORS policy). |
 | `AdminBootstrap__Enabled` | `true` for the first deploy only, then `false`. Also set `AdminBootstrap__Email`, `AdminBootstrap__Username`, `AdminBootstrap__Password`. |
 | `MediaStorage__Provider` | `Supabase` (photos go to Supabase Storage; see below) |
-| `MediaStorage__SupabaseUrl` | `https://<project-ref>.supabase.co` |
-| `MediaStorage__SupabaseBucket` | `media` (or your bucket name) |
+| `MediaStorage__SupabaseUrl` | `https://zpyacljkgrgadwgnsqyc.supabase.co` |
+| `MediaStorage__SupabaseBucket` | `ArlinkBucket` (case-sensitive; must be a public bucket) |
 | `MediaStorage__SupabaseServiceKey` | The project's `service_role` key (Project Settings > API). Secret: Render only, never Vercel or git. |
 | `EmailSettings__*`, `EnquirySettings__NotifyTo` | Only when enquiry email is wanted on staging. |
 
@@ -50,7 +50,7 @@ Environment tab of `srv-daumsmvlk1mc73dglcdg`. ASP.NET Core reads `Section__Key`
 Caveats:
 
 - **Free instances sleep.** The first request after idle takes ~30-60 s and can time out the Vercel proxy, which shows up as one-off 502s. Open `/health` first.
-- **Photos live in Supabase Storage.** Render's disk is wiped on every deploy, so staging uses `MediaStorage__Provider=Supabase`. Create the bucket first: Storage > New bucket > name `media` > **Public bucket on**. The database keeps `/media/...` paths; the API redirects `/media/*` to the bucket, so Vercel's `/media` rewrite needs no change. The Free plan covers this (1 GB storage, 5 GB egress a month, 50 MB per file) at no charge. Images already in the database from local development are not in the bucket and will 404 until re-uploaded.
+- **Photos live in Supabase Storage.** Render's disk is wiped on every deploy, so staging uses `MediaStorage__Provider=Supabase`. Create the bucket first: Storage > New bucket > name `ArlinkBucket` > **Public bucket on**. The database keeps `/media/...` paths; the API redirects `/media/*` to the bucket, so Vercel's `/media` rewrite needs no change. The Free plan covers this (1 GB storage, 5 GB egress a month, 50 MB per file) at no charge. Images already in the database from local development are not in the bucket and will 404 until re-uploaded.
 - **Schema is applied by hand.** The API has no migrations. Run `docs/migrations/001`-`003` (in `arlink28-api`) against the Supabase database if they aren't applied. Dev notes say 002 and 003 are applied to the dev database; if staging uses a different Supabase project, apply them there.
 - **Seeding** runs from a laptop, not on Render: `dotnet run -- seed-catalogue --allow-production` with the connection string set in the environment.
 
@@ -65,12 +65,12 @@ Project settings:
 | Install Command | `pnpm install` |
 | Build Command | `pnpm turbo run build --filter=@arlink28/web` (or the default; `turbo.json` builds `^build` first) |
 
-Environment variables (Production **and** Preview, or previews will be broken):
+Environment variables. Set them for **Production** (the "Development" environment is only used by `vercel dev` locally and no deployment reads it) and for **Preview** so branch deployments work:
 
 | Variable | Value | Notes |
 | --- | --- | --- |
 | `API_URL` | `https://arlink28-api.onrender.com` | No trailing slash, no `/api/v1`. Server-only, so it must **not** be named `NEXT_PUBLIC_*`. |
-| `NEXT_PUBLIC_SITE_URL` | The Vercel stable URL, `https://...` | Canonical URLs and metadata on package pages. Falls back to `http://localhost:3000` if unset. |
+| `NEXT_PUBLIC_SITE_URL` | `https://arlink28website.vercel.app` | Canonical URLs and metadata on package pages. Falls back to `http://localhost:3000` if unset. |
 | `TEST_PHOTOS` | `true` (optional) | Stock photos for packages without any. Off in production builds by default. |
 
 `API_URL` is also read **when the app is built** (the `/media` rewrite in `next.config.mjs`). Editing it in Vercel does nothing until you **redeploy**, and a redeploy must be a fresh build, not a reused cache of the old one.
