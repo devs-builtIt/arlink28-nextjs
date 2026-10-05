@@ -15,15 +15,20 @@ Browser ──► Vercel (Next.js) ──/api/v1/*──► Render (ASP.NET Core
 
 The browser never calls Render. `apps/web/app/api/v1/[...path]/route.ts` proxies `/api/v1/*` server-side, and `next.config.mjs` rewrites `/media/*` to the API. So **CORS is not involved**, and the only link between Vercel and Render is one variable.
 
-## State on 2026-10-05 (checked with curl)
+## Status
 
-| Check | Result | Meaning |
+Working end to end as of 2026-10-05: `/health` returns 200, `https://arlink28website.vercel.app/api/v1/packages` returns real data, and all 58 local photos are in `ArlinkBucket` and load through `/media/...` on Vercel.
+
+What was broken before, kept for next time (all checked with curl):
+
+| Symptom | Cause | Fix |
 | --- | --- | --- |
-| `GET onrender.com/health` | 503, `Failed to connect to 127.0.0.1:5432` | Render has no database connection string, so the API fell back to localhost. |
-| `GET onrender.com/api/v1/packages` | 500 `INTERNAL` | Same cause. |
-| `GET <vercel>/api/v1/packages` | 502 `API_UNREACHABLE` | The proxy's `fetch` threw. `apiUrl()` throws when `API_URL` is unset, and the proxy catches that as 502, so this is consistent with `API_URL` missing on Vercel. It is not proof: the Vercel dashboard wasn't inspected. |
-
-Two separate fixes are needed, one per host. Fixing Vercel alone still leaves the API returning 500.
+| Render `/health` 503 `Failed to connect to 127.0.0.1:5432`; `/api/v1/packages` 500 | No connection string on Render, so the API fell back to localhost | Section 1 |
+| Vercel `/api/v1/*` 502 `API_UNREACHABLE` | `API_URL` not set for the **Production** environment. `apiUrl()` throws and the proxy turns it into a 502 | Section 2 |
+| Vercel `/media/*` 404 with header `X-Vercel-Error: DNS_HOSTNAME_RESOLVED_PRIVATE` while `/api/v1` works | `next build` never saw `API_URL`, so the rewrite pointed at `localhost:5270`. Turborepo 2 only passes a task the env vars declared in `turbo.json` | `build.env` in `turbo.json` lists `API_URL`, `NEXT_PUBLIC_SITE_URL`, `TEST_PHOTOS`. **Any new env var read at build time must be added there too** |
+| Render `/media/*` 404 after deploying the storage code | `MediaStorage__Provider` and `MediaStorage__SupabaseUrl` not set, so it silently used local disk | Section 1 |
+| `/media/*` redirect lands on Supabase "Bucket not found" | Bucket was private | Make `ArlinkBucket` public |
+| Old `...-lkmxfs503-...` URL stays 502 | Per-deployment URLs keep the env vars they were built with | Use `arlink28website.vercel.app` |
 
 ## 1. Render (API)
 
@@ -50,7 +55,8 @@ Environment tab of `srv-daumsmvlk1mc73dglcdg`. ASP.NET Core reads `Section__Key`
 Caveats:
 
 - **Free instances sleep.** The first request after idle takes ~30-60 s and can time out the Vercel proxy, which shows up as one-off 502s. Open `/health` first.
-- **Photos live in Supabase Storage.** Render's disk is wiped on every deploy, so staging uses `MediaStorage__Provider=Supabase`. Create the bucket first: Storage > New bucket > name `ArlinkBucket` > **Public bucket on**. The database keeps `/media/...` paths; the API redirects `/media/*` to the bucket, so Vercel's `/media` rewrite needs no change. The Free plan covers this (1 GB storage, 5 GB egress a month, 50 MB per file) at no charge. Images already in the database from local development are not in the bucket and will 404 until re-uploaded.
+- **Photos live in Supabase Storage.** Render's disk is wiped on every deploy, so staging uses `MediaStorage__Provider=Supabase`. Create the bucket first: Storage > New bucket > name `ArlinkBucket` > **Public bucket on**. The database keeps `/media/...` paths; the API redirects `/media/*` to the bucket, so Vercel's `/media` rewrite needs no change. The Free plan covers this (1 GB storage, 5 GB egress a month, 50 MB per file) at no charge. The 58 photos from local development were uploaded once with the same keys (`packages/<id>/<file>.jpg`), so the existing `/media/...` paths in the database resolve. To repeat that for new local photos, upload `arlink28-api/local-storage/media/**` to the bucket under the same relative paths (Supabase dashboard, or `POST /storage/v1/object/<bucket>/<key>` with the service key).
+- **Shared database.** Staging uses the same Supabase database as local development (same `DefaultConnection`), so local edits show up on staging. Use a separate Supabase project if that stops being acceptable.
 - **Schema is applied by hand.** The API has no migrations. Run `docs/migrations/001`-`003` (in `arlink28-api`) against the Supabase database if they aren't applied. Dev notes say 002 and 003 are applied to the dev database; if staging uses a different Supabase project, apply them there.
 - **Seeding** runs from a laptop, not on Render: `dotnet run -- seed-catalogue --allow-production` with the connection string set in the environment.
 
@@ -73,7 +79,7 @@ Environment variables. Set them for **Production** (the "Development" environmen
 | `NEXT_PUBLIC_SITE_URL` | `https://arlink28website.vercel.app` | Canonical URLs and metadata on package pages. Falls back to `http://localhost:3000` if unset. |
 | `TEST_PHOTOS` | `true` (optional) | Stock photos for packages without any. Off in production builds by default. |
 
-`API_URL` is also read **when the app is built** (the `/media` rewrite in `next.config.mjs`). Editing it in Vercel does nothing until you **redeploy**, and a redeploy must be a fresh build, not a reused cache of the old one.
+`API_URL` is also read **when the app is built** (the `/media` rewrite in `next.config.mjs`). Editing it in Vercel does nothing until you **redeploy**. It reaches `next build` only because `turbo.json` declares it (see Status); a changed value also changes the build's cache key.
 
 **Check, after redeploying:**
 
@@ -85,6 +91,7 @@ curl -I https://<vercel-url>/media/<a-known-path> # proxied from Render
 ## 3. Supabase
 
 - Use the project's pooler connection string (Project Settings > Database > Connection string > Session pooler).
+- The `service_role` key (`MediaStorage__SupabaseServiceKey`) bypasses all Supabase security rules. It lives on Render only. If it is ever pasted into a chat, ticket or log, rotate it (Project Settings > API Keys) and update Render.
 - Keep the DB password in Render only. Do not put it in Vercel, in git, or in `.env.example`.
 - Staging data is shared with whatever else points at this database. Treat it as non-production but not disposable.
 

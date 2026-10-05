@@ -11,6 +11,7 @@
 - **Admin UI:** merged into `apps/web` as the `app/(admin)` route group, served under `/admin`. There is no separate `apps/admin` any more
 - **Backend:** ASP.NET Core on PostgreSQL ([ADR 0005](./adr/0005-api-in-dotnet-with-postgres.md)), in its own repo `arlink28-api` rather than the planned `backend/` folder here. The TypeScript API (`apps/api`, NestJS) and `packages/db` (Prisma/MySQL) were deleted 2026-09-29, before parity; their tests remain the parity checklist, read from git history at `a925948`
 - **Deployment target:** one VPS with Docker Compose ([ADR 0004](./adr/0004-single-vps-hosting.md), superseding cPanel). `apps/web` runs as the `web` container behind Caddy, as a live Node app, so `next.config.mjs` deliberately does **not** set `output: "export"`
+- **Staging (live demo):** Vercel (`apps/web`) → Render (the API, Docker) → Supabase Postgres + Storage; see [`staging.md`](./staging.md). Not the VPS above.
 - **Monorepo:** converted 2026-09-25 to pnpm workspaces + Turborepo. This repo's `app/`, `components/`, `public/` moved unchanged into `apps/web/`; `apps/api`, `packages/db`, `packages/shared`, `packages/emails` were scaffolded alongside it — see [`monorepo-migration.md`](./monorepo-migration.md) for the original plan
 
 ## Relationship to the other two ARLink28 repos

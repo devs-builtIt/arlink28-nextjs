@@ -150,3 +150,15 @@ A running log of what this codebase actually is and the decisions/gaps behind it
 **Correction made while writing the ADR:** a PostgreSQL exclusion constraint can't span tables. The season-overlap rule therefore needs a trigger-maintained `package_rate_windows` table. A partial unique index is enough for "one HERO".
 
 **Next:** install the .NET 10 SDK, then D0 (foundation).
+
+## 2026-10-05 — Staging environment live: Vercel + Render + Supabase
+
+**What changed:** staging now runs on Vercel (`https://arlink28website.vercel.app`), Render (`arlink28-api.onrender.com`, service `srv-daumsmvlk1mc73dglcdg`) and Supabase. Full setup, env vars and the failures hit on the way are in [`staging.md`](./staging.md). This is separate from the single-VPS production plan in ADR 0004.
+
+**Decisions:**
+- Uploaded photos go to a **public Supabase Storage bucket** (`ArlinkBucket`) through a new `SupabaseMediaStorage` in `arlink28-api` (`MediaStorage__Provider=Supabase`); Render's disk is wiped on every deploy. The API redirects `/media/*` to the bucket, so the web app's `/media` rewrite is unchanged. Free plan, no charge (1 GB storage, 5 GB egress).
+- Staging shares the dev Supabase database.
+
+**Gotcha worth remembering:** Turborepo 2 passes a task only the env vars listed in `turbo.json`. `API_URL` was missing from `build.env`, so `next build` on Vercel baked `localhost:5270` into the `/media` rewrite (symptom: 404 with `X-Vercel-Error: DNS_HOSTNAME_RESOLVED_PRIVATE`) while the runtime `/api/v1` proxy worked. Fixed in PR #7; add any new build-time env var to `turbo.json`.
+
+**Still open:** a real photo upload through the admin on staging is untested; the `service_role` key was pasted into a chat and should be rotated; `sb_secret_` keys are unverified with the storage code (it sends the key as a Bearer token).
