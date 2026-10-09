@@ -17,6 +17,7 @@ export default function EngagementPage() {
   return (
     <>
       <PageBanner
+        label="Engagement"
         title="Connecting through industry. Building for Africa."
         intro="ARLink28 actively engages across aviation, travel, tourism, sustainability, investment and business ecosystems throughout Africa and internationally."
         actions={
@@ -73,9 +74,7 @@ export default function EngagementPage() {
         <div className="section-header reveal">
           <span className="section-tag">Our Industry Engagements</span>
           <h2>
-            Where
-            <span className="highlight-red">ARLink28</span>
-            Has Been
+            Where <span className="highlight-red">ARLink28</span> Has Been
           </h2>
           <p>
             Our development is informed not only by internal planning, but by active participation in the industries,
@@ -289,8 +288,7 @@ export default function EngagementPage() {
         <div className="section-header reveal">
           <span className="section-tag">Events</span>
           <h2>
-            Upcoming
-            <span className="highlight-red">Engagements</span>
+            Upcoming <span className="highlight-red">Engagements</span>
           </h2>
           <p>
             Join us at industry events, community meetups, and online webinars where we share our vision and connect
@@ -363,7 +361,7 @@ export default function EngagementPage() {
             <span className="about-tag-line"></span>
           </div>
           <h2>
-            Addis Ababa Identified as a<span className="highlight-red">Long-Term Strategic Aviation Hub</span>
+            Addis Ababa Identified as a <span className="highlight-red">Long-Term Strategic Aviation Hub</span>
           </h2>
           <p style={{ color: "var(--text-muted)", marginTop: "10px" }}>
             Building toward an East African aviation future.
@@ -394,8 +392,7 @@ export default function EngagementPage() {
             <span className="about-tag-line"></span>
           </div>
           <h2>
-            Sustainability
-            <span className="highlight-red">From the Beginning</span>
+            Sustainability <span className="highlight-red">From the Beginning</span>
           </h2>
           <p style={{ marginTop: "20px" }}>
             ARLink28 recognises that the future of African aviation must combine greater connectivity with greater
@@ -427,7 +424,7 @@ export default function EngagementPage() {
             <span className="about-tag-line"></span>
           </div>
           <h2>
-            ARLink28 Elite —<span className="highlight-red">Private Aviation Development</span>
+            ARLink28 Elite — <span className="highlight-red">Private Aviation Development</span>
           </h2>
           <p style={{ marginTop: "20px" }}>
             ARLink28 is developing a dedicated premium private-aviation offering focused exclusively on Africa. Through
@@ -451,8 +448,7 @@ export default function EngagementPage() {
             <span className="about-tag-line"></span>
           </div>
           <h2>
-            Connecting Aviation and
-            <span className="highlight-red">African Tourism</span>
+            Connecting Aviation and <span className="highlight-red">African Tourism</span>
           </h2>
           <p style={{ marginTop: "20px" }}>
             ARLink28's vision extends beyond transportation alone. Through selected hospitality and tourism
@@ -476,8 +472,7 @@ export default function EngagementPage() {
             <span className="about-tag-line"></span>
           </div>
           <h2>
-            Building the
-            <span className="highlight-red">Foundation</span>
+            Building the <span className="highlight-red">Foundation</span>
           </h2>
           <p style={{ marginTop: "20px" }}>
             ARLink28 is currently developing its African travel and aviation ecosystem in phases. Our current activities
@@ -506,8 +501,7 @@ export default function EngagementPage() {
         <div className="section-header reveal">
           <span className="section-tag">Stay Connected</span>
           <h2>
-            Follow
-            <span className="highlight-red">Our Journey</span>
+            Follow <span className="highlight-red">Our Journey</span>
           </h2>
           <p>
             Follow our story, read the latest aviation news, and connect with fellow travelers who are part of the

@@ -34,6 +34,7 @@ export default function QuotePage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        label="Get a quote"
         id="hm-qp-h"
         title="Tell us where, and we will price it."
         intro="Send us your route and dates, or just the idea. A person replies with options and a price, and nothing is charged until you agree."

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <PageBanner title={"Privacy Policy"} intro="Last updated: June 2026" />
+      <PageBanner label="Legal" title={"Privacy Policy"} intro="Last updated: June 2026" />
       <section className="legal-body">
         <div className="legal-layout">
           <aside className="legal-sidebar">

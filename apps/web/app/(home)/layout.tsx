@@ -2,6 +2,7 @@ import "../(web)/globals.css";
 import "../styles/tokens.css";
 import "../styles/chrome.css";
 import "../styles/page-banner.css";
+import "../styles/inner-light.css";
 import "../styles/home-base.css";
 import { siteMetadata } from "../site";
 import Header from "@/components/Header";

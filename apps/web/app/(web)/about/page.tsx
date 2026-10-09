@@ -15,6 +15,7 @@ export default function AboutPage() {
   return (
     <>
       <PageBanner
+        label="About us"
         title="Connecting people, connecting destinations, connecting dreams"
         intro="A Pan-African travel ecosystem making travel across the continent more accessible, seamless, and efficient, built on connectivity, collaboration, and long-term commitment."
         actions={
@@ -37,8 +38,7 @@ export default function AboutPage() {
               <span className="about-tag-line"></span>
             </div>
             <h2>
-              A<span className="highlight-red">Pan-African travel ecosystem</span>
-              in development.
+              A <span className="highlight-red">Pan-African travel ecosystem</span> in development.
             </h2>
             <p>
               ARLink28 is building a comprehensive travel platform designed to simplify every stage of the travel
@@ -286,8 +286,7 @@ export default function AboutPage() {
       <section className="about-section" style={{ paddingTop: "0" }}>
         <div className="trust-header reveal" style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
           <h3>
-            Travel has the power to
-            <span className="highlight-red">unite people</span>.
+            Travel has the power to <span className="highlight-red">unite people</span>.
           </h3>
           <p>
             At ARLink28, we believe travel unlocks economic opportunities, fosters innovation, and strengthens

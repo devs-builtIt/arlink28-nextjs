@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function RefundPolicyPage() {
   return (
     <>
-      <PageBanner title={"Refund & Cancellation Policy"} intro="Last updated: June 2026" />
+      <PageBanner label="Legal" title={"Refund & Cancellation Policy"} intro="Last updated: June 2026" />
       <section className="legal-body">
         <div className="legal-layout">
           <aside className="legal-sidebar">

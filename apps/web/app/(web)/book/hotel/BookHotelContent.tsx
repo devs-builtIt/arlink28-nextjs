@@ -76,6 +76,7 @@ export default function BookHotelContent() {
   return (
     <>
       <PageBanner
+        label="Hotels"
         above={
           <Link href="/" className="pb-back">
             <i className="fa-solid fa-arrow-left" aria-hidden="true"></i>

@@ -81,6 +81,7 @@ export default function BookVisaContent() {
   return (
     <>
       <PageBanner
+        label="Visas"
         above={
           <Link href="/" className="pb-back">
             <i className="fa-solid fa-arrow-left" aria-hidden="true"></i>

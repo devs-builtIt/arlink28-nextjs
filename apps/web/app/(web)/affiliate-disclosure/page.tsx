@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function AffiliateDisclosurePage() {
   return (
     <>
-      <PageBanner title={"Affiliate Disclosure"} intro="Last updated: June 2026" />
+      <PageBanner label="Legal" title={"Affiliate Disclosure"} intro="Last updated: June 2026" />
       <section className="legal-body">
         <div className="legal-layout">
           <aside className="legal-sidebar">

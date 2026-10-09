@@ -2398,3 +2398,44 @@ html:has(.hm) {
     order: 0;
   }
 }
+
+/* Partner logos, a quiet strip of their own straight after the hero */
+.hm-logos-band {
+  padding: clamp(32px, 4vw, 56px) 0 0;
+}
+.hm-logos-band .hm-logos {
+  flex: none;
+  width: 100%;
+  /* fade to the page, not to grey */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+.hm-logos-band .hm-logos-track {
+  animation-direction: reverse;
+  animation-duration: 60s;
+}
+.hm-logos-band .hm-logos ul {
+  gap: 20px;
+  padding-right: 20px;
+}
+.hm-logos-band .hm-logos li {
+  width: 168px;
+  height: 64px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: #fff;
+}
+.hm-logos-band .hm-logos img {
+  height: 28px;
+  max-height: none;
+  width: auto;
+  max-width: 100%;
+}
+.hm-logos-band .hm-logos img[src*="ivisa"],
+.hm-logos-band .hm-logos img[src*="getyourguide"] {
+  height: 40px;
+  border-radius: 6px;
+}
+.hm-logos-band .hm-logos img[src*="viator"] {
+  height: 38px;
+}

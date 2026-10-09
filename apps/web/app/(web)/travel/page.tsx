@@ -13,6 +13,7 @@ export default function TravelPage() {
   return (
     <>
       <PageBanner
+        label="Travel"
         title="Discover your next journey."
         intro="Explore flight options, travel partners, visa services, and curated experiences across Africa and the world."
       />

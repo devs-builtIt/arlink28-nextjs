@@ -16,6 +16,7 @@ export default function ConnectPage() {
   return (
     <>
       <PageBanner
+        label="Connect"
         title="ARLink28, connecting Africa"
         intro="ARLink28 is a Pan-African travel and aviation-focused company created with a long-term vision of making movement across Africa easier, more connected, more efficient, and more commercially accessible."
         actions={
@@ -36,10 +37,9 @@ export default function ConnectPage() {
         >
           <span className="section-tag">Building The Ecosystem</span>
           <h2>
-            Connecting The Links Between
-            <span className="highlight-red">African Nations</span>
+            Connecting The Links Between <span className="highlight-red">African Nations</span>
           </h2>
-          <p style={{ fontSize: "16.5px", lineHeight: "1.8", color: "rgba(255,255,255,0.85)", marginTop: "16px" }}>
+          <p style={{ fontSize: "16.5px", lineHeight: "1.8", color: "var(--text-muted)", marginTop: "16px" }}>
             Africa is a continent of enormous opportunity, yet moving between its countries can still be more difficult
             than it should be. In many cases, travellers must connect through Europe or the Middle East before reaching
             another African destination. Businesses face complex travel routes, tourists encounter fragmented booking
@@ -60,8 +60,7 @@ export default function ConnectPage() {
           <div className="dest-section-header-left">
             <span className="section-tag">Our Vision</span>
             <h2>
-              Shaping The Future of
-              <span className="highlight-red">African Mobility</span>
+              Shaping The Future of <span className="highlight-red">African Mobility</span>
             </h2>
           </div>
           <p>
@@ -257,8 +256,10 @@ export default function ConnectPage() {
           <span className="section-tag" style={{ background: "rgba(230,30,43,0.15)", color: "#e61e2b" }}>
             Our Core Purpose
           </span>
-          <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#fff", marginTop: "12px" }}>Why ARLink28 Exists</h2>
-          <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "16px", marginTop: "8px" }}>
+          <h2 style={{ fontSize: "32px", fontWeight: "800", color: "var(--text-main)", marginTop: "12px" }}>
+            Why ARLink28 Exists
+          </h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "16px", marginTop: "8px" }}>
             Africa deserves stronger internal connectivity. ARLink28 exists because the future of African travel should
             increasingly be shaped by organisations that understand Africa’s markets, people, challenges, and potential.
           </p>

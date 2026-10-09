@@ -24,6 +24,7 @@ export default async function DestinationsPage() {
   return (
     <>
       <PageBanner
+        label="Destinations"
         title="Destinations"
         intro="Where ARLink28 can take you across Africa. Choose a country, or go straight to a place."
       />

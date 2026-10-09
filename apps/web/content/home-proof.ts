@@ -52,14 +52,14 @@ export const HAPPY = { value: "12,000+", label: "Happy sponsors" };
 
 /** The partner logos the About page already shows. Confirm each has permission before launch. */
 export const PARTNER_LOGOS = [
-  { name: "Travelstart", src: "/images/travelstart.png" },
-  { name: "iVisa", src: "/images/ivisa.jpg" },
-  { name: "Viator", src: "/images/viator.jpg" },
-  { name: "Trip.com", src: "/images/trip.png" },
-  { name: "Sherpa", src: "/images/sherpa.png" },
-  { name: "GetYourGuide", src: "/images/get your guide.png" },
-  { name: "Giraffe Manor", src: "/images/giraffe-manor-logo.jpg" },
-  { name: "Blue Ocean Resort & Residences", src: "/images/blue-ocean-logo.png" },
+  { name: "Travelstart", src: "/images/partners/travelstart.png" },
+  { name: "iVisa", src: "/images/partners/ivisa.png" },
+  { name: "Viator", src: "/images/partners/viator.png" },
+  { name: "Trip.com", src: "/images/partners/trip.png" },
+  { name: "Sherpa", src: "/images/partners/sherpa.png" },
+  { name: "GetYourGuide", src: "/images/partners/getyourguide.png" },
+  { name: "Giraffe Manor", src: "/images/partners/giraffe-manor.png" },
+  { name: "Blue Ocean Resort & Residences", src: "/images/partners/blue-ocean.png" },
 ];
 
 /** Partners the business has written permission to name. Empty until confirmed. */

@@ -15,6 +15,7 @@ export default function OpportunitiesPage() {
   return (
     <>
       <PageBanner
+        label="Opportunities"
         title="Shape the future of African aviation"
         intro="Whether you're a talented professional, a strategic investor, or an ambitious partner, ARLink28 has a place for you in building Africa's next great airline."
         actions={
@@ -66,9 +67,7 @@ export default function OpportunitiesPage() {
         <div className="section-header reveal">
           <span className="section-tag">Career Openings</span>
           <h2>
-            Join The
-            <span className="highlight-red">ARLink28</span>
-            Team
+            Join The <span className="highlight-red">ARLink28</span> Team
           </h2>
           <p>
             We're building a world-class airline from the ground up. We want passionate, talented people ready to shape
@@ -148,8 +147,7 @@ export default function OpportunitiesPage() {
           <div className="invest-text reveal-left">
             <span className="section-tag">Investor Relations</span>
             <h2>
-              Invest In
-              <span className="highlight-red">Africa's Aviation Future</span>
+              Invest In <span className="highlight-red">Africa's Aviation Future</span>
             </h2>
             <p>
               ARLink28 is seeking strategic investment partners to help build a new era of African air travel. We offer
@@ -220,8 +218,7 @@ export default function OpportunitiesPage() {
         <div className="section-header reveal">
           <span className="section-tag">Partnerships</span>
           <h2>
-            Partner With
-            <span className="highlight-red">ARLink28</span>
+            Partner With <span className="highlight-red">ARLink28</span>
           </h2>
           <p>
             We're actively building a network of strategic partners across aviation, technology, hospitality, and

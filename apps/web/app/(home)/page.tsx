@@ -186,6 +186,27 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Partner logos, a quiet strip straight after the hero */}
+      <div className="hm-logos-band">
+        <div className="hm-logos">
+          <div className="hm-logos-track">
+            {[0, 1].map((n) => (
+              <ul
+                key={n}
+                aria-hidden={n === 1 ? "true" : undefined}
+                aria-label={n === 0 ? "Our partners" : undefined}
+              >
+                {PARTNER_LOGOS.map((l) => (
+                  <li key={l.name}>
+                    <img src={l.src} alt={n === 0 ? l.name : ""} loading="lazy" decoding="async" height={40} />
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* 2. Destinations, straight after the hero, as the market leaders do */}
       <section className="hm-sec" id="destinations" aria-labelledby="hm-routes">
         <div className="hm-wrap">
@@ -194,7 +215,7 @@ export default async function HomePage() {
               <span className="hm-sticker" aria-hidden="true">
                 Destinations
               </span>
-              Pick a destination, and we fill in the form.
+              Trending destinations
             </h2>
             <Link className="hm-btn hm-btn-quiet" href="/destinations">
               More destinations
@@ -219,8 +240,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* 6. Why choose us, on a white section. Under the reasons, a flat rating card with the partner logos
-          scrolling right to left and sliding away into it. */}
+      {/* 6. Why choose us, on a white section. Under the reasons, a flat rating card. */}
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-why">
         <div className="hm-wrap">
           <Title id="hm-why" sticker="Why choose us?">
@@ -275,23 +295,6 @@ export default async function HomePage() {
                   <p className="hm-proof-count">
                     <b>{HAPPY.value}</b> {HAPPY.label}
                   </p>
-                </div>
-                <div className="hm-logos">
-                  <div className="hm-logos-track">
-                    {[0, 1].map((n) => (
-                      <ul
-                        key={n}
-                        aria-hidden={n === 1 ? "true" : undefined}
-                        aria-label={n === 0 ? "Our partners" : undefined}
-                      >
-                        {PARTNER_LOGOS.map((l) => (
-                          <li key={l.name}>
-                            <img src={l.src} alt={n === 0 ? l.name : ""} loading="lazy" decoding="async" height={40} />
-                          </li>
-                        ))}
-                      </ul>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>

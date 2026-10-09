@@ -50,6 +50,13 @@ async function measure(page: import("@playwright/test").Page) {
       font: h1 ? getComputedStyle(h1).fontFamily.split(",")[0].replaceAll('"', "") : "",
       weight: h1 ? getComputedStyle(h1).fontWeight : "",
       size: h1 ? getComputedStyle(h1).fontSize : "",
+      label: card?.querySelector(".pb-label")?.textContent?.trim() ?? "",
+      labelAboveTitle: (() => {
+        const l = card?.querySelector(".pb-label")?.getBoundingClientRect();
+        const t = h1?.getBoundingClientRect();
+        return !!l && !!t && l.bottom <= t.top;
+      })(),
+      kindSwitcher: !!card?.querySelector('nav[aria-label="Kind of listing"]'),
       photo: img ? img.currentSrc.split("/").slice(-2).join("/") : "",
       loaded: img ? img.complete && img.naturalWidth > 0 : false,
       sideways: document.documentElement.scrollWidth > window.innerWidth,
@@ -84,13 +91,13 @@ test.describe("the banner at the top of the inner pages", () => {
     expect([...seen.entries()].map(([k, paths]) => `${k} -> ${paths.length} pages`)).toHaveLength(1);
     const [only] = [...seen.keys()];
     expect(JSON.parse(only)).toMatchObject({
-      h: 440,
+      h: 480,
       left: 30,
       right: 30,
       radius: "12px",
       font: "Satoshi",
-      weight: "600",
-      size: "58px",
+      weight: "500",
+      size: "64px",
     });
   });
 
@@ -107,6 +114,23 @@ test.describe("the banner at the top of the inner pages", () => {
     expect(banner.left).toBe(hero.left);
     expect(banner.radius).toBe(hero.radius);
     expect(banner.left).toBeGreaterThan(0); // inset, not edge to edge
+  });
+
+  test("names the area above the title with a pill (the kind switcher does it on the listing pages)", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const listings = new Set(["/packages", "/flights", "/hotels", "/visas"]);
+    for (const path of PAGES) {
+      await page.goto(path);
+      const m = await measure(page);
+      if (listings.has(path)) {
+        expect(m.kindSwitcher, `${path}: the kind switcher stands in for the label`).toBe(true);
+      } else {
+        expect(m.label.length, `${path}: a label`).toBeGreaterThan(0);
+        expect(m.labelAboveTitle, `${path}: the label sits above the title`).toBe(true);
+      }
+    }
   });
 
   test("serves a sharp photo: the larger file to a high-density screen", async ({ browser }) => {
@@ -130,7 +154,7 @@ test.describe("the banner at the top of the inner pages", () => {
     for (const path of ["/about", "/engagement", "/packages", "/book/flight", "/privacy-policy", "/contact"]) {
       await page.goto(path);
       const m = await measure(page);
-      expect(m.size, `${path}: title size`).toBe("34px");
+      expect(m.size, `${path}: title size`).toBe("36px");
       expect(m.sideways, `${path}: no sideways scroll`).toBe(false);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     }
@@ -151,5 +175,54 @@ test.describe("the banner at the top of the inner pages", () => {
 
     await page.goto("/engagement-details");
     await expect(page.getByRole("link", { name: "Back to engagement" })).toHaveAttribute("href", "/engagement");
+  });
+});
+
+test.describe("the inner pages are light", () => {
+  const canvas = (page: import("@playwright/test").Page) =>
+    page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim().toLowerCase().replace(/^#fff$/, "#ffffff"));
+
+  test("every inner page, detail pages included, uses the light surface; the homepage keeps its own theme", async ({
+    page,
+  }) => {
+    for (const path of [...PAGES, "/destinations/chobe-national-park", "/packages/giraffe-manor-grand-escape"]) {
+      await page.goto(path);
+      expect(await canvas(page), `${path}: a light page`).toBe("#ffffff");
+    }
+    await page.goto("/");
+    // The homepage is dark until the visitor picks light, and it still has the toggle.
+    expect(await canvas(page)).not.toBe("#ffffff");
+    await expect(page.getByRole("button", { name: /Switch to (light|dark) theme/ })).toBeVisible();
+  });
+
+  test("the theme toggle is gone from the inner pages, where it would have nothing to switch", async ({ page }) => {
+    await page.goto("/contact");
+    await expect(page.getByRole("button", { name: /Switch to (light|dark) theme/ })).toBeHidden();
+  });
+
+  test("the header and the footer are light too, and the text on them is dark", async ({ page }) => {
+    for (const path of ["/about", "/privacy-policy", "/destinations/chobe-national-park"]) {
+      await page.goto(path);
+      const colours = await page.evaluate(() => {
+        const luminance = (css: string) => {
+          const [r, g, b] = (css.match(/[\d.]+/g) ?? ["0", "0", "0"]).slice(0, 3).map(Number);
+          return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        };
+        const footer = document.querySelector(".sf") as HTMLElement;
+        const link = document.querySelector(".sf a") as HTMLElement;
+        return {
+          page: luminance(
+            getComputedStyle(document.body).backgroundColor === "rgba(0, 0, 0, 0)"
+              ? getComputedStyle(document.documentElement).backgroundColor
+              : getComputedStyle(document.body).backgroundColor,
+          ),
+          footer: luminance(getComputedStyle(footer).backgroundColor),
+          footerText: luminance(getComputedStyle(link).color),
+        };
+      });
+      expect(colours.page, `${path}: a light page`).toBeGreaterThan(0.85);
+      expect(colours.footer, `${path}: a light footer`).toBeGreaterThan(0.85);
+      expect(colours.footerText, `${path}: dark footer text`).toBeLessThan(0.5);
+    }
   });
 });

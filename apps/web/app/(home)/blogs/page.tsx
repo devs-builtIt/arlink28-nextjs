@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function BlogsPage() {
   return (
     <PageBanner
+      label="Blogs"
       title="Blogs"
       intro="Travel stories and guides for the routes our travellers ask about are on their way."
       actions={

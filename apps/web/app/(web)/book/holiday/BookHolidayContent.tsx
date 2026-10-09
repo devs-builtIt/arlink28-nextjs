@@ -90,6 +90,7 @@ export default function BookHolidayContent() {
   return (
     <>
       <PageBanner
+        label="Holiday packages"
         above={
           <Link href="/" className="pb-back">
             <i className="fa-solid fa-arrow-left" aria-hidden="true"></i>

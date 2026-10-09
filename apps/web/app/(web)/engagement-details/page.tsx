@@ -17,6 +17,7 @@ export default function EngagementDetailsPage() {
   return (
     <>
       <PageBanner
+        label="Engagement"
         above={
           <Link className="pb-back" href="/engagement">
             <i className="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -30,9 +31,7 @@ export default function EngagementDetailsPage() {
         <div className="section-header reveal">
           <span className="section-tag">Engagement Details</span>
           <h2>
-            Full
-            <span className="highlight-red">Engagement</span>
-            Details
+            Full <span className="highlight-red">Engagement</span> Details
           </h2>
           <p>
             Our development is informed not only by internal planning, but by active participation in the industries,

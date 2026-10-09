@@ -16,6 +16,7 @@ export default function TeamPage() {
   return (
     <>
       <PageBanner
+        label="Our team"
         title="Meet the visionaries behind ARLink28"
         intro="Our team unites seasoned aviation executives, financial strategists, digital technology experts, partnership coordinators, and market development professionals dedicated to building Africa's next great travel ecosystem."
       />

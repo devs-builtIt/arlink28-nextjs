@@ -6,6 +6,7 @@ export default function Loading() {
   return (
     <>
       <PageBanner
+        label="Destinations"
         title="Destinations"
         intro="Where ARLink28 can take you across Africa. Choose a country, or go straight to a place."
       />

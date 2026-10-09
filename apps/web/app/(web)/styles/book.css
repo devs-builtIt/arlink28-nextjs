@@ -42,7 +42,7 @@
   color: var(--primary-red);
 }
 .book-search-tag span {
-  color: #fff;
+  color: var(--text-main);
   font-weight: 500;
 }
 .partners-grid {
@@ -89,7 +89,7 @@
   height: 48px;
 }
 .partner-card-name {
-  color: #fff;
+  color: var(--text-main);
   font-size: 22px;
   font-weight: 700;
 }
@@ -145,7 +145,7 @@
   display: inline-flex;
 }
 .book-back-link:hover {
-  color: #fff;
+  color: var(--text-main);
 }
 @media (max-width: 768px) {
   .book-page {

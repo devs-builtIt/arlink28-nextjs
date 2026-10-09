@@ -13,6 +13,7 @@ export default function ServicesPage() {
   return (
     <>
       <PageBanner
+        label="Services"
         title="Seamless travel, end to end."
         intro="From flight booking and hotel reservations to airport transfers, visa support, holiday packages, and travel insurance, ARLink28 covers every step of your journey."
       />
@@ -71,7 +72,7 @@ export default function ServicesPage() {
           <div id="hotel-reservations" className="service-block-row row-reverse reveal">
             <div
               className="service-block-img-box"
-              style={{ background: "linear-gradient(135deg, #0b121c 0%, #141d2b 100%)" }}
+              style={{ background: "linear-gradient(135deg, #eef1f5 0%, #e3e8ee 100%)" }}
             >
               <img
                 src="/images/hotelreservations.png"
@@ -263,7 +264,7 @@ export default function ServicesPage() {
           <div id="corporate-group-travel" className="service-block-row row-reverse reveal">
             <div
               className="service-block-img-box"
-              style={{ background: "linear-gradient(135deg, #0b121c 0%, #141d2b 100%)" }}
+              style={{ background: "linear-gradient(135deg, #eef1f5 0%, #e3e8ee 100%)" }}
             >
               <img
                 src="/images/coorporateandgrouptravelsolution.png"
@@ -319,8 +320,7 @@ export default function ServicesPage() {
       <section className="service-why-choose-section">
         <div className="why-choose-header reveal">
           <h2>
-            Why Choose
-            <span className="highlight-red">ARLink28</span>
+            Why Choose <span className="highlight-red">ARLink28</span>
           </h2>
         </div>
         <div className="why-choose-grid">

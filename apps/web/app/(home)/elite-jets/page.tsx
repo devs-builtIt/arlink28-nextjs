@@ -34,6 +34,7 @@ export default async function EliteJetsPage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        label="Elite Jets"
         id="el-h1"
         title="Private aviation, arranged around you."
         intro="Three ways to fly private with ARLink28, from the essentials done well to a journey designed entirely for you."

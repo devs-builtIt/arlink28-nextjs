@@ -68,12 +68,12 @@
   display: flex;
 }
 .contact-quick-btn {
-  color: #fff;
+  color: var(--text-main);
   transition: var(--transition-smooth);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  background: #ffffff0a;
-  border: 1px solid #ffffff14;
+  background: #0b17260a;
+  border: 1px solid #0b172614;
   border-radius: 50px;
   align-items: center;
   gap: 10px;
@@ -99,8 +99,8 @@
 }
 .opp-invest-section {
   background: var(--bg-secondary);
-  border-top: 1px solid #ffffff0a;
-  border-bottom: 1px solid #ffffff0a;
+  border-top: 1px solid #0b17260a;
+  border-bottom: 1px solid #0b17260a;
 }
 .opp-hero-stats {
   grid-template-columns: 1fr 1fr;
@@ -124,7 +124,7 @@
   font-size: 22px;
 }
 .opp-stat-num {
-  color: #fff;
+  color: var(--text-main);
   font-size: 30px;
   font-weight: 800;
   line-height: 1;
@@ -226,14 +226,14 @@
 }
 .carousel-dot {
   cursor: pointer;
-  background: #fff3;
+  background: #0b172603;
   border-radius: 50%;
   width: 8px;
   height: 8px;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .carousel-dot:hover {
-  background: #ffffff73;
+  background: #0b172673;
 }
 .carousel-dot.active {
   background: var(--primary-red);
@@ -266,7 +266,7 @@
   border-right-color: #f39c122e;
 }
 .ticket-num {
-  color: #ffffff1a;
+  color: #0b17261a;
   letter-spacing: -1px;
   text-align: center;
   font-size: 28px;
@@ -327,7 +327,7 @@
   bottom: -9px;
 }
 .ticket-dash-line {
-  border-left: 1.5px dashed #ffffff1a;
+  border-left: 1.5px dashed #0b17261a;
   width: 1px;
   height: 100%;
   margin: 0 auto;
@@ -346,7 +346,7 @@
   display: flex;
 }
 .ticket-body-top h3 {
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 6px;
   font-size: 19px;
   font-weight: 700;
@@ -370,8 +370,8 @@
   color: var(--text-muted);
   white-space: nowrap;
   letter-spacing: 0.3px;
-  background: #ffffff0d;
-  border: 1px solid #ffffff14;
+  background: #0b17260d;
+  border: 1px solid #0b172614;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 11.5px;
@@ -398,7 +398,7 @@
   font-weight: 600;
 }
 .ticket-action-panel {
-  border-left: 1px dashed #ffffff14;
+  border-left: 1px dashed #0b172614;
   flex-direction: column;
   flex-shrink: 0;
   justify-content: center;
@@ -474,7 +474,7 @@
   display: inline-block;
 }
 .invest-text h2 {
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 20px;
   font-size: 40px;
   font-weight: 800;
@@ -528,7 +528,7 @@
   font-size: 24px;
 }
 .invest-metric-card h4 {
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 4px;
   font-size: 15px;
   font-weight: 700;
@@ -569,7 +569,7 @@
   display: flex;
 }
 .partner-type-card h3 {
-  color: #fff;
+  color: var(--text-main);
   font-size: 20px;
   font-weight: 700;
 }
@@ -599,7 +599,7 @@
   padding: 30px;
 }
 .engage-hero-socials h4 {
-  color: #fff;
+  color: var(--text-main);
   align-items: center;
   margin-bottom: 22px;
   font-size: 15px;
@@ -614,8 +614,8 @@
 }
 .engage-social-card {
   transition: var(--transition-smooth);
-  background: #ffffff0a;
-  border: 1px solid #ffffff12;
+  background: #0b17260a;
+  border: 1px solid #0b172612;
   border-radius: 12px;
   flex-direction: column;
   gap: 6px;
@@ -633,7 +633,7 @@
   font-size: 20px;
 }
 .engage-social-card span {
-  color: #fff;
+  color: var(--text-main);
   font-size: 13px;
   font-weight: 700;
 }
@@ -642,7 +642,7 @@
   font-size: 11.5px;
 }
 .engage-community-stat {
-  border-top: 1px solid #ffffff0f;
+  border-top: 1px solid #0b17260f;
   justify-content: space-between;
   padding-top: 20px;
   display: flex;
@@ -654,7 +654,7 @@
   display: flex;
 }
 .engage-stat-num {
-  color: #fff;
+  color: var(--text-main);
   font-size: 22px;
   font-weight: 800;
   display: block;
@@ -741,7 +741,7 @@
   margin-right: 5px;
 }
 .news-content h3 {
-  color: #fff;
+  color: var(--text-main);
   font-size: 19px;
   font-weight: 700;
   line-height: 1.4;
@@ -828,17 +828,17 @@
   display: inline-block;
 }
 .event-type-badge.badge-green {
-  color: #2ecc71;
+  color: #0f8a4f;
   background: #27ae601f;
   border-color: #27ae6040;
 }
 .event-type-badge.badge-blue {
-  color: #5dade2;
+  color: #2563b8;
   background: #2980b91f;
   border-color: #2980b940;
 }
 .event-details h3 {
-  color: #fff;
+  color: var(--text-main);
   font-size: 18px;
   font-weight: 700;
 }
@@ -898,7 +898,7 @@
   display: flex;
 }
 .contact-info-card h3 {
-  color: #fff;
+  color: var(--text-main);
   font-size: 17px;
   font-weight: 700;
 }
@@ -936,7 +936,7 @@
   margin-bottom: 28px;
 }
 .contact-form-header h2 {
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 8px;
   font-size: 26px;
   font-weight: 700;
@@ -946,7 +946,7 @@
   font-size: 14.5px;
 }
 .enquiry-tabs {
-  border-bottom: 1px solid #ffffff0f;
+  border-bottom: 1px solid #0b17260f;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 28px;
@@ -957,16 +957,16 @@
   color: var(--text-muted);
   cursor: pointer;
   transition: var(--transition-smooth);
-  background: #ffffff0a;
-  border: 1px solid #ffffff14;
+  background: #0b17260a;
+  border: 1px solid #0b172614;
   border-radius: 30px;
   padding: 8px 18px;
   font-size: 13px;
   font-weight: 600;
 }
 .enquiry-tab:hover {
-  color: #fff;
-  border-color: #fff3;
+  color: var(--text-main);
+  border-color: #0b172603;
 }
 .enquiry-tab.active {
   background: var(--primary-red);
@@ -990,17 +990,17 @@
   display: flex;
 }
 .form-group label {
-  color: #fff;
+  color: var(--text-main);
   font-size: 13.5px;
   font-weight: 600;
 }
 .form-group input,
 .form-group textarea,
 .form-group select {
-  color: #fff;
+  color: var(--text-main);
   transition: var(--transition-smooth);
-  background: #ffffff0a;
-  border: 1px solid #ffffff1a;
+  background: #ffffff;
+  border: 1px solid #0b17261a;
   border-radius: 10px;
   outline: none;
   padding: 13px 16px;
@@ -1064,7 +1064,7 @@
   font-size: 32px;
 }
 .form-success-msg strong {
-  color: #fff;
+  color: var(--text-main);
   margin-bottom: 4px;
   font-size: 16px;
   display: block;
@@ -1084,7 +1084,7 @@
   padding: 28px;
 }
 .contact-side-card h3 {
-  color: #fff;
+  color: var(--text-main);
   align-items: center;
   margin-bottom: 20px;
   font-size: 15.5px;
@@ -1098,7 +1098,7 @@
 }
 .hours-row {
   color: var(--text-muted);
-  border-bottom: 1px solid #ffffff0d;
+  border-bottom: 1px solid #0b17260d;
   justify-content: space-between;
   padding-bottom: 12px;
   font-size: 13.5px;
@@ -1109,7 +1109,7 @@
   padding-bottom: 0;
 }
 .hours-row.highlight {
-  color: #fff;
+  color: var(--text-main);
 }
 .hours-green {
   color: #2ecc71;
@@ -1126,7 +1126,7 @@
   display: flex;
 }
 .response-bar {
-  background: #ffffff12;
+  background: #0b172612;
   border-radius: 10px;
   height: 5px;
   position: relative;
@@ -1157,8 +1157,8 @@
 .contact-social-btn {
   color: var(--text-muted);
   transition: var(--transition-smooth);
-  background: #ffffff08;
-  border: 1px solid #ffffff12;
+  background: #0b172608;
+  border: 1px solid #0b172612;
   border-radius: 10px;
   align-items: center;
   gap: 14px;
@@ -1174,7 +1174,7 @@
   font-size: 16px;
 }
 .contact-social-btn:hover {
-  color: #fff;
+  color: var(--text-main);
   background: #e61e2b0d;
   border-color: #e61e2b4d;
 }
@@ -1197,7 +1197,7 @@
 }
 .faq-question {
   cursor: pointer;
-  color: #fff;
+  color: var(--text-main);
   text-align: left;
   background: 0 0;
   border: none;
@@ -1340,7 +1340,7 @@
     height: 18px;
   }
   .ticket-dash-line {
-    border-top: 1.5px dashed #ffffff1a;
+    border-top: 1.5px dashed #0b17261a;
     border-left: none;
     width: 100%;
     height: 1px;
@@ -1368,7 +1368,7 @@
   .ticket-action-panel {
     min-width: unset;
     box-sizing: border-box;
-    border-top: 1px dashed #ffffff14;
+    border-top: 1px dashed #0b172614;
     border-left: none;
     flex-direction: row;
     justify-content: space-between;
@@ -1432,7 +1432,7 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 60px rgba(11, 23, 38, 0.1);
   cursor: default;
 }
 .poster-lightbox-close {

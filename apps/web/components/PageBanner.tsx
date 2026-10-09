@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 type Props = {
   /** The page's one h1. */
   title: ReactNode;
+  /** The area of the site this page belongs to, shown as a pill above the title. */
+  label?: string;
   /** A line or two on what the page is for. */
   intro?: ReactNode;
   /** Buttons, as links with the `pb-btn` classes. */
@@ -18,7 +20,7 @@ type Props = {
  * The banner at the top of every inner page: a rounded photo card sitting under the header, like the
  * homepage's hero but shorter. The same photo, size and layout on every page.
  */
-export default function PageBanner({ title, intro, actions, above, overlap = false, id = "page-title" }: Props) {
+export default function PageBanner({ title, label, intro, actions, above, overlap = false, id = "page-title" }: Props) {
   return (
     <section className={`pb${overlap ? " pb-overlap" : ""}`} aria-labelledby={id}>
       <div className="pb-card">
@@ -35,6 +37,7 @@ export default function PageBanner({ title, intro, actions, above, overlap = fal
         />
         <div className="pb-in">
           {above}
+          {label && <span className="pb-label">{label}</span>}
           <h1 id={id}>{title}</h1>
           {intro && <p className="pb-intro">{intro}</p>}
           {actions && <div className="pb-actions">{actions}</div>}
