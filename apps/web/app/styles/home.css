@@ -307,24 +307,32 @@ html:has(.hm) {
   margin: 0;
 }
 .hm-quote-assure {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--p-line);
-  color: var(--p-mute);
-  font-size: 14px;
+  font-size: 13px;
 }
+/* Each reassurance is a pill: a small tick, then the words. */
 .hm-quote-assure li {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--p-line);
+  border-radius: 999px;
+  background: var(--p-field);
+  color: var(--p-ink);
+  font-weight: 500;
+  line-height: 1.2;
 }
 .hm-quote-assure li::before {
   content: "";
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 8.5 3.2 3.2L13 4.8'/></svg>")
     center / contain no-repeat;

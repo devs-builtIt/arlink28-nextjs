@@ -87,6 +87,29 @@ test.describe("the homepage quote request", () => {
     await expect(quote(page).getByLabel("To")).toHaveValue("Cairo (CAI)");
   });
 
+  test("the reassurances under the quote form are pills", async ({ page }) => {
+    await page.goto("/");
+    const pills = quote(page).locator(".hm-quote-assure li");
+    await expect(pills).toHaveText([
+      "No payment until you agree",
+      "Secure payment, 100% guaranteed",
+      "24/7 travel support",
+    ]);
+    for (const pill of await pills.all()) {
+      const style = await pill.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          radius: parseFloat(cs.borderTopLeftRadius),
+          border: cs.borderTopWidth,
+          pad: parseFloat(cs.paddingLeft),
+        };
+      });
+      expect(style.radius).toBeGreaterThanOrEqual(100); // fully rounded
+      expect(style.border).toBe("1px");
+      expect(style.pad).toBeGreaterThan(0);
+    }
+  });
+
   test("does not scroll sideways", async ({ page }) => {
     await page.goto("/");
     const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
