@@ -36,13 +36,17 @@ const PAGES = [
 async function measure(page: import("@playwright/test").Page) {
   return page.evaluate(() => {
     const banners = document.querySelectorAll(".pb");
-    const pb = banners[0];
-    const h1 = pb?.querySelector("h1");
-    const img = pb?.querySelector<HTMLImageElement>(".pb-img");
+    const card = banners[0]?.querySelector(".pb-card");
+    const h1 = card?.querySelector("h1");
+    const img = card?.querySelector<HTMLImageElement>(".pb-img");
+    const box = card?.getBoundingClientRect();
     return {
       banners: banners.length,
       h1s: document.querySelectorAll("h1").length,
-      heightPx: pb ? Math.round(pb.getBoundingClientRect().height) : 0,
+      heightPx: box ? Math.round(box.height) : 0,
+      left: box ? Math.round(box.left) : -1,
+      right: box ? Math.round(window.innerWidth - box.right) : -1,
+      radius: card ? getComputedStyle(card).borderRadius : "",
       font: h1 ? getComputedStyle(h1).fontFamily.split(",")[0].replaceAll('"', "") : "",
       weight: h1 ? getComputedStyle(h1).fontWeight : "",
       size: h1 ? getComputedStyle(h1).fontSize : "",
@@ -64,13 +68,45 @@ test.describe("the banner at the top of the inner pages", () => {
       expect(m.h1s, `${path}: exactly one h1`).toBe(1);
       expect(m.loaded, `${path}: the photo loads`).toBe(true);
       expect(m.sideways, `${path}: no sideways scroll`).toBe(false);
-      const key = JSON.stringify({ h: m.heightPx, font: m.font, weight: m.weight, size: m.size, photo: m.photo });
+      const key = JSON.stringify({
+        h: m.heightPx,
+        left: m.left,
+        right: m.right,
+        radius: m.radius,
+        font: m.font,
+        weight: m.weight,
+        size: m.size,
+        photo: m.photo,
+      });
       seen.set(key, [...(seen.get(key) ?? []), path]);
     }
     // Every page reports the same measurements, so there is a single group.
     expect([...seen.entries()].map(([k, paths]) => `${k} -> ${paths.length} pages`)).toHaveLength(1);
     const [only] = [...seen.keys()];
-    expect(JSON.parse(only)).toMatchObject({ h: 450, font: "Satoshi", weight: "600", size: "58px" });
+    expect(JSON.parse(only)).toMatchObject({
+      h: 440,
+      left: 30,
+      right: 30,
+      radius: "12px",
+      font: "Satoshi",
+      weight: "600",
+      size: "58px",
+    });
+  });
+
+  test("is a rounded card inset from the page edges, the same shape as the homepage hero", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const hero = await page.evaluate(() => {
+      const card = document.querySelector(".hm-hero-card")!;
+      const box = card.getBoundingClientRect();
+      return { left: Math.round(box.left), radius: getComputedStyle(card).borderRadius };
+    });
+    await page.goto("/about");
+    const banner = await measure(page);
+    expect(banner.left).toBe(hero.left);
+    expect(banner.radius).toBe(hero.radius);
+    expect(banner.left).toBeGreaterThan(0); // inset, not edge to edge
   });
 
   test("serves a sharp photo: the larger file to a high-density screen", async ({ browser }) => {
