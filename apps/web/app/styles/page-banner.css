@@ -1,0 +1,178 @@
+/*
+ * The banner at the top of every inner page (components/PageBanner.tsx).
+ *
+ * One photo, one height, one layout, so the site reads as one place whichever page you land on. The
+ * photo runs behind the site header. The darkening over it is flat and only there so white text can be
+ * read on the bright part of the sky: no glows, no gradients.
+ */
+
+.pb {
+  --pb-gutter: max(var(--gutter, 30px), calc((100% - 1240px) / 2));
+  --red: #e61e2b;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  min-height: 450px;
+  padding: calc(var(--header-h, 76px) + 40px) var(--pb-gutter) clamp(34px, 4.5vw, 60px);
+  background: #0b121c;
+  color: #fff;
+  font-family: var(--font, sans-serif);
+  overflow: hidden;
+}
+/* On pages where a search bar overlaps the bottom of the banner, there is room left for it. */
+.pb.pb-overlap {
+  padding-bottom: clamp(84px, 9vw, 112px);
+}
+
+.pb-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The tree sits right of centre; keep it in frame when a narrow screen crops the sides. */
+  object-position: 62% 50%;
+}
+.pb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(5, 9, 15, 0.46);
+}
+
+.pb-in {
+  width: 100%;
+}
+.pb .pb-in h1 {
+  max-width: 22ch;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font, sans-serif);
+  font-size: clamp(34px, 4.8vw, 58px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.pb .pb-in .pb-intro {
+  max-width: 66ch;
+  margin: 14px 0 0;
+  color: #eef2f7;
+  font-family: var(--font, sans-serif);
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 400;
+  line-height: 1.55;
+}
+.pb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+/* The banner's buttons, the same on every page. */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pb-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.pb-btn-primary {
+  background: #e61e2b;
+  border-color: #e61e2b;
+  color: #fff;
+}
+.pb-btn-primary:hover {
+  background: #c91621;
+  border-color: #c91621;
+}
+.pb-btn-quiet {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.pb-btn-quiet:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+}
+
+/* A link back to the page you came from, above the title. */
+.pb-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: #eef2f7;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.pb-back:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .pb {
+    min-height: 400px;
+  }
+}
+@media (max-width: 640px) {
+  .pb {
+    min-height: 330px;
+    padding-top: calc(var(--header-h, 76px) + 28px);
+  }
+  .pb-img {
+    object-position: 66% 50%;
+  }
+  .pb .pb-in h1 {
+    max-width: none;
+  }
+  .pb-btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Statistics some pages show straight under the banner. */
+.pb-stats {
+  padding: 40px var(--gutter, 30px) 0;
+}
+.pb-stats-in {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.pb-stats .opp-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .pb-stats .opp-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A paragraph of the page's own words, leading the stats under the banner. */
+.pb-stats-lead {
+  max-width: 70ch;
+  margin: 0 0 28px;
+  color: #b9c4d3;
+  font-size: 17px;
+  line-height: 1.65;
+}

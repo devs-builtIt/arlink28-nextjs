@@ -4,6 +4,7 @@ import "../styles/opportunities-inline.css";
 import "../styles/content-shared.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Opportunities | ARLink28 - Shape The Future Of African Aviation",
@@ -13,35 +14,22 @@ export const metadata: Metadata = {
 export default function OpportunitiesPage() {
   return (
     <>
-      <section className="page-hero">
-        <div className="page-hero-content">
-          <span className="page-hero-tag hero-tag-entrance">
-            <i
-              className="fa-solid fa-circle"
-              style={{ fontSize: "8px", color: "var(--primary-red)", marginRight: "8px" }}
-            ></i>
-            Grow With Us
-          </span>
-          <h1 className="hero-h1-entrance">
-            Shape The Future Of
-            <br />
-            <span className="highlight-red">African Aviation</span>
-          </h1>
-          <p className="hero-p-entrance">
-            Whether you're a talented professional, a strategic investor, or an ambitious partner — ARLink28 has a place
-            for you in building Africa's next great airline.
-          </p>
-          <div className="page-hero-actions hero-btn-entrance">
-            <a href="#careers" className="btn btn-primary">
-              View Openings
-              <i className="fa-solid fa-arrow-right"></i>
+      <PageBanner
+        title="Shape the future of African aviation"
+        intro="Whether you're a talented professional, a strategic investor, or an ambitious partner, ARLink28 has a place for you in building Africa's next great airline."
+        actions={
+          <>
+            <a className="pb-btn pb-btn-primary" href="#careers">
+              View openings
             </a>
-            <a href="#partnerships" className="btn btn-secondary">
-              Partner With Us
+            <a className="pb-btn pb-btn-quiet" href="#partnerships">
+              Partner with us
             </a>
-          </div>
-        </div>
-        <div className="page-hero-visual hero-visual-entrance">
+          </>
+        }
+      />
+      <section className="pb-stats" aria-label="Opportunities at a glance">
+        <div className="pb-stats-in">
           <div className="opp-hero-stats">
             <div className="opp-stat-card glass-panel">
               <div className="opp-stat-icon">

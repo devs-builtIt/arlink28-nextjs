@@ -1,6 +1,7 @@
 import "./globals.css";
 import "../styles/tokens.css";
 import "../styles/chrome.css";
+import "../styles/page-banner.css";
 import { siteMetadata } from "../site";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

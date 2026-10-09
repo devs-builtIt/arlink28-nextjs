@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/home/PageHero";
+import PageBanner from "@/components/PageBanner";
 import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
 import { headline, publicPath } from "@/utils/publicProducts";
@@ -68,16 +68,14 @@ export default async function ContactPage({ searchParams }: Search) {
 
   return (
     <div className="hm hm-ct">
-      <PageHero
+      <PageBanner
         id="hm-qp-h"
         title="Contact us"
-        text={
+        intro={
           pkg
             ? `Tell us who you are and we will come back to you about this ${pkg.kind === "HolidayPackage" ? "package" : "request"}.`
             : "Ask about a package, a booking, a partnership or a role. Send a message here, or reach us by phone."
         }
-        image="/images/home/hero-safari-1920.webp"
-        position="50% 70%"
       />
 
       <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Send a message">

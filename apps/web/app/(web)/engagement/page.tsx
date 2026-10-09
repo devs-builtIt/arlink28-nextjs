@@ -6,6 +6,7 @@ import "../styles/engagement-inline.css";
 import "../styles/content-shared.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "ARLinks - Premium African Aviation",
@@ -15,37 +16,27 @@ export const metadata: Metadata = {
 export default function EngagementPage() {
   return (
     <>
-      <section className="page-hero">
-        <div className="page-hero-content">
-          <span className="page-hero-tag hero-tag-entrance">
-            <i
-              className="fa-solid fa-circle"
-              style={{ fontSize: "8px", color: "var(--primary-red)", marginRight: "8px" }}
-            ></i>
-            Industry & Community
-          </span>
-          <h1 className="hero-h1-entrance">
-            Connecting Through Industry.
-            <br />
-            <span className="highlight-red">Building for Africa.</span>
-          </h1>
-          <p className="hero-p-entrance">
-            ARLink28 actively engages across aviation, travel, tourism, sustainability, investment and business
-            ecosystems throughout Africa and internationally. Through industry summits, travel exhibitions, strategic
-            meetings and global aviation forums, we continue to expand our knowledge, strengthen relationships and build
-            the partnerships required to support our long-term vision for greater African connectivity.
+      <PageBanner
+        title="Connecting through industry. Building for Africa."
+        intro="ARLink28 actively engages across aviation, travel, tourism, sustainability, investment and business ecosystems throughout Africa and internationally."
+        actions={
+          <>
+            <a className="pb-btn pb-btn-primary" href="#engagements">
+              Our engagements
+            </a>
+            <a className="pb-btn pb-btn-quiet" href="#upcoming-engagements">
+              Upcoming events
+            </a>
+          </>
+        }
+      />
+      <section className="pb-stats" aria-label="Engagement at a glance">
+        <div className="pb-stats-in">
+          <p className="pb-stats-lead">
+            Through industry summits, travel exhibitions, strategic meetings and global aviation forums, we continue to
+            expand our knowledge, strengthen relationships and build the partnerships required to support our long-term
+            vision for greater African connectivity.
           </p>
-          <div className="page-hero-actions hero-btn-entrance">
-            <a className="btn btn-primary" href="#engagements">
-              Our Engagements
-              <i className="fa-solid fa-arrow-right"></i>
-            </a>
-            <a className="btn btn-secondary" href="#upcoming-engagements">
-              Upcoming Events
-            </a>
-          </div>
-        </div>
-        <div className="page-hero-visual hero-visual-entrance">
           <div className="opp-hero-stats">
             <div className="opp-stat-card glass-panel">
               <div className="opp-stat-icon">

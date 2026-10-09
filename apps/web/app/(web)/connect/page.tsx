@@ -4,6 +4,7 @@ import "../styles/destinations.css";
 import "../styles/connect-inline.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Connect | ARLink28 - Connecting Dreams, Connecting Africa",
@@ -14,32 +15,20 @@ export const metadata: Metadata = {
 export default function ConnectPage() {
   return (
     <>
-      <section className="connect-hero">
-        <div className="connect-hero-content">
-          <span className="connect-hero-tag hero-tag-entrance">
-            <i className="fa-solid fa-plane-departure" style={{ marginRight: "8px" }}></i>
-            Connecting Dreams, Connecting Africa
-          </span>
-          <h1 className="hero-h1-entrance">
-            ARLink28 —<span className="highlight-red">Connecting Africa</span>
-          </h1>
-          <p className="hero-p-entrance">
-            ARLink28 is a Pan-African travel and aviation-focused company created with a long-term vision of making
-            movement across Africa easier, more connected, more efficient, and more commercially accessible.
-          </p>
-          <div className="hero-btn-entrance">
-            <a className="btn btn-primary" href="#vision">
-              Explore Our Vision
+      <PageBanner
+        title="ARLink28, connecting Africa"
+        intro="ARLink28 is a Pan-African travel and aviation-focused company created with a long-term vision of making movement across Africa easier, more connected, more efficient, and more commercially accessible."
+        actions={
+          <>
+            <a className="pb-btn pb-btn-primary" href="#vision">
+              Explore our vision
             </a>
-            <Link className="btn btn-secondary" href="/contact" style={{ marginLeft: "12px" }}>
-              Partner With Us
+            <Link className="pb-btn pb-btn-quiet" href="/contact">
+              Partner with us
             </Link>
-          </div>
-        </div>
-        <div className="connect-hero-globe" aria-hidden="true">
-          <i className="fa-solid fa-globe"></i>
-        </div>
-      </section>
+          </>
+        }
+      />
       <section className="connect-section" id="overview">
         <div
           className="dest-section-header reveal"

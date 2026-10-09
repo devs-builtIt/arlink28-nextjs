@@ -4,6 +4,7 @@ import "../styles/team-inline.css";
 import "../styles/people.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Meet the Team - ARLink28 Leadership & Coordinators",
@@ -14,24 +15,10 @@ export const metadata: Metadata = {
 export default function TeamPage() {
   return (
     <>
-      <section className="team-hero">
-        <div className="team-hero-container">
-          <span className="team-hero-tag">
-            <i className="fa-solid fa-users"></i>
-            Leadership & Coordinators
-          </span>
-          <h1>
-            Meet The Visionaries Behind
-            <br />
-            <span className="highlight-red">ARLink28</span>
-          </h1>
-          <p>
-            Our team unites seasoned aviation executives, financial strategists, digital technology experts, partnership
-            coordinators, and market development professionals dedicated to building Africa's next great travel
-            ecosystem.
-          </p>
-        </div>
-      </section>
+      <PageBanner
+        title="Meet the visionaries behind ARLink28"
+        intro="Our team unites seasoned aviation executives, financial strategists, digital technology experts, partnership coordinators, and market development professionals dedicated to building Africa's next great travel ecosystem."
+      />
       <section className="team-grid-section">
         <div className="team-grid-container">
           <div className="team-card reveal">

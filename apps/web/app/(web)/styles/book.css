@@ -1,6 +1,5 @@
 .book-page {
-  min-height: 100vh;
-  padding: 120px 8% 80px;
+  padding: 56px 8% 80px;
 }
 .book-header {
   text-align: center;
@@ -150,7 +149,7 @@
 }
 @media (max-width: 768px) {
   .book-page {
-    padding: 100px 5% 60px;
+    padding: 40px 5% 60px;
   }
   .book-header h1 {
     font-size: 30px;

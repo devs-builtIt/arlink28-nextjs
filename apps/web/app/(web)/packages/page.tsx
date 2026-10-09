@@ -8,6 +8,7 @@ import Pagination from "@/components/packages/Pagination";
 import ResultsBar, { ResultsFrame } from "@/components/packages/ResultsBar";
 import { PAGE_SIZE, listDestinations, listPackages } from "@/utils/server/catalogue";
 import "../styles/packages.css";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Holiday packages | ARLink28",
@@ -59,13 +60,12 @@ export default async function PackagesPage({ searchParams }: { searchParams: Sea
 
   return (
     <ListingProvider params={params}>
-      <section className="pkgs-hero">
-        <div className="pkgs-hero-inner">
-          <KindSwitcher active="/packages" />
-          <h1>Find your next safari</h1>
-          <p>Safari and lodge packages across Africa, with the price up front.</p>
-        </div>
-      </section>
+      <PageBanner
+        overlap
+        above={<KindSwitcher active="/packages" />}
+        title="Find your next safari"
+        intro="Safari and lodge packages across Africa, with the price up front."
+      />
 
       <div className="pkgs-searchwrap">
         <HeroSearch destinations={destinations} />

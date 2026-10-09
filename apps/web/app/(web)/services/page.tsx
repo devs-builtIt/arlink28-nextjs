@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/services.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "ARLinks - Premium African Aviation",
@@ -11,23 +12,10 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <>
-      <section className="service-hero">
-        <div className="service-hero-content">
-          <span className="service-hero-tag hero-tag-entrance">
-            <i className="fa-solid fa-circle" style={{ fontSize: "8px", marginRight: "8px" }}></i>
-            Our Services
-          </span>
-          <h1 className="hero-h1-entrance">
-            Seamless Travel,
-            <br />
-            <span className="highlight-red">End to End.</span>
-          </h1>
-          <p className="hero-p-entrance">
-            From flight booking and hotel reservations to airport transfers, visa support, holiday packages, and travel
-            insurance — ARLink28 covers every step of your journey.
-          </p>
-        </div>
-      </section>
+      <PageBanner
+        title="Seamless travel, end to end."
+        intro="From flight booking and hotel reservations to airport transfers, visa support, holiday packages, and travel insurance, ARLink28 covers every step of your journey."
+      />
       <section className="core-services-section">
         <div className="services-title-wrapper">
           <span className="services-tag">What We Offer</span>

@@ -4,6 +4,7 @@ import DestinationTile from "@/components/destinations/DestinationTile";
 import { groupByCountry, placeHref } from "@/utils/destinations";
 import { listDestinations } from "@/utils/server/catalogue";
 import "../../styles/destination-pages.css";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Destinations across Africa | ARLink28",
@@ -22,12 +23,10 @@ export default async function DestinationsPage() {
 
   return (
     <>
-      <section className="dst-hero">
-        <div className="dst-hero-inner">
-          <h1>Destinations</h1>
-          <p>Where ARLink28 can take you across Africa. Choose a country, or go straight to a place.</p>
-        </div>
-      </section>
+      <PageBanner
+        title="Destinations"
+        intro="Where ARLink28 can take you across Africa. Choose a country, or go straight to a place."
+      />
 
       <div className="dst-page">
         {destinations === null ? (
