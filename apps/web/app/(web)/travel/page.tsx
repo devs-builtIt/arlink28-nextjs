@@ -44,12 +44,12 @@ export default function TravelPage() {
                 <img
                   alt="ARLinks"
                   loading="lazy"
-                  width="80"
-                  height="18"
+                  width="81"
+                  height="22"
                   decoding="async"
                   className="pass-logo"
-                  src="/images/logo.png"
-                  style={{ color: "transparent", height: "18px", width: "auto" }}
+                  src="/images/logo-horizontal-white.png"
+                  style={{ color: "transparent", height: "22px", width: "auto" }}
                 />
                 <span className="pass-class">BUSINESS</span>
               </div>

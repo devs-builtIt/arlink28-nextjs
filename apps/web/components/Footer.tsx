@@ -40,8 +40,7 @@ export default function Footer() {
         <div className="sf-top">
           <div className="sf-brand">
             <Link className="sf-logo" href="/" aria-label="ARLink28 home">
-              <img alt="" loading="lazy" width={62} height={50} decoding="async" src="/images/logo.png" />
-              <span>ARLink28</span>
+              <span className="sh-logo-art" aria-hidden="true" />
             </Link>
             <p>
               Flights, hotels, visas and holidays across Africa and beyond. A travel agency today, building towards an

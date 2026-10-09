@@ -143,8 +143,7 @@ export default function Header({ themable = false }: { themable?: boolean }) {
       </a>
       <div className="sh-bar">
         <Link className="sh-logo" href="/" aria-label="ARLink28 home">
-          <img alt="" width={62} height={50} decoding="async" src="/images/logo.png" />
-          <span>ARLink28</span>
+          <span className="sh-logo-art" aria-hidden="true" />
         </Link>
 
         <nav className="sh-nav" aria-label="Main">

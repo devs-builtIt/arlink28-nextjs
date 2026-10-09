@@ -86,24 +86,20 @@
 .sf-logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: var(--ink);
 }
-.sh-logo img,
-.sf-logo img {
-  width: auto;
-  height: 50px;
+/* The horizontal lockup (mark, name, tagline), swapped for the light or dark artwork by the --logo token. */
+.sh-logo-art {
+  display: block;
+  height: 46px;
+  aspect-ratio: 1200 / 325;
+  background: var(--logo) left center / contain no-repeat;
   transition: height 0.3s ease;
 }
-.sh.is-scrolled .sh-logo img {
-  height: 38px;
+.sf-logo .sh-logo-art {
+  height: 56px;
 }
-.sh-logo span,
-.sf-logo span {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: var(--track);
-  line-height: 1;
+.sh.is-scrolled .sh-logo-art {
+  height: 38px;
 }
 .sh-nav {
   display: flex;
@@ -356,9 +352,6 @@
     padding: 0 8px;
     font-size: 15px;
   }
-  .sh-logo span {
-    font-size: 1.3rem;
-  }
 }
 /* On phones the bar has no room for the theme toggle next to the CTA and menu button, so it moves into the menu. */
 .sh-theme-bar {
@@ -390,11 +383,8 @@
   .sh.is-scrolled .sh-bar {
     padding: 0 8px 0 14px;
   }
-  .sh-logo span {
-    font-size: 1.25rem;
-  }
-  .sh-logo {
-    gap: 6px;
+  .sh-logo-art {
+    height: 38px;
   }
 }
 @media (max-width: 350px) {

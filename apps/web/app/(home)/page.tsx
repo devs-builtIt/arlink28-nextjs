@@ -82,7 +82,7 @@ const jsonLd = {
       "@id": `${SITE}/#organization`,
       name: "ARLink28",
       url: SITE,
-      logo: `${SITE}/images/logo.png`,
+      logo: `${SITE}/images/logo-horizontal-black.png`,
       description: "Flights, hotel reservations, visa support and holidays across Africa and beyond.",
       telephone: "+2347047009128",
       sameAs: ["https://www.instagram.com/fly_arlink28"],
