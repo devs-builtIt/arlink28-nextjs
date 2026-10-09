@@ -2,7 +2,13 @@ import Link from "next/link";
 import type { DestinationResponse } from "@arlink28/api-client";
 
 /** A place with a photo: the picture, then its name and a line about it. The whole tile is one link. */
-export default function DestinationTile({ place, priority = false }: { place: DestinationResponse; priority?: boolean }) {
+export default function DestinationTile({
+  place,
+  priority = false,
+}: {
+  place: DestinationResponse;
+  priority?: boolean;
+}) {
   return (
     <article className="dst-tile">
       <Link className="dst-tile-link" href={`/destinations/${place.slug}`}>

@@ -45,8 +45,14 @@ test.describe("the destinations index", () => {
     await expect(kenya.locator("article.dst-tile")).toHaveCount(1); // only Masai Mara has a photo
     const others = kenya.locator(".dst-others");
     await expect(others).toContainText("Also on our packages:");
-    await expect(others.getByRole("link", { name: "Nairobi" })).toHaveAttribute("href", "/packages?destination=nairobi");
-    await expect(others.getByRole("link", { name: "Samburu" })).toHaveAttribute("href", "/packages?destination=samburu");
+    await expect(others.getByRole("link", { name: "Nairobi" })).toHaveAttribute(
+      "href",
+      "/packages?destination=nairobi",
+    );
+    await expect(others.getByRole("link", { name: "Samburu" })).toHaveAttribute(
+      "href",
+      "/packages?destination=samburu",
+    );
   });
 
   test("never shows a draft", async ({ page }) => {
@@ -129,7 +135,11 @@ test.describe("a place", () => {
     const [place, crumbs] = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());
     expect(place).toMatchObject({ "@type": "TouristDestination", name: "Chobe National Park" });
     expect(place.containedInPlace).toMatchObject({ name: "Botswana" });
-    expect(crumbs.itemListElement.map((i: { name: string }) => i.name)).toEqual(["Destinations", "Botswana", "Chobe National Park"]);
+    expect(crumbs.itemListElement.map((i: { name: string }) => i.name)).toEqual([
+      "Destinations",
+      "Botswana",
+      "Chobe National Park",
+    ]);
   });
 
   test("has no horizontal scroll on a phone", async ({ page }) => {
@@ -146,7 +156,10 @@ test.describe("a country", () => {
     await expect(page.getByRole("heading", { name: "Botswana", level: 1 })).toBeVisible();
     const places = page.getByRole("region", { name: "Places in Botswana" });
     await expect(places.locator("article.dst-tile")).toHaveCount(2);
-    await expect(places.getByRole("link", { name: /Okavango Delta/ })).toHaveAttribute("href", "/destinations/okavango-delta");
+    await expect(places.getByRole("link", { name: /Okavango Delta/ })).toHaveAttribute(
+      "href",
+      "/destinations/okavango-delta",
+    );
     await expect(page.getByRole("complementary", { name: "About this destination" })).toContainText("Country");
     const crumbs = page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("listitem");
     await expect(crumbs).toHaveText(["Destinations", "Botswana"]);

@@ -32,8 +32,21 @@
       "heroAlt": "A herd of elephants drinking at the Chobe River",
       "heroCredit": "Photo by Rory Ashman on Unsplash",
       "attractions": [
-        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000011", "name": "River safari", "summary": "A boat trip along the Chobe at sunset.", "photoPath": "/media/destinations/river-safari.jpg", "photoAlt": "A boat on the Chobe River", "photoCredit": "Photo by A. Photographer on Unsplash", "sortOrder": 0 },
-        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000012", "name": "Elephant crossing", "summary": "Herds swim between the islands.", "sortOrder": 1 }
+        {
+          "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000011",
+          "name": "River safari",
+          "summary": "A boat trip along the Chobe at sunset.",
+          "photoPath": "/media/destinations/river-safari.jpg",
+          "photoAlt": "A boat on the Chobe River",
+          "photoCredit": "Photo by A. Photographer on Unsplash",
+          "sortOrder": 0
+        },
+        {
+          "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000012",
+          "name": "Elephant crossing",
+          "summary": "Herds swim between the islands.",
+          "sortOrder": 1
+        }
       ]
     },
     {
@@ -50,7 +63,12 @@
       "heroAlt": "Aerial view of the Okavango river",
       "heroCredit": "Photo by Wynand Uys on Unsplash",
       "attractions": [
-        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000013", "name": "Mokoro trip", "summary": "Glide through the channels in a dugout canoe.", "sortOrder": 0 }
+        {
+          "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000013",
+          "name": "Mokoro trip",
+          "summary": "Glide through the channels in a dugout canoe.",
+          "sortOrder": 0
+        }
       ]
     },
     {
@@ -68,7 +86,12 @@
       "heroAlt": "The pyramids of Giza and the Sphinx",
       "heroCredit": "Photo by Dilip Poddar on Unsplash",
       "attractions": [
-        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000014", "name": "The Great Pyramid", "summary": "Built for Khufu about 4,500 years ago.", "sortOrder": 0 }
+        {
+          "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000014",
+          "name": "The Great Pyramid",
+          "summary": "Built for Khufu about 4,500 years ago.",
+          "sortOrder": 0
+        }
       ]
     },
     {
@@ -105,7 +128,12 @@
       "heroAlt": "Savanna in the Masai Mara",
       "heroCredit": "Photo by Someone on Unsplash",
       "attractions": [
-        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000015", "name": "Game drive", "summary": "Early morning drives find the big cats.", "sortOrder": 0 }
+        {
+          "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000015",
+          "name": "Game drive",
+          "summary": "Early morning drives find the big cats.",
+          "sortOrder": 0
+        }
       ]
     },
     "nairobi": { "kind": "Place" },

@@ -45,5 +45,4 @@ export async function listDestinations(): Promise<DestinationResponse[]> {
 }
 
 /** A published destination with its attractions and places, or null when it does not exist (or is still a draft). */
-export const getDestination = (slug: string) =>
-  get<DestinationDetail>(`/destinations/${encodeURIComponent(slug)}`, 60);
+export const getDestination = (slug: string) => get<DestinationDetail>(`/destinations/${encodeURIComponent(slug)}`, 60);

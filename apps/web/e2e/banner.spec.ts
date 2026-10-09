@@ -180,7 +180,13 @@ test.describe("the banner at the top of the inner pages", () => {
 
 test.describe("the inner pages are light", () => {
   const canvas = (page: import("@playwright/test").Page) =>
-    page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim().toLowerCase().replace(/^#fff$/, "#ffffff"));
+    page.evaluate(() =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--canvas")
+        .trim()
+        .toLowerCase()
+        .replace(/^#fff$/, "#ffffff"),
+    );
 
   test("every inner page, detail pages included, uses the light surface; the homepage keeps its own theme", async ({
     page,

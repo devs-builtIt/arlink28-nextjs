@@ -191,11 +191,7 @@ export default async function HomePage() {
         <div className="hm-logos">
           <div className="hm-logos-track">
             {[0, 1].map((n) => (
-              <ul
-                key={n}
-                aria-hidden={n === 1 ? "true" : undefined}
-                aria-label={n === 0 ? "Our partners" : undefined}
-              >
+              <ul key={n} aria-hidden={n === 1 ? "true" : undefined} aria-label={n === 0 ? "Our partners" : undefined}>
                 {PARTNER_LOGOS.map((l) => (
                   <li key={l.name}>
                     <img src={l.src} alt={n === 0 ? l.name : ""} loading="lazy" decoding="async" height={40} />

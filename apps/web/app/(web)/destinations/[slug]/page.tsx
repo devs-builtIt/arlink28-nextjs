@@ -114,7 +114,14 @@ export default async function DestinationPage({ params }: Params) {
                     <li key={a.id}>
                       {a.photoPath && (
                         <figure>
-                          <img src={a.photoPath} alt={a.photoAlt ?? a.name} loading="lazy" decoding="async" width={640} height={480} />
+                          <img
+                            src={a.photoPath}
+                            alt={a.photoAlt ?? a.name}
+                            loading="lazy"
+                            decoding="async"
+                            width={640}
+                            height={480}
+                          />
                           {a.photoCredit && <figcaption>{a.photoCredit}</figcaption>}
                         </figure>
                       )}

@@ -13,7 +13,8 @@ export type CountryGroup = {
   others: DestinationResponse[];
 };
 
-const regionNames = typeof Intl !== "undefined" && "DisplayNames" in Intl ? new Intl.DisplayNames(["en"], { type: "region" }) : null;
+const regionNames =
+  typeof Intl !== "undefined" && "DisplayNames" in Intl ? new Intl.DisplayNames(["en"], { type: "region" }) : null;
 
 /** "BW" becomes "Botswana". Falls back to the code for anything the runtime does not know. */
 export function countryName(code: string): string {
