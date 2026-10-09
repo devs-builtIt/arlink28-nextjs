@@ -52,6 +52,15 @@ test.describe("the homepage quote request", () => {
     await expect(quote(page).getByLabel("To")).toHaveValue("Accra (ACC)");
   });
 
+  test("Victoria Falls is among the destinations, and choosing it fills in the form", async ({ page }) => {
+    await page.goto("/");
+    const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
+    await expect(cards).toHaveCount(7);
+    await page.getByRole("button", { name: /Victoria Falls.*From Johannesburg/ }).click();
+    await expect(quote(page).getByLabel("From")).toHaveValue("Johannesburg (JNB)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Victoria Falls (VFA)");
+  });
+
   test("does not scroll sideways", async ({ page }) => {
     await page.goto("/");
     const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);

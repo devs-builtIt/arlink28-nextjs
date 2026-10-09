@@ -781,6 +781,9 @@ html:has(.hm) {
 .hm-routes li.is-wide {
   grid-column: span 2;
 }
+.hm-routes li.is-full {
+  grid-column: 1 / -1;
+}
 .hm-routes button {
   position: absolute;
   inset: 0;

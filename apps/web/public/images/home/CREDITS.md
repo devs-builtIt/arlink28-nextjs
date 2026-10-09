@@ -15,3 +15,7 @@
   photo-1619659085985-f51a00f0160a (Jakob Rosen), photo-1474302770737-173ee21bab63 (Chris Leipelt),
   photo-1625513123245-fcb02d69ad12 (Yaroslav Muzychenko). Photographer names are as listed on Unsplash; confirm on the pages.
   They are stock images, not ARLink28 aircraft. Replace them when the charter service has its own.
+
+- `route-vfa.webp`: Victoria Falls Bridge over the Batoka Gorge, below Victoria Falls, Zimbabwe and Zambia.
+  Unsplash, photo by Jeremy Boley (https://unsplash.com/photos/lqBM9IsXhiY). Used under the Unsplash License
+  (free for commercial use, no attribution required). Cropped to a wide slice for the full-row card.
