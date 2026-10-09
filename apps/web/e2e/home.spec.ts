@@ -64,14 +64,27 @@ test.describe("the homepage quote request", () => {
     await expect(quote(page).getByLabel("To")).toHaveValue("Victoria Falls (VFA)");
   });
 
-  test("Botswana is among the destinations in Dubai's place, and choosing it fills in the form", async ({ page }) => {
+  test("Chobe National Park is among the destinations in Dubai's place, and choosing it fills in the form", async ({
+    page,
+  }) => {
     await page.goto("/");
     const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
     await expect(cards).toHaveCount(6);
     await expect(cards.filter({ hasText: "Dubai" })).toHaveCount(0);
-    await page.getByRole("button", { name: /Botswana.*From Johannesburg/ }).click();
+    await page.getByRole("button", { name: /Chobe National Park.*From Johannesburg/ }).click();
     await expect(quote(page).getByLabel("From")).toHaveValue("Johannesburg (JNB)");
-    await expect(quote(page).getByLabel("To")).toHaveValue("Maun (MUB)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Kasane (BBK)");
+  });
+
+  test("the Pyramids of Giza are among the destinations in Kampala's place, and choosing it fills in the form", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
+    await expect(cards.filter({ hasText: "Kampala" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Pyramids of Giza.*From Lagos/ }).click();
+    await expect(quote(page).getByLabel("From")).toHaveValue("Lagos (LOS)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Cairo (CAI)");
   });
 
   test("does not scroll sideways", async ({ page }) => {

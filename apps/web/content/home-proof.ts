@@ -121,10 +121,10 @@ export const ROUTES: {
   { from: "JNB", to: "VFA", fromCity: "Johannesburg", toCity: "Victoria Falls", photo: "/images/home/route-vfa.webp" },
   {
     from: "JNB",
-    to: "MUB",
+    to: "BBK",
     fromCity: "Johannesburg",
-    toCity: "Botswana",
-    photo: "/images/home/route-botswana.webp",
+    toCity: "Chobe National Park",
+    photo: "/images/home/route-chobe.webp",
     wide: true,
   },
   {
@@ -135,7 +135,7 @@ export const ROUTES: {
     photo: "/images/home/route-cpt.webp",
     wide: true,
   },
-  { from: "NBO", to: "EBB", fromCity: "Nairobi", toCity: "Kampala", photo: "/images/home/route-ebb.webp" },
+  { from: "LOS", to: "CAI", fromCity: "Lagos", toCity: "Pyramids of Giza", photo: "/images/home/route-giza.webp" },
   { from: "ADD", to: "NBO", fromCity: "Addis Ababa", toCity: "Nairobi", photo: "/images/home/route-nbo.webp" },
 ];
 

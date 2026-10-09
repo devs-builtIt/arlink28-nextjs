@@ -20,6 +20,10 @@
   Unsplash, photo by Ed Wingate (https://unsplash.com/photos/m1k3k4FvaCE). Used under the Unsplash License
   (free for commercial use, no attribution required). Cropped to portrait for the destination card.
 
-- `route-botswana.webp`: elephants drinking at the Chobe River, Botswana.
+- `route-chobe.webp`: elephants drinking at the Chobe River, Chobe National Park, Botswana.
   Unsplash, photo by Rory Ashman (https://unsplash.com/photos/CMjB7RelPoE). Used under the Unsplash License
   (free for commercial use, no attribution required). Cropped to the wide destination card.
+
+- `route-giza.webp`: the Great Pyramid and the Sphinx at Giza, Egypt.
+  Unsplash, photo by Dilip Poddar (https://unsplash.com/photos/1k7JC31SRyI). Used under the Unsplash License
+  (free for commercial use, no attribution required). Cropped to portrait for the destination card.
