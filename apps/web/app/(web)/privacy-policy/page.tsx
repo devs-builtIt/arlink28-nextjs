@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/legal.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | ARLink28",
@@ -11,16 +12,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <section className="legal-hero">
-        <div className="legal-hero-inner">
-          <div className="legal-hero-icon">
-            <i className="fa-solid fa-user-shield"></i>
-          </div>
-          <span className="legal-hero-tag">Legal</span>
-          <h1>Privacy Policy</h1>
-          <p>Last updated: June 2026</p>
-        </div>
-      </section>
+      <PageBanner label="Legal" title={"Privacy Policy"} intro="Last updated: June 2026" />
       <section className="legal-body">
         <div className="legal-layout">
           <aside className="legal-sidebar">

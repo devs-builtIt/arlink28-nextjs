@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/services.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "ARLinks - Premium African Aviation",
@@ -11,23 +12,11 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <>
-      <section className="service-hero">
-        <div className="service-hero-content">
-          <span className="service-hero-tag hero-tag-entrance">
-            <i className="fa-solid fa-circle" style={{ fontSize: "8px", marginRight: "8px" }}></i>
-            Our Services
-          </span>
-          <h1 className="hero-h1-entrance">
-            Seamless Travel,
-            <br />
-            <span className="highlight-red">End to End.</span>
-          </h1>
-          <p className="hero-p-entrance">
-            From flight booking and hotel reservations to airport transfers, visa support, holiday packages, and travel
-            insurance — ARLink28 covers every step of your journey.
-          </p>
-        </div>
-      </section>
+      <PageBanner
+        label="Services"
+        title="Seamless travel, end to end."
+        intro="From flight booking and hotel reservations to airport transfers, visa support, holiday packages, and travel insurance, ARLink28 covers every step of your journey."
+      />
       <section className="core-services-section">
         <div className="services-title-wrapper">
           <span className="services-tag">What We Offer</span>
@@ -83,7 +72,7 @@ export default function ServicesPage() {
           <div id="hotel-reservations" className="service-block-row row-reverse reveal">
             <div
               className="service-block-img-box"
-              style={{ background: "linear-gradient(135deg, #0b121c 0%, #141d2b 100%)" }}
+              style={{ background: "linear-gradient(135deg, #eef1f5 0%, #e3e8ee 100%)" }}
             >
               <img
                 src="/images/hotelreservations.png"
@@ -275,7 +264,7 @@ export default function ServicesPage() {
           <div id="corporate-group-travel" className="service-block-row row-reverse reveal">
             <div
               className="service-block-img-box"
-              style={{ background: "linear-gradient(135deg, #0b121c 0%, #141d2b 100%)" }}
+              style={{ background: "linear-gradient(135deg, #eef1f5 0%, #e3e8ee 100%)" }}
             >
               <img
                 src="/images/coorporateandgrouptravelsolution.png"
@@ -331,8 +320,7 @@ export default function ServicesPage() {
       <section className="service-why-choose-section">
         <div className="why-choose-header reveal">
           <h2>
-            Why Choose
-            <span className="highlight-red">ARLink28</span>
+            Why Choose <span className="highlight-red">ARLink28</span>
           </h2>
         </div>
         <div className="why-choose-grid">

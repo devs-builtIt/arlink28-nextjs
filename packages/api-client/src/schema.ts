@@ -4,6 +4,574 @@
  */
 
 export interface paths {
+    "/api/v1/admin/destinations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    status?: string;
+                    search?: string;
+                    country?: string;
+                    kind?: string;
+                    page?: number;
+                    pageSize?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationListResponse"];
+                        "application/json": components["schemas"]["AdminDestinationListResponse"];
+                        "text/json": components["schemas"]["AdminDestinationListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json-patch+json": components["schemas"]["CreateDestinationRequest"];
+                    "application/json": components["schemas"]["CreateDestinationRequest"];
+                    "text/json": components["schemas"]["CreateDestinationRequest"];
+                    "application/*+json": components["schemas"]["CreateDestinationRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json-patch+json": components["schemas"]["UpdateDestinationRequest"];
+                    "application/json": components["schemas"]["UpdateDestinationRequest"];
+                    "text/json": components["schemas"]["UpdateDestinationRequest"];
+                    "application/*+json": components["schemas"]["UpdateDestinationRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}/attractions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json-patch+json": components["schemas"]["AttractionInput"][];
+                    "application/json": components["schemas"]["AttractionInput"][];
+                    "text/json": components["schemas"]["AttractionInput"][];
+                    "application/*+json": components["schemas"]["AttractionInput"][];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}/hero": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        /** Format: binary */
+                        file?: string;
+                        alt?: string;
+                        credit?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}/attractions/{attractionId}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    attractionId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        /** Format: binary */
+                        file?: string;
+                        alt?: string;
+                        credit?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Unprocessable Content */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/destinations/{id}/unpublish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AdminDestinationDetail"];
+                        "application/json": components["schemas"]["AdminDestinationDetail"];
+                        "text/json": components["schemas"]["AdminDestinationDetail"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/enquiries": {
         parameters: {
             query?: never;
@@ -1591,7 +2159,10 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    country?: string;
+                    kind?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -1607,6 +2178,56 @@ export interface paths {
                         "text/plain": components["schemas"]["DestinationResponse"][];
                         "application/json": components["schemas"]["DestinationResponse"][];
                         "text/json": components["schemas"]["DestinationResponse"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/destinations/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DestinationDetailResponse"];
+                        "application/json": components["schemas"]["DestinationDetailResponse"];
+                        "text/json": components["schemas"]["DestinationDetailResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -2031,6 +2652,68 @@ export interface components {
             /** Format: int32 */
             sortOrder: number;
         };
+        AdminDestinationDetail: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            country: string;
+            kind: string;
+            status: string;
+            /** Format: uuid */
+            parentId?: string | null;
+            parentName?: string | null;
+            tagline?: string | null;
+            summary?: string | null;
+            description?: string | null;
+            bestTimeToVisit?: string | null;
+            heroPath?: string | null;
+            heroAlt?: string | null;
+            heroCredit?: string | null;
+            /** Format: double */
+            latitude?: number | null;
+            /** Format: double */
+            longitude?: number | null;
+            /** Format: int32 */
+            sortOrder: number;
+            slugLocked: boolean;
+            /** Format: date-time */
+            publishedAt?: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            places: components["schemas"]["AdminDestinationSummary"][];
+            attractions: components["schemas"]["AttractionResponse"][];
+            /** Format: int32 */
+            packageCount: number;
+            missing: string[];
+        };
+        AdminDestinationListResponse: {
+            items: components["schemas"]["AdminDestinationSummary"][];
+            /** Format: int32 */
+            total: number;
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+            counts: components["schemas"]["DestinationStatusCounts"];
+        };
+        AdminDestinationSummary: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            country: string;
+            kind: string;
+            status: string;
+            parentName?: string | null;
+            heroPath?: string | null;
+            /** Format: int32 */
+            placeCount: number;
+            /** Format: int32 */
+            attractionCount: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
         AdminFeature: {
             /** Format: uuid */
             id: string;
@@ -2152,6 +2835,25 @@ export interface components {
         AssignRoleRequest: {
             role: components["schemas"]["StaffRole"];
         };
+        AttractionInput: {
+            /** Format: uuid */
+            id?: string | null;
+            name: string;
+            summary?: string | null;
+            photoAlt?: string | null;
+            photoCredit?: string | null;
+        };
+        AttractionResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            summary?: string | null;
+            photoPath?: string | null;
+            photoAlt?: string | null;
+            photoCredit?: string | null;
+            /** Format: int32 */
+            sortOrder: number;
+        };
         AuthResponse: {
             accessToken: string;
             role: components["schemas"]["StaffRole"];
@@ -2166,6 +2868,23 @@ export interface components {
         ConfirmResetPasswordRequest: {
             token: string;
             newPassword: string;
+        };
+        CreateDestinationRequest: {
+            name: string;
+            country?: string | null;
+            /** Format: uuid */
+            parentId?: string | null;
+            slug?: string | null;
+            tagline?: string | null;
+            summary?: string | null;
+            description?: string | null;
+            bestTimeToVisit?: string | null;
+            /** Format: double */
+            latitude?: number | null;
+            /** Format: double */
+            longitude?: number | null;
+            /** Format: int32 */
+            sortOrder: number;
         };
         CreateEnquiryRequest: {
             type: components["schemas"]["EnquiryType"];
@@ -2213,12 +2932,51 @@ export interface components {
             /** Format: date */
             end: string;
         };
+        DestinationDetailResponse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            country: string;
+            kind: string;
+            parent?: components["schemas"]["DestinationResponse"];
+            tagline?: string | null;
+            summary?: string | null;
+            description?: string | null;
+            bestTimeToVisit?: string | null;
+            heroPath?: string | null;
+            heroAlt?: string | null;
+            heroCredit?: string | null;
+            /** Format: double */
+            latitude?: number | null;
+            /** Format: double */
+            longitude?: number | null;
+            places: components["schemas"]["DestinationResponse"][];
+            attractions: components["schemas"]["AttractionResponse"][];
+            /** Format: int32 */
+            packageCount: number;
+        };
         DestinationResponse: {
             /** Format: uuid */
             id: string;
             slug: string;
             name: string;
             country: string;
+            kind?: string | null;
+            parentSlug?: string | null;
+            tagline?: string | null;
+            summary?: string | null;
+            heroPath?: string | null;
+            heroAlt?: string | null;
+            heroCredit?: string | null;
+        };
+        DestinationStatusCounts: {
+            /** Format: int32 */
+            all: number;
+            /** Format: int32 */
+            draft: number;
+            /** Format: int32 */
+            published: number;
         };
         EnquiryDetail: {
             /** Format: uuid */
@@ -2539,6 +3297,22 @@ export interface components {
             propertyName: string;
             propertySlug: string;
             destinationName: string;
+        };
+        UpdateDestinationRequest: {
+            name?: string | null;
+            slug?: string | null;
+            tagline?: string | null;
+            summary?: string | null;
+            description?: string | null;
+            bestTimeToVisit?: string | null;
+            /** Format: double */
+            latitude?: number | null;
+            /** Format: double */
+            longitude?: number | null;
+            /** Format: int32 */
+            sortOrder?: number | null;
+            heroAlt?: string | null;
+            heroCredit?: string | null;
         };
         UpdateEnquiryRequest: {
             status: components["schemas"]["EnquiryStatus"];

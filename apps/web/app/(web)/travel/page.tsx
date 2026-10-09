@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/travel.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "ARLinks - Premium African Aviation",
@@ -11,114 +12,11 @@ export const metadata: Metadata = {
 export default function TravelPage() {
   return (
     <>
-      <section className="explore-hero">
-        <div className="explore-hero-container">
-          <div className="explore-hero-left">
-            <span className="explore-hero-tag hero-tag-entrance">
-              <i className="fa-solid fa-circle" style={{ fontSize: "8px", marginRight: "8px" }}></i>
-              Explore With ARLinks
-            </span>
-            <h1 className="hero-h1-entrance">
-              DISCOVER YOUR
-              <br />
-              <span className="highlight-red">NEXT JOURNEY.</span>
-            </h1>
-            <p className="hero-p-entrance">
-              Explore flight options, travel partners, visa services, and curated experiences across Africa and the
-              world.
-            </p>
-            <div className="hero-search-wrapper hero-widget-entrance">
-              <div className="search-input-field">
-                <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="hero-search-input" placeholder="Search destinations, services..." />
-              </div>
-              <button className="search-btn btn">
-                <i className="fa-solid fa-paper-plane"></i>
-                Search
-              </button>
-            </div>
-          </div>
-          <div className="explore-hero-right hero-visual-entrance">
-            <div className="mock-boarding-pass">
-              <div className="pass-header">
-                <img
-                  alt="ARLinks"
-                  loading="lazy"
-                  width="80"
-                  height="18"
-                  decoding="async"
-                  className="pass-logo"
-                  src="/images/logo.png"
-                  style={{ color: "transparent", height: "18px", width: "auto" }}
-                />
-                <span className="pass-class">BUSINESS</span>
-              </div>
-              <div className="pass-body">
-                <div className="pass-airport">
-                  <span className="airport-code">LOS</span>
-                  <span className="airport-name">Lagos, Nigeria</span>
-                </div>
-                <div className="pass-flight-icon">
-                  <div className="flight-line"></div>
-                  <i className="fa-solid fa-plane"></i>
-                </div>
-                <div className="pass-airport destination">
-                  <span className="airport-code">ACC</span>
-                  <span className="airport-name">Kotoka Int'l Airport</span>
-                </div>
-              </div>
-              <div className="pass-details">
-                <div className="pass-col">
-                  <span className="detail-label">Date</span>
-                  <span className="detail-val">15 AUG 2026</span>
-                </div>
-                <div className="pass-col">
-                  <span className="detail-label">Flight</span>
-                  <span className="detail-val">AL 2800</span>
-                </div>
-                <div className="pass-col">
-                  <span className="detail-label">Gate</span>
-                  <span className="detail-val">D14</span>
-                </div>
-              </div>
-              <div className="pass-divider">
-                <div className="pass-circle left"></div>
-                <div className="pass-dash-line"></div>
-                <div className="pass-circle right"></div>
-              </div>
-              <div className="pass-footer">
-                <div className="barcode-container">
-                  <div className="barcode-line w-2"></div>
-                  <div className="barcode-line w-1"></div>
-                  <div className="barcode-line w-3"></div>
-                  <div className="barcode-line w-1"></div>
-                  <div className="barcode-line w-4"></div>
-                  <div className="barcode-line w-2"></div>
-                  <div className="barcode-line w-1"></div>
-                  <div className="barcode-line w-3"></div>
-                  <div className="barcode-line w-2"></div>
-                  <div className="barcode-line w-4"></div>
-                  <div className="barcode-line w-1"></div>
-                  <div className="barcode-line w-2"></div>
-                </div>
-                <span className="pass-status">
-                  <span className="status-indicator"></span>
-                  CONFIRMED
-                </span>
-              </div>
-            </div>
-            <div className="floating-badge-card">
-              <div className="badge-icon-circle">
-                <i className="fa-solid fa-check"></i>
-              </div>
-              <div className="badge-text-content">
-                <h5>Booking Confirmed</h5>
-                <p>Seat 12A • Business Class</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageBanner
+        label="Travel"
+        title="Discover your next journey."
+        intro="Explore flight options, travel partners, visa services, and curated experiences across Africa and the world."
+      />
       <section id="travel-partners" className="explore-directory-section">
         <div className="directory-header reveal">
           <span className="section-tag">Travel Partners</span>

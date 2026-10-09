@@ -4,6 +4,7 @@ import "../styles/opportunities-inline.css";
 import "../styles/content-shared.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Opportunities | ARLink28 - Shape The Future Of African Aviation",
@@ -13,35 +14,23 @@ export const metadata: Metadata = {
 export default function OpportunitiesPage() {
   return (
     <>
-      <section className="page-hero">
-        <div className="page-hero-content">
-          <span className="page-hero-tag hero-tag-entrance">
-            <i
-              className="fa-solid fa-circle"
-              style={{ fontSize: "8px", color: "var(--primary-red)", marginRight: "8px" }}
-            ></i>
-            Grow With Us
-          </span>
-          <h1 className="hero-h1-entrance">
-            Shape The Future Of
-            <br />
-            <span className="highlight-red">African Aviation</span>
-          </h1>
-          <p className="hero-p-entrance">
-            Whether you're a talented professional, a strategic investor, or an ambitious partner — ARLink28 has a place
-            for you in building Africa's next great airline.
-          </p>
-          <div className="page-hero-actions hero-btn-entrance">
-            <a href="#careers" className="btn btn-primary">
-              View Openings
-              <i className="fa-solid fa-arrow-right"></i>
+      <PageBanner
+        label="Opportunities"
+        title="Shape the future of African aviation"
+        intro="Whether you're a talented professional, a strategic investor, or an ambitious partner, ARLink28 has a place for you in building Africa's next great airline."
+        actions={
+          <>
+            <a className="pb-btn pb-btn-primary" href="#careers">
+              View openings
             </a>
-            <a href="#partnerships" className="btn btn-secondary">
-              Partner With Us
+            <a className="pb-btn pb-btn-quiet" href="#partnerships">
+              Partner with us
             </a>
-          </div>
-        </div>
-        <div className="page-hero-visual hero-visual-entrance">
+          </>
+        }
+      />
+      <section className="pb-stats" aria-label="Opportunities at a glance">
+        <div className="pb-stats-in">
           <div className="opp-hero-stats">
             <div className="opp-stat-card glass-panel">
               <div className="opp-stat-icon">
@@ -78,9 +67,7 @@ export default function OpportunitiesPage() {
         <div className="section-header reveal">
           <span className="section-tag">Career Openings</span>
           <h2>
-            Join The
-            <span className="highlight-red">ARLink28</span>
-            Team
+            Join The <span className="highlight-red">ARLink28</span> Team
           </h2>
           <p>
             We're building a world-class airline from the ground up. We want passionate, talented people ready to shape
@@ -160,8 +147,7 @@ export default function OpportunitiesPage() {
           <div className="invest-text reveal-left">
             <span className="section-tag">Investor Relations</span>
             <h2>
-              Invest In
-              <span className="highlight-red">Africa's Aviation Future</span>
+              Invest In <span className="highlight-red">Africa's Aviation Future</span>
             </h2>
             <p>
               ARLink28 is seeking strategic investment partners to help build a new era of African air travel. We offer
@@ -232,8 +218,7 @@ export default function OpportunitiesPage() {
         <div className="section-header reveal">
           <span className="section-tag">Partnerships</span>
           <h2>
-            Partner With
-            <span className="highlight-red">ARLink28</span>
+            Partner With <span className="highlight-red">ARLink28</span>
           </h2>
           <p>
             We're actively building a network of strategic partners across aviation, technology, hospitality, and

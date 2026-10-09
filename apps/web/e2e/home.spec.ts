@@ -52,6 +52,64 @@ test.describe("the homepage quote request", () => {
     await expect(quote(page).getByLabel("To")).toHaveValue("Accra (ACC)");
   });
 
+  test("Victoria Falls is among the destinations, London is not, and choosing it fills in the form", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
+    await expect(cards).toHaveCount(6);
+    await expect(cards.filter({ hasText: "London" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Victoria Falls.*From Johannesburg/ }).click();
+    await expect(quote(page).getByLabel("From")).toHaveValue("Johannesburg (JNB)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Victoria Falls (VFA)");
+  });
+
+  test("Chobe National Park is among the destinations in Dubai's place, and choosing it fills in the form", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
+    await expect(cards).toHaveCount(6);
+    await expect(cards.filter({ hasText: "Dubai" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Chobe National Park.*From Johannesburg/ }).click();
+    await expect(quote(page).getByLabel("From")).toHaveValue("Johannesburg (JNB)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Kasane (BBK)");
+  });
+
+  test("the Pyramids of Giza are among the destinations in Kampala's place, and choosing it fills in the form", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cards = page.getByRole("list", { name: "Start a quote for a destination" }).getByRole("listitem");
+    await expect(cards.filter({ hasText: "Kampala" })).toHaveCount(0);
+    await page.getByRole("button", { name: /Pyramids of Giza.*From Lagos/ }).click();
+    await expect(quote(page).getByLabel("From")).toHaveValue("Lagos (LOS)");
+    await expect(quote(page).getByLabel("To")).toHaveValue("Cairo (CAI)");
+  });
+
+  test("the reassurances under the quote form are pills", async ({ page }) => {
+    await page.goto("/");
+    const pills = quote(page).locator(".hm-quote-assure li");
+    await expect(pills).toHaveText([
+      "No payment until you agree",
+      "Secure payment, 100% guaranteed",
+      "24/7 travel support",
+    ]);
+    for (const pill of await pills.all()) {
+      const style = await pill.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          radius: parseFloat(cs.borderTopLeftRadius),
+          border: cs.borderTopWidth,
+          pad: parseFloat(cs.paddingLeft),
+        };
+      });
+      expect(style.radius).toBeGreaterThanOrEqual(100); // fully rounded
+      expect(style.border).toBe("1px");
+      expect(style.pad).toBeGreaterThan(0);
+    }
+  });
+
   test("does not scroll sideways", async ({ page }) => {
     await page.goto("/");
     const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);

@@ -1,0 +1,216 @@
+/*
+ * The banner at the top of every inner page (components/PageBanner.tsx).
+ *
+ * A rounded photo card under the header, the same shape as the homepage's hero (same side spacing, same
+ * radius) and shorter. One photo, one size and one layout on every page, so the site reads as one place.
+ * The darkening over the photo is only there so white text can be read; the sunset on the right is left
+ * alone.
+ */
+
+.pb {
+  --red: #e61e2b;
+  /* Under the header, with the card's own breathing room below, exactly as the homepage hero does. */
+  padding: var(--header-h, 76px) var(--gutter, 30px) 16px;
+  font-family: var(--font, sans-serif);
+}
+/* Pages that dock a search bar into the card's bottom edge: the bar overlaps the card, so no gap below it. */
+.pb.pb-overlap {
+  padding-bottom: 0;
+}
+
+.pb-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  max-width: 1800px;
+  min-height: 480px;
+  margin: 0 auto;
+  padding: clamp(24px, 3.6vw, 52px);
+  border-radius: var(--radius, 12px);
+  background: #0b121c;
+  color: #fff;
+  overflow: hidden;
+}
+/* Room inside the card for the search bar that overlaps its bottom edge. */
+.pb-overlap .pb-card {
+  padding-bottom: clamp(76px, 7vw, 96px);
+}
+
+.pb-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Keep the tree's crown in frame, and the tree itself when a narrow screen crops the sides. */
+  object-position: 62% 40%;
+}
+.pb-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Darker on the left, where the words are, clear on the right, where the sun is. */
+  background:
+    linear-gradient(90deg, rgba(5, 9, 15, 0.62) 0%, rgba(5, 9, 15, 0.3) 50%, rgba(5, 9, 15, 0.04) 100%),
+    linear-gradient(180deg, rgba(5, 9, 15, 0.12) 0%, rgba(5, 9, 15, 0) 40%, rgba(5, 9, 15, 0.34) 100%);
+}
+
+.pb-in {
+  width: 100%;
+}
+/* The area this page belongs to: a small outlined pill with a dash, above the title. */
+.pb-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 6px 14px 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.pb-label::before {
+  content: "";
+  width: 14px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.pb .pb-in h1 {
+  max-width: 20ch;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font, sans-serif);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.pb .pb-in .pb-intro {
+  max-width: 72ch;
+  margin: 14px 0 0;
+  color: #eef2f7;
+  font-family: var(--font, sans-serif);
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 400;
+  line-height: 1.55;
+}
+.pb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+/* The banner's buttons, the same on every page. */
+.pb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pb-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.pb-btn-primary {
+  background: #e61e2b;
+  border-color: #e61e2b;
+  color: #fff;
+}
+.pb-btn-primary:hover {
+  background: #c91621;
+  border-color: #c91621;
+}
+.pb-btn-quiet {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.pb-btn-quiet:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+}
+
+/* A link back to the page you came from, above the title. */
+.pb-back {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: #eef2f7;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.pb-back:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .pb-card {
+    min-height: 420px;
+  }
+}
+@media (max-width: 640px) {
+  .pb-card {
+    min-height: 360px;
+    padding: 22px;
+  }
+  .pb-img {
+    object-position: 66% 40%;
+  }
+  .pb .pb-in h1 {
+    max-width: none;
+  }
+  .pb-btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Statistics some pages show straight under the banner. */
+.pb-stats {
+  padding: 40px var(--gutter, 30px) 0;
+}
+.pb-stats-in {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.pb-stats .opp-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .pb-stats .opp-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A paragraph of the page's own words, leading the stats under the banner. */
+.pb-stats-lead {
+  max-width: 70ch;
+  margin: 0 0 28px;
+  color: var(--text-muted, #5b6b82);
+  font-size: 17px;
+  line-height: 1.65;
+}

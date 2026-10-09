@@ -1,6 +1,5 @@
 .book-page {
-  min-height: 100vh;
-  padding: 120px 8% 80px;
+  padding: 56px 8% 80px;
 }
 .book-header {
   text-align: center;
@@ -43,7 +42,7 @@
   color: var(--primary-red);
 }
 .book-search-tag span {
-  color: #fff;
+  color: var(--text-main);
   font-weight: 500;
 }
 .partners-grid {
@@ -90,7 +89,7 @@
   height: 48px;
 }
 .partner-card-name {
-  color: #fff;
+  color: var(--text-main);
   font-size: 22px;
   font-weight: 700;
 }
@@ -146,11 +145,11 @@
   display: inline-flex;
 }
 .book-back-link:hover {
-  color: #fff;
+  color: var(--text-main);
 }
 @media (max-width: 768px) {
   .book-page {
-    padding: 100px 5% 60px;
+    padding: 40px 5% 60px;
   }
   .book-header h1 {
     font-size: 30px;
