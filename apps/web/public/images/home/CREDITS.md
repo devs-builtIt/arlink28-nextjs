@@ -19,3 +19,7 @@
 - `route-vfa.webp`: water falling over a cliff at sunset, Victoria Falls, Zimbabwe and Zambia.
   Unsplash, photo by Ed Wingate (https://unsplash.com/photos/m1k3k4FvaCE). Used under the Unsplash License
   (free for commercial use, no attribution required). Cropped to portrait for the destination card.
+
+- `route-botswana.webp`: elephants drinking at the Chobe River, Botswana.
+  Unsplash, photo by Rory Ashman (https://unsplash.com/photos/CMjB7RelPoE). Used under the Unsplash License
+  (free for commercial use, no attribution required). Cropped to the wide destination card.

@@ -119,7 +119,14 @@ export const ROUTES: {
 }[] = [
   { from: "LOS", to: "ACC", fromCity: "Lagos", toCity: "Accra", photo: "/images/home/route-acc.webp" },
   { from: "JNB", to: "VFA", fromCity: "Johannesburg", toCity: "Victoria Falls", photo: "/images/home/route-vfa.webp" },
-  { from: "ABV", to: "DXB", fromCity: "Abuja", toCity: "Dubai", photo: "/images/home/route-dxb.webp", wide: true },
+  {
+    from: "JNB",
+    to: "MUB",
+    fromCity: "Johannesburg",
+    toCity: "Botswana",
+    photo: "/images/home/route-botswana.webp",
+    wide: true,
+  },
   {
     from: "JNB",
     to: "CPT",
