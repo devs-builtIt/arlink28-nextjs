@@ -20,8 +20,6 @@ const COMPANY = [
   { href: "/travel", label: "Travel" },
   { href: "/engagement", label: "Engagement" },
   { href: "/opportunities#careers", label: "Careers" },
-  { href: "/opportunities#invest", label: "Investors" },
-  { href: "/opportunities#partnerships", label: "Partnerships" },
 ];
 
 const LEGAL = [
