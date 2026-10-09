@@ -11,7 +11,7 @@ export default function RouteCards() {
       {ROUTES.map((r, i) => (
         <li
           key={`${r.from}-${r.to}`}
-          className={r.full ? "is-full" : r.wide ? "is-wide" : undefined}
+          className={r.wide ? "is-wide" : undefined}
           data-rv
           style={{ ["--i" as string]: i }}
         >

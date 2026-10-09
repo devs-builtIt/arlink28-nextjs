@@ -116,11 +116,9 @@ export const ROUTES: {
   toCity: string;
   photo: string;
   wide?: boolean;
-  /** Takes the whole row, for a destination that deserves a panoramic photo. */
-  full?: boolean;
 }[] = [
   { from: "LOS", to: "ACC", fromCity: "Lagos", toCity: "Accra", photo: "/images/home/route-acc.webp" },
-  { from: "LOS", to: "LHR", fromCity: "Lagos", toCity: "London", photo: "/images/home/route-lhr.webp" },
+  { from: "JNB", to: "VFA", fromCity: "Johannesburg", toCity: "Victoria Falls", photo: "/images/home/route-vfa.webp" },
   { from: "ABV", to: "DXB", fromCity: "Abuja", toCity: "Dubai", photo: "/images/home/route-dxb.webp", wide: true },
   {
     from: "JNB",
@@ -132,14 +130,6 @@ export const ROUTES: {
   },
   { from: "NBO", to: "EBB", fromCity: "Nairobi", toCity: "Kampala", photo: "/images/home/route-ebb.webp" },
   { from: "ADD", to: "NBO", fromCity: "Addis Ababa", toCity: "Nairobi", photo: "/images/home/route-nbo.webp" },
-  {
-    from: "JNB",
-    to: "VFA",
-    fromCity: "Johannesburg",
-    toCity: "Victoria Falls",
-    photo: "/images/home/route-vfa.webp",
-    full: true,
-  },
 ];
 
 /** The six reasons on the homepage. Each must be something the business can show. */
