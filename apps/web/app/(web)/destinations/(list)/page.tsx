@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/destinations" },
 };
 
+// Rendered on request, so a build made while the API is down never bakes in the error state. The API data
+// itself is still cached for five minutes (see utils/server/catalogue.ts).
+export const dynamic = "force-dynamic";
+
 export default async function DestinationsPage() {
   const destinations = await listDestinations().catch(() => null);
   const groups = destinations ? groupByCountry(destinations) : [];

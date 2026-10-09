@@ -1,6 +1,6 @@
 # Destinations — Plan
 
-> **Status:** 2026-10-09. Steps 1 to 3 are built. API (`arlink28-api`, branch `feature/destination-profiles`): data model, public read, admin endpoints, and the country filter on packages; migration 004 is not yet applied to any database. Web (branch `feature/destinations`): regenerated API client, `/destinations` and `/destinations/[slug]`, with e2e tests. Hero photos for nine places are downloaded to `Company docs/destination-photos/` with credits in `manifest.json`, not yet in storage or the database. Still to do: step 4 (admin screens) and step 5 (content and the photo import). Descriptions render as plain paragraphs, not Markdown, to match packages.
+> **Status:** 2026-10-09. Steps 1 to 4 are built. API (`arlink28-api`, branch `feature/destination-profiles`): data model, public read, admin endpoints, and the country filter on packages; migration 004 is not yet applied to any database. Web (branch `feature/destinations`): regenerated API client, public `/destinations` and `/destinations/[slug]`, and the staff console at `/admin/destinations` (list, new, editor with Details, Photo, Things to do and Places tabs, publish panel). Both have e2e coverage against the mock API. Hero photos for nine places are downloaded to `Company docs/destination-photos/` with credits in `manifest.json`, not yet in storage or the database. Still to do: step 5 (content and the photo import). Descriptions render as plain paragraphs, not Markdown, to match packages.
 
 ## 1. Where we are
 

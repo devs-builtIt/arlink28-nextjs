@@ -1,0 +1,167 @@
+/*
+ * Destinations console: the pieces the list and editor need beyond the shared .pk parts (packages.css).
+ * Same rules as there: hairlines, 8px radius, no gradients or glows, red only for the primary action.
+ */
+
+/* ── New destination ─────────────────────────────────────────────────── */
+
+.adm .pk-dest-new {
+  max-width: 640px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--pk-line);
+  border-radius: 8px;
+}
+.adm .pk-dest-new fieldset {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+.adm .pk-dest-new legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-weight: 600;
+}
+.adm .pk-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.adm .pk-radio input {
+  margin-top: 3px;
+  accent-color: var(--livery);
+}
+.adm .pk-radio small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.adm .pk-dest-number {
+  max-width: 140px;
+}
+.adm .pk-dest-gap {
+  margin: -4px 0 18px;
+}
+
+/* ── Main photo ──────────────────────────────────────────────────────── */
+
+.adm .pk-dest-hero {
+  margin-bottom: 14px;
+}
+.adm .pk-dest-hero img {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--pk-line);
+  border-radius: 8px;
+  background: var(--tile);
+}
+.adm .pk-dest-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+/* The file input sits inside its label, off screen but still focusable. */
+.adm label.btn:focus-within {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ── Things to do ────────────────────────────────────────────────────── */
+
+.adm .pk-dest-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--pk-line);
+}
+.adm .pk-dest-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--pk-line);
+}
+.adm .pk-dest-row-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.adm .pk-dest-row-photo {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.adm .pk-dest-row-photo img {
+  flex: none;
+  width: 120px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--pk-line);
+  border-radius: 6px;
+  background: var(--tile);
+}
+.adm .pk-dest-row-photo > div {
+  flex: 1;
+  min-width: 0;
+}
+.adm .pk-dest-row-photo .field-row {
+  grid-template-columns: 1fr;
+  margin-top: 12px;
+}
+.adm .pk-dest-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 4px;
+}
+
+/* ── Places in a country ─────────────────────────────────────────────── */
+
+.adm .pk-dest-places {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--pk-line);
+}
+.adm .pk-dest-places li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--pk-line);
+}
+.adm .pk-dest-places a {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.adm .pk-dest-places a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .adm .pk-dest-row {
+    grid-template-columns: 1fr;
+  }
+  .adm .pk-dest-row-actions {
+    justify-content: flex-end;
+  }
+  .adm .pk-dest-row-photo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .adm .pk-dest-new {
+    padding: 16px;
+  }
+}
