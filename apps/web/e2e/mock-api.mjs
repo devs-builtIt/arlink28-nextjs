@@ -16,6 +16,7 @@ import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 
 const CATALOGUE = JSON.parse(readFileSync(new URL("./data/catalogue.json", import.meta.url), "utf8"));
+const DEST_DATA = JSON.parse(readFileSync(new URL("./data/destinations.json", import.meta.url), "utf8"));
 
 const PORT = Number(process.env.MOCK_API_PORT ?? 5399);
 const HOUR = 3600_000;
@@ -688,6 +689,39 @@ function issue(user) {
   return { accessToken, role: user.role, username: user.username, expiresAt };
 }
 
+// ── Destination profiles (public): the catalogue's places plus the profiles in data/destinations.json.
+// Drafts are in the data on purpose, to prove they never leak. ──
+function destinationRecords() {
+  const base = CATALOGUE.destinations.map((d) => ({ published: true, attractions: [], ...d, ...(DEST_DATA.overrides[d.slug] ?? {}) }));
+  return [...base, ...DEST_DATA.profiles.filter((p) => !base.some((b) => b.slug === p.slug))];
+}
+const destinationRow = (r, parentSlug = r.parentSlug) => ({
+  id: r.id, slug: r.slug, name: r.name, country: r.country, kind: r.kind ?? "Place", parentSlug: parentSlug ?? null,
+  tagline: r.tagline ?? null, summary: r.summary ?? null, heroPath: r.heroPath ?? null, heroAlt: r.heroAlt ?? null, heroCredit: r.heroCredit ?? null,
+});
+function destinationList(params) {
+  let rows = destinationRecords().filter((r) => r.published);
+  if (params.get("country")) rows = rows.filter((r) => r.country === params.get("country").toUpperCase());
+  if (params.get("kind")) rows = rows.filter((r) => (r.kind ?? "Place").toLowerCase() === params.get("kind").toLowerCase());
+  return rows.map((r) => destinationRow(r));
+}
+function destinationDetail(slug) {
+  const all = destinationRecords();
+  const r = all.find((x) => x.slug === slug && x.published);
+  if (!r) return null;
+  const parent = all.find((x) => x.slug === r.parentSlug && x.published);
+  const places = all.filter((x) => x.parentSlug === slug && x.published);
+  const slugs = [slug, ...places.map((x) => x.slug)];
+  return {
+    ...destinationRow(r), description: r.description ?? null, bestTimeToVisit: r.bestTimeToVisit ?? null,
+    latitude: null, longitude: null,
+    parent: parent ? destinationRow(parent) : undefined,
+    places: places.map((x) => destinationRow(x)),
+    attractions: r.attractions ?? [],
+    packageCount: CATALOGUE.packages.filter((p) => slugs.includes(p.destination.slug)).length,
+  };
+}
+
 function send(res, status, body) {
   if (body === undefined) {
     res.writeHead(status);
@@ -873,7 +907,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Catalogue (public) ──
-  if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, CATALOGUE.destinations);
+  if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, destinationList(url.searchParams));
+  if (method === "GET" && path.startsWith("/api/v1/destinations/")) {
+    const found = destinationDetail(decodeURIComponent(path.slice("/api/v1/destinations/".length)));
+    return found ? send(res, 200, found) : send(res, 404, { type: "about:blank", title: "Not Found", status: 404, code: "NOT_FOUND" });
+  }
   if (method === "GET" && path === "/api/v1/packages") {
     const q = Object.fromEntries([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
     // Holidays unless another kind, or "all", is asked for: the API's rule.
@@ -885,7 +923,10 @@ const server = http.createServer(async (req, res) => {
         : kind === "HolidayPackage"
           ? CATALOGUE.packages
           : products.filter((c) => c.productType === kind);
-    if (q.destination) items = items.filter((p) => p.destination.slug === q.destination);
+    if (q.destination) {
+      const inside = destinationRecords().filter((d) => d.parentSlug === q.destination).map((d) => d.slug);
+      items = items.filter((p) => p.destination.slug === q.destination || inside.includes(p.destination.slug));
+    }
     if (q.category) items = items.filter((p) => p.category === q.category);
     if (q.partner)
       items = items.filter((p) => CATALOGUE.details[p.slug]?.stays.some((st) => st.propertySlug === q.partner));

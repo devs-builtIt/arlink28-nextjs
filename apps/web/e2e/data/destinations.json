@@ -1,0 +1,114 @@
+{
+  "profiles": [
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000001",
+      "slug": "botswana",
+      "name": "Botswana",
+      "country": "BW",
+      "kind": "Country",
+      "published": true,
+      "tagline": "Delta, desert and elephants",
+      "summary": "A big, quiet country where the safari is the point: water in the north, salt and sand in the middle.",
+      "description": "Botswana keeps its visitor numbers low on purpose.\n\nMost trips pair the Okavango Delta with Chobe.",
+      "bestTimeToVisit": "May to October, the dry season",
+      "heroPath": "/media/destinations/botswana.jpg",
+      "heroAlt": "Elephants at the Chobe River",
+      "heroCredit": "Photo by Rory Ashman on Unsplash",
+      "attractions": []
+    },
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000002",
+      "slug": "chobe-national-park",
+      "name": "Chobe National Park",
+      "country": "BW",
+      "kind": "Place",
+      "parentSlug": "botswana",
+      "published": true,
+      "tagline": "The largest elephant herds in Africa",
+      "summary": "Chobe is best seen from the river, where herds come down to drink in the late afternoon.",
+      "description": "The Chobe River forms the park's northern edge.\n\nBoat safaris get closer than a vehicle can.",
+      "bestTimeToVisit": "May to September",
+      "heroPath": "/media/destinations/chobe-national-park.jpg",
+      "heroAlt": "A herd of elephants drinking at the Chobe River",
+      "heroCredit": "Photo by Rory Ashman on Unsplash",
+      "attractions": [
+        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000011", "name": "River safari", "summary": "A boat trip along the Chobe at sunset.", "photoPath": "/media/destinations/river-safari.jpg", "photoAlt": "A boat on the Chobe River", "photoCredit": "Photo by A. Photographer on Unsplash", "sortOrder": 0 },
+        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000012", "name": "Elephant crossing", "summary": "Herds swim between the islands.", "sortOrder": 1 }
+      ]
+    },
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000003",
+      "slug": "okavango-delta",
+      "name": "Okavango Delta",
+      "country": "BW",
+      "kind": "Place",
+      "parentSlug": "botswana",
+      "published": true,
+      "tagline": "A river that ends in the desert",
+      "summary": "The delta floods in the dry season, so the best game viewing is when everything else is parched.",
+      "heroPath": "/media/destinations/okavango-delta.jpg",
+      "heroAlt": "Aerial view of the Okavango river",
+      "heroCredit": "Photo by Wynand Uys on Unsplash",
+      "attractions": [
+        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000013", "name": "Mokoro trip", "summary": "Glide through the channels in a dugout canoe.", "sortOrder": 0 }
+      ]
+    },
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000004",
+      "slug": "giza",
+      "name": "Giza",
+      "country": "EG",
+      "kind": "Place",
+      "parentSlug": "egypt",
+      "parentPublished": false,
+      "published": true,
+      "tagline": "The pyramids and the Sphinx",
+      "summary": "The only one of the ancient wonders still standing, on the edge of Cairo.",
+      "heroPath": "/media/destinations/giza.jpg",
+      "heroAlt": "The pyramids of Giza and the Sphinx",
+      "heroCredit": "Photo by Dilip Poddar on Unsplash",
+      "attractions": [
+        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000014", "name": "The Great Pyramid", "summary": "Built for Khufu about 4,500 years ago.", "sortOrder": 0 }
+      ]
+    },
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000005",
+      "slug": "moremi-game-reserve",
+      "name": "Moremi Game Reserve",
+      "country": "BW",
+      "kind": "Place",
+      "parentSlug": "botswana",
+      "published": false,
+      "summary": "A draft: it must never be listed or reachable.",
+      "heroPath": "/media/destinations/moremi.jpg",
+      "attractions": []
+    },
+    {
+      "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000006",
+      "slug": "egypt",
+      "name": "Egypt",
+      "country": "EG",
+      "kind": "Country",
+      "published": false,
+      "summary": "A draft country: Giza is published but this is not.",
+      "attractions": []
+    }
+  ],
+  "overrides": {
+    "masai-mara": {
+      "kind": "Place",
+      "tagline": "The great migration country",
+      "summary": "Open savanna in southwest Kenya, and the place to see the wildebeest river crossings.",
+      "description": "The reserve is best known for the migration, between July and October.",
+      "bestTimeToVisit": "July to October",
+      "heroPath": "/media/destinations/masai-mara.jpg",
+      "heroAlt": "Savanna in the Masai Mara",
+      "heroCredit": "Photo by Someone on Unsplash",
+      "attractions": [
+        { "id": "0b6f0e0a-4c8e-4a56-9a10-1c0000000015", "name": "Game drive", "summary": "Early morning drives find the big cats.", "sortOrder": 0 }
+      ]
+    },
+    "nairobi": { "kind": "Place" },
+    "samburu": { "kind": "Place" }
+  }
+}

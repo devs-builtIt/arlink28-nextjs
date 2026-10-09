@@ -31,6 +31,8 @@ export type MeResponse = Schemas["MeResponse"];
 export type UserResponse = Schemas["UserResponse"];
 
 export type DestinationResponse = Schemas["DestinationResponse"];
+export type DestinationDetail = Schemas["DestinationDetailResponse"];
+export type Attraction = Schemas["AttractionResponse"];
 export type PackageCard = Schemas["PackageCardResponse"];
 export type PackageList = Schemas["PackageListResponse"];
 export type PackageDetail = Schemas["PackageDetailResponse"];
