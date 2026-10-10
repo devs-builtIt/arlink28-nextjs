@@ -47,6 +47,16 @@
   /* Keep the tree's crown in frame, and the tree itself when a narrow screen crops the sides. */
   object-position: 62% 40%;
 }
+/* The other photos are cropped to the same shape, so only where the eye should land differs. */
+.pb[data-photo="flights"] .pb-img {
+  object-position: 55% 55%;
+}
+.pb[data-photo="hotels"] .pb-img {
+  object-position: 50% 50%;
+}
+.pb[data-photo="visas"] .pb-img {
+  object-position: 70% 55%;
+}
 .pb-card::after {
   content: "";
   position: absolute;
