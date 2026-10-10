@@ -7,5 +7,5 @@
 
 - `flights-*.webp`: a private jet on the tarmac at sunset, from the same Unsplash photo as `images/home/jet-sunset-1600.webp` (id `1474302770737-173ee21bab63`).
 - `hotels-*.webp`: a thatched lodge and its pool at dusk. Unsplash photo id `1781039869379-5561fe260d26`.
-- `visas-*.webp`: giraffes crossing open grassland. Unsplash photo id `1632518876532-8a2a3c735705`.
+- `visas-*.webp`: a family arriving at an airport, cropped from our own `images/airporttransfer.png` (1254 px, so the two larger sizes are upscaled). A stand-in until there is a real photo of a traveller with their documents.
   All three under the Unsplash License, cropped to 16:7 in the same three sizes. Used by the Flights, Hotels and Visas listing pages (`photo` prop of `PageBanner`).
