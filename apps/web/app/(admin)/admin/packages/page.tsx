@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { AdminPackageList, DestinationResponse } from "@arlink28/api-client";
 import ProtectedPage from "@/components/ProtectedPage";
 import Notice from "@/components/admin/Notice";
+import PackageCard from "@/components/admin/PackageCard";
 import { Pagination, Skeleton, StatusBadge } from "@/components/admin/ui";
 import { adminPackagesApi, packagesApi } from "@/utils/api/packages";
 import { fullDate, money, party, timeAgo, titleCase } from "@/components/admin/format";
@@ -27,10 +28,10 @@ function tabCount(counts: AdminPackageList["counts"] | undefined, status: string
 
 /** List or cards. A convenience for this browser only, so it is kept there and the page works without it. */
 function useView(): ["list" | "cards", (v: "list" | "cards") => void] {
-  const [view, setView] = useState<"list" | "cards">("list");
+  const [view, setView] = useState<"list" | "cards">("cards");
   useEffect(() => {
     try {
-      if (localStorage.getItem("arlink-packages-view") === "cards") setView("cards");
+      if (localStorage.getItem("arlink-packages-view") === "list") setView("list");
     } catch {}
   }, []);
   const choose = (v: "list" | "cards") => {
@@ -320,52 +321,14 @@ function PackagesList() {
                 !error &&
                 Array.from({ length: 6 }, (_, i) => (
                   <li key={i} className="pk-card" aria-hidden="true">
-                    <Skeleton h={150} r={10} />
+                    <Skeleton h={170} r={10} />
                     <Skeleton w="70%" h={14} />
                     <Skeleton w="45%" h={12} />
                   </li>
                 ))}
               {items.map((p) => (
                 <li key={p.id}>
-                  <Link className="pk-card" href={`/admin/packages/${p.id}`}>
-                    {p.heroImagePath ? (
-                      <img className="pk-card-img" src={p.heroImagePath} alt="" />
-                    ) : (
-                      <span className="pk-card-img pk-card-empty" aria-hidden="true">
-                        <i className="fa-solid fa-image"></i>
-                      </span>
-                    )}
-                    <span className="pk-card-top">
-                      <StatusBadge status={p.status} />
-                      <span className="pk-card-kind">
-                        {isHoliday(p.productType) ? titleCase(p.category) : typeLabel(p.productType)}
-                      </span>
-                    </span>
-                    <strong className="pk-card-title">{p.title}</strong>
-                    <span className="pk-card-sub">
-                      {p.destination.name}
-                      {" · "}
-                      {isHoliday(p.productType)
-                        ? `${p.nights} ${p.nights === 1 ? "night" : "nights"}, ${party(p.adults, p.children)}`
-                        : detailsSummary(p.productType, p.details) || "No details yet"}
-                    </span>
-                    <span className="pk-card-foot">
-                      <span>
-                        {p.fromPriceMinor != null ? (
-                          <>
-                            <small>From</small> {money(p.fromPriceMinor, p.baseCurrency)}
-                          </>
-                        ) : (
-                          <small>No price</small>
-                        )}
-                      </span>
-                      <small>
-                        <time dateTime={p.updatedAt} title={fullDate(p.updatedAt)}>
-                          {timeAgo(p.updatedAt)}
-                        </time>
-                      </small>
-                    </span>
-                  </Link>
+                  <PackageCard item={p} onChanged={() => setRetry((n) => n + 1)} />
                 </li>
               ))}
             </ul>
