@@ -25,6 +25,23 @@ function tabCount(counts: AdminPackageList["counts"] | undefined, status: string
   return { "": counts.all, Published: counts.published, Draft: counts.draft, Archived: counts.archived }[status];
 }
 
+/** List or cards. A convenience for this browser only, so it is kept there and the page works without it. */
+function useView(): ["list" | "cards", (v: "list" | "cards") => void] {
+  const [view, setView] = useState<"list" | "cards">("list");
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("arlink-packages-view") === "cards") setView("cards");
+    } catch {}
+  }, []);
+  const choose = (v: "list" | "cards") => {
+    setView(v);
+    try {
+      localStorage.setItem("arlink-packages-view", v);
+    } catch {}
+  };
+  return [view, choose];
+}
+
 function SkeletonRows({ rows = 10 }: { rows?: number }) {
   return (
     <>
@@ -82,6 +99,7 @@ function PackagesList() {
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
   const [search, setSearch] = useState(q);
+  const [view, setView] = useView();
   // The search text we last put in the address, so the address never overwrites newer typing.
   const pushedSearch = useRef(q);
 
@@ -268,6 +286,19 @@ function PackagesList() {
               Clear filters
             </button>
           )}
+          <div className="pk-views" role="group" aria-label="View">
+            {(["list", "cards"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={view === v}
+                className={view === v ? "is-on" : undefined}
+                onClick={() => setView(v)}
+              >
+                {v === "list" ? "List" : "Cards"}
+              </button>
+            ))}
+          </div>
         </div>
 
         {error && (
@@ -283,78 +314,135 @@ function PackagesList() {
           {loading && !firstLoad && (
             <span className="pk-progress" role="progressbar" aria-label="Loading packages"></span>
           )}
-          <div className="pk-table-scroll">
-            <table className="pk-table packages">
-              <thead>
-                <tr>
-                  <th scope="col">Package</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Destination</th>
-                  <th scope="col">Details</th>
-                  <th scope="col" className="num">
-                    From
-                  </th>
-                  <th scope="col">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                {firstLoad && !error && <SkeletonRows rows={Math.min(size, 10)} />}
-                {items.map((p) => (
-                  <tr key={p.id} className="row-link" onClick={() => router.push(`/admin/packages/${p.id}`)}>
-                    <td>
-                      <div className="pkg">
-                        {p.heroImagePath ? (
-                          <img className="pkg-thumb" src={p.heroImagePath} alt="" />
-                        ) : (
-                          <span className="pkg-thumb pkg-thumb-empty" aria-hidden="true">
-                            <i className="fa-solid fa-image"></i>
-                          </span>
-                        )}
-                        <span>
-                          <Link
-                            className="pkg-title"
-                            href={`/admin/packages/${p.id}`}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {p.title}
-                          </Link>
-                          <span className="pkg-sub">
-                            <span>{isHoliday(p.productType) ? titleCase(p.category) : typeLabel(p.productType)}</span>
-                            {p.mediaCount > 0 && (
-                              <span>
-                                {p.mediaCount} {p.mediaCount === 1 ? "photo" : "photos"}
-                              </span>
-                            )}
-                          </span>
-                        </span>
-                      </div>
-                    </td>
-                    <td>
+          {view === "cards" ? (
+            <ul className="pk-cards">
+              {firstLoad &&
+                !error &&
+                Array.from({ length: 6 }, (_, i) => (
+                  <li key={i} className="pk-card" aria-hidden="true">
+                    <Skeleton h={150} r={10} />
+                    <Skeleton w="70%" h={14} />
+                    <Skeleton w="45%" h={12} />
+                  </li>
+                ))}
+              {items.map((p) => (
+                <li key={p.id}>
+                  <Link className="pk-card" href={`/admin/packages/${p.id}`}>
+                    {p.heroImagePath ? (
+                      <img className="pk-card-img" src={p.heroImagePath} alt="" />
+                    ) : (
+                      <span className="pk-card-img pk-card-empty" aria-hidden="true">
+                        <i className="fa-solid fa-image"></i>
+                      </span>
+                    )}
+                    <span className="pk-card-top">
                       <StatusBadge status={p.status} />
-                    </td>
-                    <td>{p.destination.name}</td>
-                    <td className="muted">
+                      <span className="pk-card-kind">
+                        {isHoliday(p.productType) ? titleCase(p.category) : typeLabel(p.productType)}
+                      </span>
+                    </span>
+                    <strong className="pk-card-title">{p.title}</strong>
+                    <span className="pk-card-sub">
+                      {p.destination.name}
+                      {" · "}
                       {isHoliday(p.productType)
                         ? `${p.nights} ${p.nights === 1 ? "night" : "nights"}, ${party(p.adults, p.children)}`
                         : detailsSummary(p.productType, p.details) || "No details yet"}
-                    </td>
-                    <td className="num">
-                      {p.fromPriceMinor != null ? (
-                        money(p.fromPriceMinor, p.baseCurrency)
-                      ) : (
-                        <span className="muted">No price</span>
-                      )}
-                    </td>
-                    <td className="muted">
-                      <time dateTime={p.updatedAt} title={fullDate(p.updatedAt)}>
-                        {timeAgo(p.updatedAt)}
-                      </time>
-                    </td>
+                    </span>
+                    <span className="pk-card-foot">
+                      <span>
+                        {p.fromPriceMinor != null ? (
+                          <>
+                            <small>From</small> {money(p.fromPriceMinor, p.baseCurrency)}
+                          </>
+                        ) : (
+                          <small>No price</small>
+                        )}
+                      </span>
+                      <small>
+                        <time dateTime={p.updatedAt} title={fullDate(p.updatedAt)}>
+                          {timeAgo(p.updatedAt)}
+                        </time>
+                      </small>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="pk-table-scroll">
+              <table className="pk-table packages">
+                <thead>
+                  <tr>
+                    <th scope="col">Package</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Details</th>
+                    <th scope="col" className="num">
+                      From
+                    </th>
+                    <th scope="col">Updated</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {firstLoad && !error && <SkeletonRows rows={Math.min(size, 10)} />}
+                  {items.map((p) => (
+                    <tr key={p.id} className="row-link" onClick={() => router.push(`/admin/packages/${p.id}`)}>
+                      <td>
+                        <div className="pkg">
+                          {p.heroImagePath ? (
+                            <img className="pkg-thumb" src={p.heroImagePath} alt="" />
+                          ) : (
+                            <span className="pkg-thumb pkg-thumb-empty" aria-hidden="true">
+                              <i className="fa-solid fa-image"></i>
+                            </span>
+                          )}
+                          <span>
+                            <Link
+                              className="pkg-title"
+                              href={`/admin/packages/${p.id}`}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {p.title}
+                            </Link>
+                            <span className="pkg-sub">
+                              <span>{isHoliday(p.productType) ? titleCase(p.category) : typeLabel(p.productType)}</span>
+                              {p.mediaCount > 0 && (
+                                <span>
+                                  {p.mediaCount} {p.mediaCount === 1 ? "photo" : "photos"}
+                                </span>
+                              )}
+                            </span>
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <StatusBadge status={p.status} />
+                      </td>
+                      <td>{p.destination.name}</td>
+                      <td className="muted">
+                        {isHoliday(p.productType)
+                          ? `${p.nights} ${p.nights === 1 ? "night" : "nights"}, ${party(p.adults, p.children)}`
+                          : detailsSummary(p.productType, p.details) || "No details yet"}
+                      </td>
+                      <td className="num">
+                        {p.fromPriceMinor != null ? (
+                          money(p.fromPriceMinor, p.baseCurrency)
+                        ) : (
+                          <span className="muted">No price</span>
+                        )}
+                      </td>
+                      <td className="muted">
+                        <time dateTime={p.updatedAt} title={fullDate(p.updatedAt)}>
+                          {timeAgo(p.updatedAt)}
+                        </time>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {!firstLoad && items.length === 0 && !loading && !pastEnd && (
             <div className="pk-empty">

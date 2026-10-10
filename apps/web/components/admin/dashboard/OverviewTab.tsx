@@ -65,21 +65,12 @@ export function Kpis({ data }: { data: DashboardResponse }) {
         tone="red"
         label="Waiting for a reply"
         alert={e.awaitingAll > 0}
-        pill={
-          <span className="dv-pill">
-            {oldest ? `Oldest ${timeAgo(oldest.createdAt)}` : "All replied to"}
-          </span>
-        }
+        pill={<span className="dv-pill">{oldest ? `Oldest ${timeAgo(oldest.createdAt)}` : "All replied to"}</span>}
       >
         <Count value={e.awaitingAll} start={inView} />
       </Kpi>
 
-      <Kpi
-        index={2}
-        tone="green"
-        label="Time to act"
-        pill={<span className="dv-pill">{handled} handled</span>}
-      >
+      <Kpi index={2} tone="green" label="Time to act" pill={<span className="dv-pill">{handled} handled</span>}>
         <span className="dv-num">{e.medianHandleHours === null ? "—" : duration(e.medianHandleHours)}</span>
       </Kpi>
 

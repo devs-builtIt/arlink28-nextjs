@@ -1066,3 +1066,269 @@
   color: var(--muted);
   font-size: 12px;
 }
+
+/* ── Light and flat: soft panels, no outlines, pill tabs ────────────── */
+
+.adm .pk {
+  --pk-shadow: 0 1px 2px rgba(11, 23, 38, 0.04), 0 8px 24px rgba(11, 23, 38, 0.04);
+  --pk-soft: #f1f3f7;
+}
+.adm .pk-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.adm .pk-table-panel,
+.adm .pk-panel {
+  border: 0;
+  border-radius: 14px;
+  box-shadow: var(--pk-shadow);
+}
+
+/* Tabs become the same pills as the dashboard's. */
+.adm .pk-tabs {
+  gap: 6px;
+  margin-bottom: 20px;
+  border-bottom: 0;
+}
+.adm .pk-tab {
+  margin: 0;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 14px;
+}
+.adm .pk-tab:hover {
+  background: var(--pk-soft);
+}
+.adm .pk-tab[aria-selected="true"] {
+  background: var(--ink);
+  color: #fff;
+}
+.adm .pk-tab-count {
+  background: rgba(11, 23, 38, 0.07);
+  color: inherit;
+  opacity: 0.8;
+}
+.adm .pk-tab[aria-selected="true"] .pk-tab-count {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Filters: soft grey fields, no outline. */
+.adm .pk-filters {
+  margin-bottom: 16px;
+}
+.adm .pk-filters .input {
+  border: 0;
+  border-radius: 10px;
+  background-color: var(--pk-soft);
+  box-shadow: none;
+}
+.adm .pk-filters .input:focus-visible {
+  background-color: #fff;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+/* The table: a quiet header row and generous rows. */
+.adm .pk-table th {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--pk-line-soft);
+  background: none;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.adm .pk-table td {
+  height: 68px;
+  border-bottom-color: var(--pk-line-soft);
+}
+.adm .pk-table :is(th, td):first-child {
+  padding-left: 24px;
+}
+.adm .pk-table :is(th, td):last-child {
+  padding-right: 24px;
+}
+.adm .pk-table tbody tr.row-link:hover td {
+  background: #f7f8fb;
+}
+.adm .pk-table .pkg-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+.adm .pk-badge {
+  border-radius: 8px;
+}
+.adm .pk-pager {
+  padding: 14px 24px;
+  border-top: 1px solid var(--pk-line-soft);
+}
+.adm .pk-page {
+  border-radius: 8px;
+}
+
+/* A person's initials, ahead of their name. */
+.adm .pk-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+.adm .pk-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--pk-soft);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* List / cards switch */
+.adm .pk-views {
+  display: inline-flex;
+  margin-left: auto;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--pk-soft);
+}
+.adm .pk-views button {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: 500 13px/1 var(--font);
+  cursor: pointer;
+}
+.adm .pk-views button.is-on {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(11, 23, 38, 0.12);
+}
+
+/* Cards: a photo, what it is, where, and the price. */
+.adm .pk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 20px;
+  list-style: none;
+}
+.adm .pk-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 10px 10px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--pk-shadow);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.adm a.pk-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(11, 23, 38, 0.05), 0 16px 36px rgba(11, 23, 38, 0.09);
+}
+.adm .pk-card-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--pk-soft);
+}
+.adm .pk-card-empty {
+  display: grid;
+  place-items: center;
+  color: #a3aebd;
+}
+.adm .pk-card-top {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.adm .pk-card-kind {
+  padding: 0 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.adm .pk-card-title {
+  margin-top: 6px;
+  padding: 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.adm .pk-card-sub {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.adm .pk-card-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding: 10px 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.adm .pk-card-foot small {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 400;
+}
+
+/* New: each kind is its own soft card. */
+.adm .pk-types {
+  display: grid;
+  gap: 12px;
+  background: none;
+  border: 0;
+}
+.adm .pk-types li + li {
+  border-top: 0;
+}
+.adm .pk-types a {
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--pk-shadow);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.adm .pk-types a:hover {
+  background: var(--surface);
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(11, 23, 38, 0.05),
+    0 16px 36px rgba(11, 23, 38, 0.09);
+}
+.adm .pk-types i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--livery);
+  color: #fff;
+  font-size: 11px;
+}
