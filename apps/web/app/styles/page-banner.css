@@ -54,6 +54,9 @@
 .pb[data-photo="holidays"] .pb-img {
   object-position: 50% 50%;
 }
+.pb[data-photo="elite"] .pb-img {
+  object-position: 65% 55%;
+}
 .pb[data-photo="visas"] .pb-img {
   object-position: 70% 55%;
 }

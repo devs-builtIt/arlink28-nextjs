@@ -10,3 +10,4 @@
 - `hotels-*.webp`: the curved timber lounge of a safari lodge. Unsplash photo id `1722645390607-9f69ce4cfadf`.
 - `visas-*.webp`: a family arriving at an airport, cropped from our own `images/airporttransfer.png` (1254 px, so the two larger sizes are upscaled). A stand-in until there is a real photo of a traveller with their documents.
   All three under the Unsplash License, cropped to 16:7 in the same three sizes. Used by the Holidays, Flights, Hotels and Visas listing pages (`photo` prop of `PageBanner`).
+- `elite-*.webp`: a private jet on the tarmac at golden hour, cropped to 16:7 from the full original of the photo already used on the Elite Jets cards (Unsplash photo id `1619659085985-f51a00f0160a`). Used by the Elite Jets page.

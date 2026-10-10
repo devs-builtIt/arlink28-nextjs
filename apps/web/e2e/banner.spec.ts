@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures";
 
-// Every inner page opens with the same banner (components/PageBanner.tsx): the same height and shape (the photo differs on holidays, flights, hotels and visas),
+// Every inner page opens with the same banner (components/PageBanner.tsx): the same height and shape (the photo differs on holidays, flights, hotels, visas and Elite Jets),
 // the same typeface. This visits them all so one page cannot quietly drift from the rest.
 
 const PAGES = [
@@ -100,7 +100,7 @@ test.describe("the banner at the top of the inner pages", () => {
     });
   });
 
-  test("gives holidays, flights, hotels and visas a photo of their own and everything else the safari", async ({
+  test("gives holidays, flights, hotels, visas and Elite Jets a photo of their own and everything else the safari", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -111,6 +111,7 @@ test.describe("the banner at the top of the inner pages", () => {
       ["/flights", "flights"],
       ["/hotels", "hotels"],
       ["/visas", "visas"],
+      ["/elite-jets", "elite"],
     ] as const) {
       await page.goto(path);
       const m = await measure(page);

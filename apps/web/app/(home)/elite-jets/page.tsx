@@ -35,6 +35,7 @@ export default async function EliteJetsPage() {
       <Reveal />
       <PageBanner
         label="Elite Jets"
+        photo="elite"
         id="el-h1"
         title={
           <>
