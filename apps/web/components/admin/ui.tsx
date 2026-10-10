@@ -74,8 +74,10 @@ type PagerProps = {
   pageSize: number;
   total: number;
   onPage: (page: number) => void;
-  onPageSize: (size: number) => void;
+  onPageSize?: (size: number) => void;
   sizes?: number[];
+  /** Hide the rows-per-page choice, for a list that is always one size. */
+  fixedSize?: boolean;
   busy?: boolean;
   noun?: string;
 };
@@ -87,6 +89,7 @@ export function Pagination({
   onPage,
   onPageSize,
   sizes = [10, 25, 50, 100],
+  fixedSize,
   busy,
   noun = "results",
 }: PagerProps) {
@@ -100,16 +103,18 @@ export function Pagination({
         {total === 0 ? `No ${noun}` : `Showing ${from} to ${to} of ${total} ${noun}`}
       </p>
       <div className="pk-pager-controls">
-        <label className="pk-pager-size">
-          <span>Rows per page</span>
-          <select className="input" value={pageSize} onChange={(e) => onPageSize(Number(e.target.value))}>
-            {sizes.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
+        {!fixedSize && (
+          <label className="pk-pager-size">
+            <span>Rows per page</span>
+            <select className="input" value={pageSize} onChange={(e) => onPageSize?.(Number(e.target.value))}>
+              {sizes.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <div className="pk-pages">
           <button
             type="button"

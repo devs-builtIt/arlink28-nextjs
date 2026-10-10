@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { DashboardResponse, EnquiryListItem, EnquiryStatus } from "@arlink28/api-client";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
 import { initials, money, timeAgo } from "@/components/admin/format";
+import { Pagination } from "@/components/admin/ui";
 import { BarList, Count, Sparkline } from "./charts";
 import { useInView } from "./motion";
 import { Card, Delta, PERIODS, PRODUCT, TYPE, duration, seriesPoints } from "./shared";
@@ -15,6 +16,7 @@ function Kpi({
   tone,
   label,
   alert,
+  href,
   children,
   pill,
   spark,
@@ -23,18 +25,31 @@ function Kpi({
   tone: "blue" | "red" | "green" | "amber";
   label: string;
   alert?: boolean;
+  /** Makes the whole card a link. */
+  href?: string;
   children: React.ReactNode;
   pill: React.ReactNode;
   spark?: React.ReactNode;
 }) {
-  return (
-    <div className={`dv-kpi is-${tone}${alert ? " is-alert" : ""}`} style={{ ["--i" as string]: index }}>
+  const className = `dv-kpi is-${tone}${alert ? " is-alert" : ""}${href ? " is-link" : ""}`;
+  const body = (
+    <>
       <span className="dv-kpi-label">{label}</span>
       {children}
       <div className="dv-kpi-row">
         {pill}
         {spark}
       </div>
+    </>
+  );
+  const style = { ["--i" as string]: index };
+  return href ? (
+    <Link href={href} className={className} style={style}>
+      {body}
+    </Link>
+  ) : (
+    <div className={className} style={style}>
+      {body}
     </div>
   );
 }
@@ -64,6 +79,7 @@ export function Kpis({ data }: { data: DashboardResponse }) {
         index={1}
         tone="red"
         label="Waiting for a reply"
+        href="/admin/enquiries?status=New"
         alert={e.awaitingAll > 0}
         pill={<span className="dv-pill">{oldest ? `Oldest ${timeAgo(oldest.createdAt)}` : "All replied to"}</span>}
       >
@@ -107,21 +123,26 @@ const KIND_TONE: Record<string, string> = {
   PrivateCharter: "red",
 };
 
+const PAGE_SIZE = 10;
+
 /** The latest enquiries, with the two things staff do to one: mark it contacted, or close it. */
 export function RecentEnquiries({ data }: { data: DashboardResponse }) {
   const [items, setItems] = useState<EnquiryListItem[] | null>(null);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [failed, setFailed] = useState(false);
   const [saving, setSaving] = useState<string | null>(null);
 
   const load = useCallback(() => {
     adminEnquiriesApi
-      .list({ pageSize: 7 })
+      .list({ page, pageSize: PAGE_SIZE })
       .then((r) => {
         setItems(r.items);
+        setTotal(r.total);
         setFailed(false);
       })
       .catch(() => setFailed(true));
-  }, []);
+  }, [page]);
   useEffect(load, [load, data.generatedAt]);
 
   const move = (id: string, status: EnquiryStatus) => {
@@ -145,90 +166,95 @@ export function RecentEnquiries({ data }: { data: DashboardResponse }) {
         </Link>
       }
     >
-      {() =>
-        failed && !items ? (
-          <p className="dv-empty">The latest enquiries couldn&apos;t be loaded.</p>
-        ) : !items ? (
-          <p className="dv-empty">Loading…</p>
-        ) : items.length === 0 ? (
-          <p className="dv-empty">No enquiries yet.</p>
-        ) : (
-          <div className="dv-table-wrap">
-            <table className="dv-enq">
-              <thead>
-                <tr>
-                  <th scope="col">Enquiry</th>
-                  <th scope="col">About</th>
-                  <th scope="col">Quote</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((r) => {
-                  const kind = r.productType ?? "";
-                  return (
-                    <tr key={r.id}>
-                      <td>
-                        <Link href={`/admin/enquiries/${r.id}`} className="dv-who">
-                          <span className="dv-avatar" aria-hidden="true">
-                            {initials(r.name)}
+      {() => (
+        <>
+          {failed && !items ? (
+            <p className="dv-empty">The latest enquiries couldn&apos;t be loaded.</p>
+          ) : !items ? (
+            <p className="dv-empty">Loading…</p>
+          ) : items.length === 0 ? (
+            <p className="dv-empty">No enquiries yet.</p>
+          ) : (
+            <div className="dv-table-wrap">
+              <table className="dv-enq">
+                <thead>
+                  <tr>
+                    <th scope="col">Enquiry</th>
+                    <th scope="col">About</th>
+                    <th scope="col">Quote</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">
+                      <span className="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((r) => {
+                    const kind = r.productType ?? "";
+                    return (
+                      <tr key={r.id}>
+                        <td>
+                          <Link href={`/admin/enquiries/${r.id}`} className="dv-who">
+                            <span className="dv-avatar" aria-hidden="true">
+                              {initials(r.name)}
+                            </span>
+                            <span className="dv-list-text">
+                              <strong>{r.name}</strong>
+                              <small>{r.packageTitle ?? r.subject ?? r.reference}</small>
+                            </span>
+                          </Link>
+                        </td>
+                        <td>
+                          <span className={`dv-tone is-${KIND_TONE[kind] ?? "slate"}`}>
+                            {PRODUCT[kind] ?? TYPE[r.type] ?? r.type}
                           </span>
-                          <span className="dv-list-text">
-                            <strong>{r.name}</strong>
-                            <small>{r.packageTitle ?? r.subject ?? r.reference}</small>
+                        </td>
+                        <td className="dv-nowrap">
+                          {r.quotedTotalMinor ? money(r.quotedTotalMinor, r.currency ?? "USD") : "—"}
+                        </td>
+                        <td>
+                          <span className={`dv-tone is-${STATUS_TONE[r.status]}`}>{r.status}</span>
+                        </td>
+                        <td>
+                          <span className="dv-acts">
+                            <button
+                              type="button"
+                              className="dv-act"
+                              aria-label={`Mark ${r.name} contacted`}
+                              title="Mark contacted"
+                              disabled={r.status !== "New" || saving === r.id}
+                              onClick={() => move(r.id, "Contacted")}
+                            >
+                              <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m6 12.5 4 4 8-9" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              className="dv-act"
+                              aria-label={`Close ${r.name}`}
+                              title="Close"
+                              disabled={r.status === "Closed" || saving === r.id}
+                              onClick={() => move(r.id, "Closed")}
+                            >
+                              <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m7 7 10 10M17 7 7 17" />
+                              </svg>
+                            </button>
                           </span>
-                        </Link>
-                      </td>
-                      <td>
-                        <span className={`dv-tone is-${KIND_TONE[kind] ?? "slate"}`}>
-                          {PRODUCT[kind] ?? TYPE[r.type] ?? r.type}
-                        </span>
-                      </td>
-                      <td className="dv-nowrap">
-                        {r.quotedTotalMinor ? money(r.quotedTotalMinor, r.currency ?? "USD") : "—"}
-                      </td>
-                      <td>
-                        <span className={`dv-tone is-${STATUS_TONE[r.status]}`}>{r.status}</span>
-                      </td>
-                      <td>
-                        <span className="dv-acts">
-                          <button
-                            type="button"
-                            className="dv-act"
-                            aria-label={`Mark ${r.name} contacted`}
-                            title="Mark contacted"
-                            disabled={r.status !== "New" || saving === r.id}
-                            onClick={() => move(r.id, "Contacted")}
-                          >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                              <path d="m6 12.5 4 4 8-9" />
-                            </svg>
-                          </button>
-                          <button
-                            type="button"
-                            className="dv-act"
-                            aria-label={`Close ${r.name}`}
-                            title="Close"
-                            disabled={r.status === "Closed" || saving === r.id}
-                            onClick={() => move(r.id, "Closed")}
-                          >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                              <path d="m7 7 10 10M17 7 7 17" />
-                            </svg>
-                          </button>
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )
-      }
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {total > PAGE_SIZE && (
+            <Pagination page={page} pageSize={PAGE_SIZE} total={total} fixedSize noun="enquiries" onPage={setPage} />
+          )}
+        </>
+      )}
     </Card>
   );
 }

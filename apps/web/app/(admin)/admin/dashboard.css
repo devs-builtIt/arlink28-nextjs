@@ -1704,3 +1704,27 @@
     grid-column: 1 / -1;
   }
 }
+
+/* A card that is a link: the whole card lifts. */
+.adm a.dv-kpi {
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.adm a.dv-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(11, 23, 38, 0.05),
+    0 16px 36px rgba(11, 23, 38, 0.09);
+}
+.adm a.dv-kpi:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.adm .dv-table-card .pk-pager {
+  margin-top: auto;
+  padding-inline: 24px;
+  border-top: 1px solid var(--dv-line);
+}

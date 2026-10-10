@@ -24,6 +24,33 @@ test.describe("overview", () => {
     await expect(page.getByRole("region", { name: "Top services" })).toContainText("Holidays");
   });
 
+  test("the waiting card opens the unanswered enquiries", async ({ page }) => {
+    await page.getByRole("link", { name: /Waiting for a reply/ }).click();
+    await expect(page).toHaveURL(/\/admin\/enquiries\?status=New$/);
+  });
+
+  test("recent enquiries are paged ten at a time", async ({ page, request }) => {
+    for (let i = 1; i <= 9; i++) {
+      await request.post("http://localhost:5399/api/v1/enquiries", {
+        data: {
+          type: "General",
+          name: `Guest ${i}`,
+          email: `guest${i}@example.test`,
+          subject: "Hello",
+          message: "Hi",
+          consent: true,
+        },
+      });
+    }
+    await page.reload();
+    const recent = page.getByRole("region", { name: "Recent enquiries" });
+    await expect(recent.getByRole("row")).toHaveCount(11); // the header and ten rows
+    await expect(recent.getByText("Showing 1 to 10 of 12 enquiries")).toBeVisible();
+    await recent.getByRole("button", { name: "Next" }).click();
+    await expect(recent.getByText("Showing 11 to 12 of 12 enquiries")).toBeVisible();
+    await expect(recent.getByRole("row")).toHaveCount(3);
+  });
+
   test("changing the period asks for that many days and says so", async ({ page }) => {
     await expect(page.getByText("Enquiries, 30 days")).toBeVisible();
     const request = page.waitForRequest((r) => r.url().includes("/api/v1/admin/dashboard?days=7"));
