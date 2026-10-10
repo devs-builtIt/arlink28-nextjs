@@ -62,7 +62,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Sea
     <ListingProvider params={params}>
       <PageBanner
         overlap
-        photo="hotels"
+        photo="holidays"
         above={<KindSwitcher active="/packages" />}
         title={
           <>

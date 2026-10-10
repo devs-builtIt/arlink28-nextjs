@@ -7,7 +7,7 @@ export default function Loading() {
     <>
       <PageBanner
         overlap
-        photo="hotels"
+        photo="holidays"
         title={
           <>
             Find your

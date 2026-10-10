@@ -13,8 +13,8 @@ type Props = {
   above?: ReactNode;
   /** The page docks a search bar into the card's bottom edge: leaves room for it. */
   overlap?: boolean;
-  /** Which photo: the holiday safari by default; flights, hotels and visas each have their own. */
-  photo?: "banner" | "flights" | "hotels" | "visas";
+  /** Which photo: the safari by default; holidays, flights, hotels and visas each have their own. */
+  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas";
   id?: string;
 };
 
