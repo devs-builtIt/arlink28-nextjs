@@ -15,13 +15,13 @@ test.describe("overview", () => {
       await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
     }
 
-    // The oldest unanswered enquiry comes first, and links to it.
-    const waiting = page.getByRole("region", { name: "Needs a reply" });
-    await expect(waiting.getByRole("listitem")).toHaveCount(5);
-    await expect(waiting.getByRole("listitem").first()).toContainText("Adaeze Okafor");
+    // The latest enquiries, newest first, each linking to its page.
+    const recent = page.getByRole("region", { name: "Recent enquiries" });
+    await expect(recent.getByRole("row")).toHaveCount(4); // the header and the three seeded enquiries
+    await expect(recent.getByRole("link", { name: /Sam Roe/ })).toBeVisible();
+
     await expect(page.getByRole("region", { name: "Top destinations" })).toContainText("Kenya");
-    await expect(page.getByRole("region", { name: "Top services" })).toBeVisible();
-    await expect(waiting.getByRole("link", { name: /Adaeze Okafor/ })).toHaveAttribute("href", "/admin/enquiries/a1");
+    await expect(page.getByRole("region", { name: "Top services" })).toContainText("Holidays");
   });
 
   test("changing the period asks for that many days and says so", async ({ page }) => {

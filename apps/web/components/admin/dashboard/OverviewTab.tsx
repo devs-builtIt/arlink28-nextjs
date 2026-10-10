@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import type { DashboardResponse, EnquiryListItem, EnquiryStatus } from "@arlink28/api-client";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
-import { fullDate, initials, money, timeAgo } from "@/components/admin/format";
+import { initials, money, timeAgo } from "@/components/admin/format";
 import { BarList, Count, Sparkline } from "./charts";
 import { useInView } from "./motion";
-import { Card, Delta, PERIODS, PRODUCT, TYPE, ageTone, duration, seriesPoints } from "./shared";
+import { Card, Delta, PERIODS, PRODUCT, TYPE, duration, seriesPoints } from "./shared";
 
 /** One headline figure: the label, the number, then a tinted pill and, where there is a series, its line. */
 function Kpi({
@@ -233,56 +233,6 @@ export function RecentEnquiries({ data }: { data: DashboardResponse }) {
   );
 }
 
-export function Awaiting({ data }: { data: DashboardResponse }) {
-  const e = data.enquiries;
-  return (
-    <Card
-      title="Needs a reply"
-      span={4}
-      index={5}
-      action={
-        <Link className="dv-link" href="/admin/enquiries?status=New">
-          View all {e.awaitingAll > 0 && <span>({e.awaitingAll})</span>}
-        </Link>
-      }
-    >
-      {() =>
-        e.awaiting.length === 0 ? (
-          <div className="dv-clear">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m5 12.5 4.5 4.5L19 7.5" />
-            </svg>
-            <p>Every enquiry has had a reply.</p>
-          </div>
-        ) : (
-          <ul className="dv-list">
-            {e.awaiting.map((a) => (
-              <li key={a.id}>
-                <Link href={`/admin/enquiries/${a.id}`}>
-                  <span className="dv-avatar" aria-hidden="true">
-                    {initials(a.name)}
-                  </span>
-                  <span className="dv-list-text">
-                    <strong>{a.name}</strong>
-                    <small>{a.packageTitle ?? TYPE[a.type] ?? a.type}</small>
-                  </span>
-                  <time
-                    className={`dv-age is-${ageTone(a.createdAt)}`}
-                    dateTime={a.createdAt}
-                    title={fullDate(a.createdAt)}
-                  >
-                    {timeAgo(a.createdAt)}
-                  </time>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </Card>
-  );
-}
-
 /** What people are asking for: a ranked bar for each, with how many enquiries and their share of the period. */
 function Demand({
   title,
@@ -301,7 +251,7 @@ function Demand({
   const total = items.reduce((sum, i) => sum + i.value, 0);
   const bars = items.map((i, n) => ({ ...i, color: n === 0 ? "#0b1726" : "#7da3d6" }));
   return (
-    <Card title={title} note={note} span={6} index={index}>
+    <Card title={title} note={note} index={index}>
       {(inView) =>
         items.length === 0 ? (
           <p className="dv-empty">{empty}</p>
@@ -330,21 +280,22 @@ export function OverviewTab({ data }: { data: DashboardResponse }) {
     <>
       <Kpis data={data} />
       <RecentEnquiries data={data} />
-      <Awaiting data={data} />
-      <Demand
-        title="Top destinations"
-        note={`Where people want to go, last ${period}.`}
-        items={e.byDestination.map((d) => ({ key: d.name, label: d.name, value: d.count }))}
-        empty="No enquiries about a listing in this period."
-        index={6}
-      />
-      <Demand
-        title="Top services"
-        note={`What they are asking for, last ${period}.`}
-        items={e.byProduct.map((p) => ({ key: p.product, label: PRODUCT[p.product] ?? p.product, value: p.count }))}
-        empty="No enquiries in this period yet."
-        index={7}
-      />
+      <div className="dv-side">
+        <Demand
+          title="Top destinations"
+          note={`Where people want to go, last ${period}.`}
+          items={e.byDestination.map((d) => ({ key: d.name, label: d.name, value: d.count }))}
+          empty="No enquiries about a listing in this period."
+          index={5}
+        />
+        <Demand
+          title="Top services"
+          note={`What they are asking for, last ${period}.`}
+          items={e.byProduct.map((p) => ({ key: p.product, label: PRODUCT[p.product] ?? p.product, value: p.count }))}
+          empty="No enquiries in this period yet."
+          index={6}
+        />
+      </div>
     </>
   );
 }
