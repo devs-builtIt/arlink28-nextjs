@@ -2,15 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import type { DashboardResponse, UserResponse } from "@arlink28/api-client";
+import type { DashboardResponse } from "@arlink28/api-client";
 import { useAuth } from "@/context/AuthContext";
 import { dashboardApi } from "@/utils/api/dashboard";
-import { usersApi } from "@/utils/api/users";
 import { clockTime } from "@/components/admin/format";
 import { Skeleton } from "@/components/admin/ui";
-import { OperationsTab } from "./OperationsTab";
 import { OverviewTab } from "./OverviewTab";
-import { PartnersTab } from "./PartnersTab";
 import { SalesTab } from "./SalesTab";
 import { SampleBanner, SampleProvider, useSamplePreference } from "./sample";
 import { Segmented } from "./shared";
@@ -18,18 +15,6 @@ import { Segmented } from "./shared";
 const TABS = [
   { id: "overview", label: "Overview", about: "Enquiries and demand." },
   { id: "sales", label: "Sales", about: "Revenue, bookings and conversion.", sample: "Bookings and revenue" },
-  {
-    id: "operations",
-    label: "Operations",
-    about: "Trips, visas, payments and the team.",
-    sample: "Visa applications and payments",
-  },
-  {
-    id: "partners",
-    label: "Partners & clients",
-    about: "Suppliers, commission and client feedback.",
-    sample: "Supplier commissions and client reviews",
-  },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -55,7 +40,7 @@ function Loading() {
   );
 }
 
-/** The four views of the agency. The choice lives in the address (#sales), so a refresh or a shared link keeps it. */
+/** The two views of the agency. The choice lives in the address (#sales), so a refresh or a shared link keeps it. */
 function useTab(): [TabId, (id: TabId) => void] {
   const [tab, setTab] = useState<TabId>("overview");
   useEffect(() => {
@@ -116,8 +101,6 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [busy, setBusy] = useState(true);
   const [failed, setFailed] = useState(false);
-  const [staff, setStaff] = useState<UserResponse[] | null>(null);
-  const [staffFailed, setStaffFailed] = useState(false);
   const [tab, setTab] = useTab();
   const [showSample, setShowSample] = useSamplePreference();
 
@@ -132,14 +115,6 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => load(days), [days, load]);
-
-  useEffect(() => {
-    if (!isSuperAdmin) return;
-    usersApi
-      .list()
-      .then(setStaff)
-      .catch(() => setStaffFailed(true));
-  }, [isSuperAdmin]);
 
   const current = TABS.find((t) => t.id === tab) ?? TABS[0];
 
@@ -192,8 +167,6 @@ export default function Dashboard() {
           <div className={`dv-grid${busy ? " is-busy" : ""}`} key={tab}>
             {tab === "overview" && <OverviewTab data={data} />}
             {tab === "sales" && <SalesTab data={data} />}
-            {tab === "operations" && <OperationsTab data={data} staff={staff} staffFailed={staffFailed} />}
-            {tab === "partners" && <PartnersTab data={data} />}
           </div>
         </div>
       )}

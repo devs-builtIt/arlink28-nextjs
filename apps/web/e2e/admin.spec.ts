@@ -26,30 +26,6 @@ test.describe("overview", () => {
     await expect(page.getByText("Sample", { exact: true })).toHaveCount(0);
   });
 
-  test("operations has the trips, the catalogue, the team and the session", async ({ page }) => {
-    await page.getByRole("tab", { name: "Operations" }).click();
-    await expect(page).toHaveURL(/#operations$/);
-
-    const trips = page.getByRole("region", { name: "Upcoming trips" });
-    await expect(trips.getByRole("listitem")).toHaveCount(5);
-    await expect(trips.getByRole("listitem").first()).toContainText("Chidi Eze");
-    await expect(page.getByRole("region", { name: "Who is handling what" })).toContainText("anna_bello");
-
-    await expect(page.getByRole("region", { name: "Catalogue" })).toContainText("9 live, 2 draft, 1 archived");
-    await expect(page.getByRole("region", { name: "Finish these" })).toContainText("Kenya tourist visa");
-
-    const session = page.getByRole("region", { name: "Your session" });
-    await expect(session.getByRole("img", { name: /^[78]h \d+m left$/ })).toBeVisible();
-    await expect(session.getByText("Super admin")).toBeVisible();
-
-    // Staff numbers come from the staff list. Most recent first; yusuf_bakare has never signed in, so isn't listed.
-    const team = page.getByRole("region", { name: "Team" });
-    await expect(team.getByText("Active")).toBeVisible();
-    await expect(team).toContainText("2 super admins, 3 operators.");
-    await expect(team.getByRole("listitem").first()).toContainText("anna_bello");
-    await expect(team).not.toContainText("yusuf_bakare");
-  });
-
   test("the tabs are keyboard reachable and the choice survives a reload", async ({ page }) => {
     await page.getByRole("tab", { name: "Overview" }).focus();
     await page.keyboard.press("ArrowRight");
@@ -60,7 +36,7 @@ test.describe("overview", () => {
     await expect(page.getByRole("region", { name: "Revenue over time" })).toBeVisible();
   });
 
-  test("sales, payments and partners are labelled as samples, and the samples can be hidden", async ({ page }) => {
+  test("sales is labelled as samples, and the samples can be hidden", async ({ page }) => {
     await page.getByRole("tab", { name: "Sales" }).click();
     await expect(page.getByRole("note")).toContainText("Nothing on them is real");
     const revenue = page.getByRole("region", { name: "Revenue over time" });
@@ -76,14 +52,6 @@ test.describe("overview", () => {
     // The real steps stay; the sample ones go.
     await expect(funnel.getByText("Enquiries", { exact: true })).toBeVisible();
     await expect(funnel.getByText("Booked")).toHaveCount(0);
-
-    await page.getByRole("tab", { name: "Operations" }).click();
-    await expect(page.getByRole("region", { name: "Payments" })).toContainText("Not connected yet");
-    // Real cards on the same tab are untouched.
-    await expect(page.getByRole("region", { name: "Upcoming trips" })).toContainText("Chidi Eze");
-
-    await page.getByText("Show samples", { exact: true }).click();
-    await expect(page.getByRole("region", { name: "Payments" })).toContainText("Collected");
   });
 
   test("changing the period asks for that many days and says so", async ({ page }) => {
