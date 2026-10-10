@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import type { DashboardResponse } from "@arlink28/api-client";
 import { fullDate, initials, money, timeAgo } from "@/components/admin/format";
-import { AreaChart, BarList, Columns, Count, Donut, Sparkline, type Slice } from "./charts";
+import { AreaChart, BarList, Count, Donut, Sparkline, type Slice } from "./charts";
 import { useCountUp, useInView, useReveal } from "./motion";
-import { Card, Delta, PALETTE, PERIODS, PRODUCT, TYPE, WEEKDAYS, ageTone, duration, seriesPoints } from "./shared";
+import { Card, Delta, PALETTE, PERIODS, TYPE, ageTone, duration, seriesPoints } from "./shared";
 
 export function Kpis({ data }: { data: DashboardResponse }) {
   const e = data.enquiries;
@@ -166,57 +166,6 @@ export function ByType({ data }: { data: DashboardResponse }) {
   );
 }
 
-export function ByProduct({ data }: { data: DashboardResponse }) {
-  const items = data.enquiries.byProduct.map((p, i) => ({
-    key: p.product,
-    label: PRODUCT[p.product] ?? p.product,
-    value: p.count,
-    color: PALETTE[i % PALETTE.length],
-  }));
-  return (
-    <Card title="Which service" note="Enquiries by what they are about." span={4} index={7}>
-      {(inView) =>
-        items.length === 0 ? (
-          <p className="dv-empty">Nothing yet.</p>
-        ) : (
-          <>
-            <BarList items={items} start={inView} />
-            <p className="dv-foot">
-              <strong>{items[0].label}</strong> bring{" "}
-              {Math.round((items[0].value / Math.max(1, data.enquiries.total)) * 100)}% of enquiries.
-            </p>
-          </>
-        )
-      }
-    </Card>
-  );
-}
-
-export function Weekdays({ data }: { data: DashboardResponse }) {
-  const values = data.enquiries.byWeekday;
-  const best = values.indexOf(Math.max(...values));
-  return (
-    <Card
-      title="Busiest days"
-      note={values.some((v) => v > 0) ? `${WEEKDAYS[best]} brings the most.` : "Enquiries by day of the week."}
-      span={4}
-      index={8}
-    >
-      {(inView) => (
-        <>
-          <Columns values={values} labels={WEEKDAYS.map((d) => d[0])} start={inView} unit="enquiries" />
-          {values.some((v) => v > 0) && (
-            <p className="dv-foot">
-              <strong>Weekends</strong> bring{" "}
-              {Math.round(((values[5] + values[6]) / values.reduce((s, v) => s + v, 0)) * 100)}% of enquiries.
-            </p>
-          )}
-        </>
-      )}
-    </Card>
-  );
-}
-
 export function Awaiting({ data }: { data: DashboardResponse }) {
   const e = data.enquiries;
   return (
@@ -262,26 +211,6 @@ export function Awaiting({ data }: { data: DashboardResponse }) {
               </li>
             ))}
           </ul>
-        )
-      }
-    </Card>
-  );
-}
-
-export function TopPackages({ data }: { data: DashboardResponse }) {
-  const items = data.enquiries.topPackages.map((p, i) => ({
-    key: `${p.packageId ?? p.title}-${i}`,
-    label: p.title,
-    value: p.count,
-    color: i === 0 ? "#0b1726" : "#7da3d6",
-  }));
-  return (
-    <Card title="Most asked about" note="Packages and listings, by enquiries." span={4} index={10}>
-      {(inView) =>
-        items.length === 0 ? (
-          <p className="dv-empty">No one has asked about a listing in this period.</p>
-        ) : (
-          <BarList items={items} start={inView} />
         )
       }
     </Card>
@@ -360,12 +289,9 @@ export function OverviewTab({ data }: { data: DashboardResponse }) {
     <>
       <Kpis data={data} />
       <EnquiryChart data={data} />
+      <Awaiting data={data} />
       <Pipeline data={data} />
       <ByType data={data} />
-      <ByProduct data={data} />
-      <Weekdays data={data} />
-      <Awaiting data={data} />
-      <TopPackages data={data} />
       <Destinations data={data} />
     </>
   );
