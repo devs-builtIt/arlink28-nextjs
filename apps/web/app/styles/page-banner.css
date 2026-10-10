@@ -49,7 +49,7 @@
 }
 /* The other photos are cropped to the same shape, so only where the eye should land differs. */
 .pb[data-photo="flights"] .pb-img {
-  object-position: 55% 55%;
+  object-position: 60% 78%;
 }
 .pb[data-photo="hotels"] .pb-img {
   object-position: 50% 50%;
