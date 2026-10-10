@@ -323,16 +323,16 @@ body {
   color: #0f5c39;
 }
 
-/* ── Signed-out pages: one centred card on a dark page ─────────────── */
+/* ── Signed-out pages: one centred card on a light page, like the public site ─────────────── */
 
 .adm .auth {
-  --canvas: #0a0d12;
-  --surface: #11151c;
-  --ink: #f5f7fa;
-  --muted: #a3adbd;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --field: rgba(255, 255, 255, 0.05);
+  --canvas: #f3f4f8;
+  --surface: #ffffff;
+  --ink: #0b1726;
+  --muted: #5b6b82;
+  --line: rgba(11, 23, 38, 0.08);
+  --line-strong: rgba(11, 23, 38, 0.18);
+  --field: #f3f4f8;
   --font: Satoshi, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-family: var(--font);
   position: relative;
@@ -370,14 +370,17 @@ body {
   max-width: 440px;
   margin: auto;
   padding: clamp(28px, 4vw, 40px);
-  border-radius: 12px;
+  border-radius: 20px;
   background: var(--surface);
+  box-shadow:
+    0 1px 2px rgba(11, 23, 38, 0.04),
+    0 12px 32px rgba(11, 23, 38, 0.08);
 }
 .adm .auth-title {
   font-size: clamp(2rem, 2.4vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
 }
 .adm .auth-intro {
   margin: 12px 0 0;
@@ -396,7 +399,7 @@ body {
   font-size: 16px;
   height: 48px;
   border-color: transparent;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 .adm .auth .input:hover:not(:disabled) {
   border-color: var(--line-strong);
@@ -404,17 +407,17 @@ body {
 .adm .auth .input::placeholder {
   color: #6f7a8c;
 }
-/* Browsers paint autofilled fields pale yellow; keep them on the dark surface. */
+/* Browsers paint autofilled fields pale yellow; keep them on the field colour. */
 .adm .auth .input:-webkit-autofill {
   -webkit-text-fill-color: var(--ink);
-  box-shadow: 0 0 0 100px #1a2029 inset;
+  box-shadow: 0 0 0 100px #f3f4f8 inset;
 }
 .adm .auth .btn-block {
   font-family: var(--font);
   font-weight: 700;
   height: 48px;
   margin-top: 8px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 15px;
 }
 .adm .auth .notice {
@@ -441,9 +444,11 @@ body {
   position: sticky;
   top: 0;
   order: -1;
-  height: 100vh;
+  height: calc(100vh - 32px);
+  margin: 16px 0 16px 16px;
+  border-radius: 24px;
   overflow: hidden;
-  background: var(--surface);
+  background: #0b121c;
 }
 .adm .auth-photo img {
   width: 100%;
@@ -468,9 +473,9 @@ body {
   color: #fff;
   font-family: var(--font);
   font-size: clamp(1.75rem, 2.8vw, 3rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
 }
 @media (max-width: 900px) {
   .adm .auth {
