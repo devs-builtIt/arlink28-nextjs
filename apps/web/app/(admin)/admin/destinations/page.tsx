@@ -257,7 +257,7 @@ function DestinationsList() {
             <span className="pk-progress" role="progressbar" aria-label="Loading destinations"></span>
           )}
           <div className="pk-table-scroll">
-            <table className="pk-table packages">
+            <table className="pk-table packages dest-table">
               <thead>
                 <tr>
                   <th scope="col">Destination</th>
