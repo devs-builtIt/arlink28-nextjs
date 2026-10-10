@@ -2,10 +2,8 @@
 
 import type { ReactNode } from "react";
 import type { DashboardResponse } from "@arlink28/api-client";
-import { money } from "@/components/admin/format";
-import { compact, type SeriesPoint } from "./charts";
+import type { SeriesPoint } from "./charts";
 import { useInView } from "./motion";
-import { NotConnected, SamplePill, useShowSample } from "./sample";
 
 /* ── labels ────────────────────────────────────────────────────────────────────────────────────── */
 
@@ -85,18 +83,13 @@ export function seriesPoints(data: DashboardResponse): { points: SeriesPoint[]; 
 
 /* ── building blocks ───────────────────────────────────────────────────────────────────────────── */
 
-/**
- * A card that rises into place, and tells its charts when they are on screen so they draw themselves then.
- * `sample` marks a card that runs on made-up figures: it gets a "Sample" label, and when the visitor has switched
- * samples off it says what record it is waiting for instead. `sample` is the name of that record.
- */
+/** A card that rises into place, and tells its charts when they are on screen so they draw themselves then. */
 export function Card({
   title,
   note,
   action,
   span,
   index = 0,
-  sample,
   children,
   className = "",
 }: {
@@ -105,33 +98,27 @@ export function Card({
   action?: ReactNode;
   span?: 4 | 5 | 6 | 7 | 8 | 12;
   index?: number;
-  sample?: string;
   children: (inView: boolean) => ReactNode;
   className?: string;
 }) {
   const [ref, inView] = useInView<HTMLElement>();
-  const showSample = useShowSample();
-  const hidden = !!sample && !showSample;
   return (
     <section
       ref={ref}
-      className={`dv-card${span ? ` dv-span-${span}` : ""}${sample ? " is-sample" : ""} ${className}`}
+      className={`dv-card${span ? ` dv-span-${span}` : ""} ${className}`}
       style={{ ["--i" as string]: index }}
       aria-label={title}
     >
-      {(title || action || sample) && (
+      {(title || action) && (
         <div className="dv-card-head">
           <div>
             {title && <h2 className="dv-card-title">{title}</h2>}
-            {note && !hidden && <p className="dv-card-note">{note}</p>}
+            {note && <p className="dv-card-note">{note}</p>}
           </div>
-          <div className="dv-card-tools">
-            {sample && !hidden && <SamplePill />}
-            {!hidden && action}
-          </div>
+          {action && <div className="dv-card-tools">{action}</div>}
         </div>
       )}
-      {hidden ? <NotConnected what={sample} /> : children(inView)}
+      {children(inView)}
     </section>
   );
 }
@@ -176,57 +163,4 @@ export function Segmented({
       ))}
     </div>
   );
-}
-
-/* ── money and headline figures ────────────────────────────────────────────────────────────────── */
-
-/** Whole dollars, for the sample figures: "$12,400". */
-export const usd = (n: number) => money(Math.round(n) * 100, "USD");
-/** "$12.4k", for axes. */
-export const usdShort = (n: number) => `$${compact(n)}`;
-
-/**
- * One headline figure. A sample one shows a "Sample" label, and a dash when samples are switched off.
- * Pass `delta` for the change against the period before.
- */
-export function Stat({
-  index,
-  label,
-  value,
-  sub,
-  delta,
-  sample,
-  alert,
-  children,
-}: {
-  index: number;
-  label: string;
-  value: ReactNode;
-  sub?: ReactNode;
-  delta?: ReactNode;
-  sample?: boolean;
-  alert?: boolean;
-  children?: ReactNode;
-}) {
-  const showSample = useShowSample();
-  const off = !!sample && !showSample;
-  return (
-    <div
-      className={`dv-kpi${alert ? " is-alert" : ""}${sample ? " is-sample" : ""}`}
-      style={{ ["--i" as string]: index }}
-    >
-      <div className="dv-kpi-top">
-        <span className="dv-kpi-label">{label}</span>
-        {sample ? !off && <SamplePill /> : delta}
-      </div>
-      {off ? <span className="dv-num">—</span> : value}
-      {(off || sub) && <p className="dv-kpi-sub">{off ? "Not connected yet." : sub}</p>}
-      {!off && children}
-    </div>
-  );
-}
-
-/** The change against the period before, for a figure that has no real previous value to compare with. */
-export function SampleDelta({ now, before }: { now: number; before: number }) {
-  return <Delta now={now} before={before} />;
 }

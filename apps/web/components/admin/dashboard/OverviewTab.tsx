@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { DashboardResponse, EnquiryListItem, EnquiryStatus } from "@arlink28/api-client";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
 import { fullDate, initials, money, timeAgo } from "@/components/admin/format";
-import { AreaChart, Count, Sparkline } from "./charts";
+import { Count, Sparkline } from "./charts";
 import { useInView } from "./motion";
 import { Card, Delta, PERIODS, PRODUCT, TYPE, ageTone, duration, seriesPoints } from "./shared";
 
@@ -283,103 +283,12 @@ export function Awaiting({ data }: { data: DashboardResponse }) {
   );
 }
 
-/** A ranked list with each share on the right, on a tinted card. */
-function Shares({
-  title,
-  note,
-  items,
-  empty,
-  index,
-}: {
-  title: string;
-  note: string;
-  items: { key: string; label: string; value: number }[];
-  empty: string;
-  index: number;
-}) {
-  const total = items.reduce((s, i) => s + i.value, 0);
-  return (
-    <Card title={title} note={note} span={4} index={index} className="is-tint">
-      {() =>
-        items.length === 0 ? (
-          <p className="dv-empty">{empty}</p>
-        ) : (
-          <ul className="dv-shares">
-            {items.map((i) => (
-              <li key={i.key}>
-                <span>{i.label}</span>
-                <strong>{Math.round((i.value / Math.max(1, total)) * 100)}%</strong>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </Card>
-  );
-}
-
-export function EnquiryChart({ data }: { data: DashboardResponse }) {
-  const [showPrevious, setShowPrevious] = useState(true);
-  const chart = seriesPoints(data);
-  const days = data.days;
-  const period = PERIODS.find((p) => p.days === days)?.label ?? `${days} days`;
-  return (
-    <Card
-      title="Enquiries over time"
-      note={`The last ${period}${showPrevious ? ", against the period before." : "."}`}
-      span={8}
-      index={6}
-      action={
-        <label className="dv-switch">
-          <input type="checkbox" checked={showPrevious} onChange={(e) => setShowPrevious(e.target.checked)} />
-          <span aria-hidden="true" />
-          Compare
-        </label>
-      }
-    >
-      {(inView) => (
-        <>
-          <AreaChart
-            points={chart.points}
-            start={inView}
-            replayKey={data.generatedAt}
-            showPrevious={showPrevious}
-            unit={chart.unit}
-          />
-          <ul className="dv-key">
-            <li>
-              <i className="is-now" aria-hidden="true" />
-              This period
-            </li>
-            {showPrevious && (
-              <li>
-                <i className="is-before" aria-hidden="true" />
-                The period before
-              </li>
-            )}
-            {days > 90 && <li className="dv-key-note">Weekly totals</li>}
-          </ul>
-        </>
-      )}
-    </Card>
-  );
-}
-
 export function OverviewTab({ data }: { data: DashboardResponse }) {
-  const e = data.enquiries;
   return (
     <>
       <Kpis data={data} />
       <RecentEnquiries data={data} />
       <Awaiting data={data} />
-      <EnquiryChart data={data} />
-      <Shares
-        title="Where people want to go"
-        note="Share of listing enquiries."
-        items={e.byDestination.map((d) => ({ key: d.name, label: d.name, value: d.count }))}
-        empty="No enquiries about a listing in this period."
-        index={7}
-      />
     </>
   );
 }

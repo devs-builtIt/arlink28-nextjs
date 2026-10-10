@@ -6,8 +6,9 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("overview", () => {
   test("the overview shows the real enquiry numbers", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Dashboard", level: 1 })).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Overview" })).toHaveAttribute("aria-selected", "true");
+    await expect(
+      page.getByRole("heading", { name: /^Good (morning|afternoon|evening), Anna$/, level: 1 }),
+    ).toBeVisible();
 
     // The four headline figures.
     for (const label of ["Enquiries", "Waiting for a reply", "Time to act", "Quoted"]) {
@@ -20,56 +21,15 @@ test.describe("overview", () => {
     await expect(waiting.getByRole("listitem").first()).toContainText("Adaeze Okafor");
     await expect(waiting.getByRole("link", { name: /Adaeze Okafor/ })).toHaveAttribute("href", "/admin/enquiries/a1");
 
-    await expect(page.getByRole("region", { name: "Enquiries over time" }).getByRole("img")).toBeVisible();
-    await expect(page.getByRole("region", { name: "Where people want to go" })).toContainText("Kenya");
-    // Nothing on the overview is a sample.
-    await expect(page.getByText("Sample", { exact: true })).toHaveCount(0);
-  });
-
-  test("the tabs are keyboard reachable and the choice survives a reload", async ({ page }) => {
-    await page.getByRole("tab", { name: "Overview" }).focus();
-    await page.keyboard.press("ArrowRight");
-    await expect(page.getByRole("tab", { name: "Sales" })).toHaveAttribute("aria-selected", "true");
-    await expect(page).toHaveURL(/#sales$/);
-    await page.reload();
-    await expect(page.getByRole("tab", { name: "Sales" })).toHaveAttribute("aria-selected", "true");
-    await expect(page.getByRole("region", { name: "Revenue over time" })).toBeVisible();
-  });
-
-  test("sales is labelled as samples, and the samples can be hidden", async ({ page }) => {
-    await page.getByRole("tab", { name: "Sales" }).click();
-    await expect(page.getByRole("note")).toContainText("Nothing on them is real");
-    const revenue = page.getByRole("region", { name: "Revenue over time" });
-    await expect(revenue.getByText("Sample", { exact: true })).toBeVisible();
-    // The funnel mixes real and sample steps and says which is which.
-    const funnel = page.getByRole("region", { name: "From enquiry to payment" });
-    await expect(funnel.getByText("Enquiries", { exact: true })).toBeVisible();
-    await expect(funnel.getByText("Booked")).toBeVisible();
-
-    await page.getByText("Show samples", { exact: true }).click();
-    await expect(revenue).toContainText("Not connected yet");
-    await expect(revenue.getByText("Sample", { exact: true })).toHaveCount(0);
-    // The real steps stay; the sample ones go.
-    await expect(funnel.getByText("Enquiries", { exact: true })).toBeVisible();
-    await expect(funnel.getByText("Booked")).toHaveCount(0);
   });
 
   test("changing the period asks for that many days and says so", async ({ page }) => {
-    const chart = page.getByRole("region", { name: "Enquiries over time" });
-    await expect(chart).toContainText("The last 30 days");
+    await expect(page.getByText("Enquiries, 30 days")).toBeVisible();
     const request = page.waitForRequest((r) => r.url().includes("/api/v1/admin/dashboard?days=7"));
     await page.getByRole("button", { name: "Last 7 days" }).click();
     await request;
     await expect(page.getByRole("button", { name: "Last 7 days" })).toHaveAttribute("aria-pressed", "true");
-    await expect(chart).toContainText("The last 7 days");
-  });
-
-  test("the comparison line can be switched off", async ({ page }) => {
-    const chart = page.getByRole("region", { name: "Enquiries over time" });
-    await expect(chart.getByText("The period before", { exact: true })).toBeVisible();
-    await chart.getByText("Compare", { exact: true }).click(); // the label, as a visitor would
-    await expect(chart.getByRole("checkbox", { name: "Compare" })).not.toBeChecked();
-    await expect(chart.getByText("The period before", { exact: true })).toBeHidden();
+    await expect(page.getByText("Enquiries, 7 days")).toBeVisible();
   });
 
   test("the current page is marked in the navigation", async ({ page }) => {
