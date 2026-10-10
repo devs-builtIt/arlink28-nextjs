@@ -141,7 +141,7 @@
 
 .adm .dv-card,
 .adm .dv-kpi {
-  border-radius: 20px;
+  border-radius: 14px;
   background: var(--surface);
   box-shadow: var(--dv-shadow);
   animation: dv-rise 0.7s var(--dv-ease) both;
@@ -1481,7 +1481,7 @@
 
 .adm .dv-card,
 .adm .dv-kpi {
-  border-radius: 24px;
+  border-radius: 14px;
 }
 .adm .dv-kpis {
   --tone: var(--dv-steel);
