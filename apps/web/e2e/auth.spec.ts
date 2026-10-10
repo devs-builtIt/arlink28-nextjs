@@ -54,7 +54,7 @@ test.describe("signing in and out", () => {
     await signIn(page, OPERATOR);
 
     const nav = page.getByRole("navigation", { name: "Admin" });
-    await expect(nav.getByRole("link", { name: "Overview" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Dashboard" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Staff" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Invite staff" })).toHaveCount(0);
 
@@ -103,7 +103,7 @@ test.describe("password reset and invites", () => {
     await page.getByRole("button", { name: "Create account and sign in" }).click();
 
     await expect(page).toHaveURL(/\/admin\/dashboard$/);
-    await expect(page.getByText("Signed in as new_hire.")).toBeVisible();
+    await expect(page.getByText("new_hire", { exact: true })).toBeVisible(); // named in the top bar
   });
 
   test("an invite link without a token explains what to do", async ({ page }) => {

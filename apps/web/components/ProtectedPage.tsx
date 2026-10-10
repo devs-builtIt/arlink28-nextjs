@@ -17,7 +17,7 @@ interface Props {
 type NavItem = { href: string; label: string; icon: string; superAdminOnly?: boolean };
 
 const NAV: NavItem[] = [
-  { href: "/admin/dashboard", label: "Overview", icon: "fa-table-cells-large" },
+  { href: "/admin/dashboard", label: "Dashboard", icon: "fa-table-cells-large" },
   { href: "/admin/packages", label: "Packages", icon: "fa-suitcase-rolling" },
   { href: "/admin/destinations", label: "Destinations", icon: "fa-earth-africa" },
   { href: "/admin/enquiries", label: "Enquiries", icon: "fa-inbox" },

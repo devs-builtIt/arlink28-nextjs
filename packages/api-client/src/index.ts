@@ -106,6 +106,18 @@ export type DashboardEnquiries = {
     packageTitle: string | null;
     createdAt: string;
   }[];
+  byDestination: { name: string; count: number }[];
+  staff: { id: string; username: string; handled: number; closed: number }[];
+  upcoming: {
+    id: string;
+    reference: string;
+    name: string;
+    packageTitle: string | null;
+    checkIn: string;
+    nights: number | null;
+    status: EnquiryStatus;
+  }[];
+  upcomingNext30: number;
 };
 export type DashboardCatalogue = {
   byProduct: { product: string; published: number; draft: number; archived: number }[];

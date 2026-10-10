@@ -139,12 +139,25 @@ export function AreaChart({
   replayKey,
   showPrevious,
   unit,
+  format = (n: number) => String(n),
+  axisFormat = compact,
+  target,
+  targetLabel = "Target",
+  previousLabel = "Before",
 }: {
   points: SeriesPoint[];
   start: boolean;
   replayKey: unknown;
   showPrevious: boolean;
   unit: string;
+  /** How a value reads in the tooltip. */
+  format?: (n: number) => string;
+  /** How a value reads on the axis. */
+  axisFormat?: (n: number) => string;
+  /** A level to aim for, drawn as a dashed line across the chart. */
+  target?: number;
+  targetLabel?: string;
+  previousLabel?: string;
 }) {
   const id = useId();
   const [boxRef, width] = useWidth<HTMLDivElement>();
@@ -155,7 +168,7 @@ export function AreaChart({
   const m = { top: 16, right: 12, bottom: 30, left: 38 };
   const innerW = Math.max(0, width - m.left - m.right);
   const innerH = H - m.top - m.bottom;
-  const max = Math.max(1, ...points.map((p) => Math.max(p.value, showPrevious ? (p.previous ?? 0) : 0)));
+  const max = Math.max(1, target ?? 0, ...points.map((p) => Math.max(p.value, showPrevious ? (p.previous ?? 0) : 0)));
   const { top, step } = niceScale(max);
   const x = (i: number) => m.left + (points.length <= 1 ? innerW / 2 : (i / (points.length - 1)) * innerW);
   const y = (v: number) => m.top + innerH - (v / top) * innerH;
@@ -192,7 +205,7 @@ export function AreaChart({
   const hover = active !== null ? points[active] : null;
   const total = points.reduce((s, p) => s + p.value, 0);
   const peak = points.reduce((best, p) => (p.value > best.value ? p : best), points[0] ?? { label: "", value: 0 });
-  const summary = `${total} ${unit} in total. The busiest was ${peak.label}, with ${peak.value}. Use the arrow keys to read each one.`;
+  const summary = `${format(total)}${unit ? ` ${unit}` : ""} in total. The highest was ${peak.label}, with ${format(peak.value)}. Use the arrow keys to read each one.`;
 
   return (
     <div
@@ -223,7 +236,7 @@ export function AreaChart({
             <g key={v}>
               <line className="dv-gridline" x1={m.left} x2={width - m.right} y1={y(v)} y2={y(v)} />
               <text className="dv-axis" x={m.left - 10} y={y(v)} textAnchor="end" dominantBaseline="middle">
-                {compact(v)}
+                {axisFormat(v)}
               </text>
             </g>
           ))}
@@ -239,6 +252,14 @@ export function AreaChart({
             </text>
           ))}
 
+          {target !== undefined && (
+            <g style={{ opacity: progress }}>
+              <line className="dv-target" x1={m.left} x2={width - m.right} y1={y(target)} y2={y(target)} />
+              <text className="dv-target-label" x={width - m.right} y={y(target) - 6} textAnchor="end">
+                {targetLabel}
+              </text>
+            </g>
+          )}
           {showPrevious && (
             <path
               className="dv-line-prev"
@@ -271,11 +292,12 @@ export function AreaChart({
         >
           <span className="dv-tip-label">{hover.label}</span>
           <strong>
-            {hover.value} <small>{hover.value === 1 ? unit.replace(/ies$/, "y").replace(/s$/, "") : unit}</small>
+            {format(hover.value)}{" "}
+            {unit && <small>{hover.value === 1 ? unit.replace(/ies$/, "y").replace(/s$/, "") : unit}</small>}
           </strong>
           {showPrevious && hover.previous !== undefined && (
             <span className="dv-tip-prev">
-              Before: {hover.previous}
+              {previousLabel}: {format(hover.previous)}
               {hover.previous > 0 && (
                 <em className={hover.value >= hover.previous ? "is-up" : "is-down"}>
                   {hover.value >= hover.previous ? "+" : ""}
@@ -294,7 +316,20 @@ export function AreaChart({
 
 export type Slice = { key: string; label: string; value: number; color: string };
 
-export function Donut({ slices, start, centreLabel }: { slices: Slice[]; start: boolean; centreLabel: string }) {
+export function Donut({
+  slices,
+  start,
+  centreLabel,
+  centreValue,
+  format = (n: number) => Math.round(n).toLocaleString(),
+}: {
+  slices: Slice[];
+  start: boolean;
+  centreLabel: string;
+  /** Shown in the middle instead of the total, for when the total is not the point (a share, say). */
+  centreValue?: string;
+  format?: (n: number) => string;
+}) {
   const progress = useReveal(start, 1300, slices.length);
   const [hot, setHot] = useState<string | null>(null);
   const total = slices.reduce((s, x) => s + x.value, 0);
@@ -338,7 +373,7 @@ export function Donut({ slices, start, centreLabel }: { slices: Slice[]; start: 
           ))}
         </svg>
         <div className="dv-donut-centre">
-          <span className="dv-num">{Math.round(shownTotal).toLocaleString()}</span>
+          <span className="dv-num">{centreValue ?? format(shownTotal)}</span>
           <small>{centreLabel}</small>
         </div>
       </div>
@@ -352,7 +387,7 @@ export function Donut({ slices, start, centreLabel }: { slices: Slice[]; start: 
           >
             <i style={{ background: s.color }} aria-hidden="true" />
             <span>{s.label}</span>
-            <strong>{s.value}</strong>
+            <strong>{format(s.value)}</strong>
             <em>{total ? Math.round((s.value / total) * 100) : 0}%</em>
           </li>
         ))}
@@ -365,7 +400,17 @@ export function Donut({ slices, start, centreLabel }: { slices: Slice[]; start: 
 
 export type BarItem = { key: string; label: string; value: number; sub?: string; color?: string; href?: string };
 
-export function BarList({ items, start, max }: { items: BarItem[]; start: boolean; max?: number }) {
+export function BarList({
+  items,
+  start,
+  max,
+  format = (n: number) => String(n),
+}: {
+  items: BarItem[];
+  start: boolean;
+  max?: number;
+  format?: (n: number) => string;
+}) {
   const progress = useReveal(start, 1000, items.length);
   const top = max ?? Math.max(1, ...items.map((i) => i.value));
   return (
@@ -379,7 +424,7 @@ export function BarList({ items, start, max }: { items: BarItem[]; start: boolea
               <span className="dv-bars-label" title={item.label}>
                 {item.label}
               </span>
-              <strong>{item.value}</strong>
+              <strong>{format(item.value)}</strong>
             </div>
             <div className="dv-track">
               <div
@@ -469,5 +514,142 @@ export function Stack({
           ))
       )}
     </div>
+  );
+}
+
+/* ── Ring ──────────────────────────────────────────────────────────────────────────────────────── */
+
+/** A progress ring that sweeps round to `value` (0 to 1), with the figure in the middle. */
+export function Ring({
+  value,
+  start,
+  centre,
+  sub,
+  label,
+  tone = "navy",
+}: {
+  value: number;
+  start: boolean;
+  centre: string;
+  sub?: string;
+  label: string;
+  tone?: "navy" | "green" | "steel";
+}) {
+  const progress = useReveal(start, 1400, value);
+  const r = 52;
+  const c = 2 * Math.PI * r;
+  const share = Math.min(1, Math.max(0, value));
+  return (
+    <div className="dv-ring">
+      <svg viewBox="0 0 128 128" role="img" aria-label={label}>
+        <circle className="dv-ring-bg" cx="64" cy="64" r={r} />
+        <circle
+          className={`dv-ring-arc is-${tone}`}
+          cx="64"
+          cy="64"
+          r={r}
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - share * progress)}
+          transform="rotate(-90 64 64)"
+        />
+        <text x="64" y={sub ? 62 : 70} textAnchor="middle" className="dv-ring-num">
+          {centre}
+        </text>
+        {sub && (
+          <text x="64" y="82" textAnchor="middle" className="dv-ring-sub">
+            {sub}
+          </text>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+/* ── Stacked columns ───────────────────────────────────────────────────────────────────────────── */
+
+export type StackItem = { label: string; a: number; b: number };
+
+/** Columns made of two parts that rise from the baseline, one after another. */
+export function StackedColumns({
+  items,
+  start,
+  format,
+  names,
+}: {
+  items: StackItem[];
+  start: boolean;
+  format: (n: number) => string;
+  names: [string, string];
+}) {
+  const progress = useReveal(start, 1100, items.length);
+  const max = Math.max(1, ...items.map((i) => i.a + i.b));
+  const [hot, setHot] = useState<number | null>(null);
+  return (
+    <div>
+      <div
+        className="dv-scols"
+        role="img"
+        aria-label={items.map((i) => `${i.label}: ${names[0]} ${format(i.a)}, ${names[1]} ${format(i.b)}`).join(". ")}
+      >
+        {items.map((item, i) => {
+          const local = Math.min(1, Math.max(0, progress * 1.5 - i * 0.1));
+          return (
+            <div
+              key={item.label}
+              className={`dv-scol${hot === i ? " is-hot" : ""}`}
+              onPointerEnter={() => setHot(i)}
+              onPointerLeave={() => setHot(null)}
+            >
+              <span className="dv-scol-value" style={{ opacity: hot === i ? 1 : 0 }}>
+                {format(item.a + item.b)}
+              </span>
+              <div className="dv-scol-track">
+                <div className="dv-scol-stack" style={{ height: `${((item.a + item.b) / max) * 100 * local}%` }}>
+                  <span className="dv-scol-b" style={{ flexGrow: item.b }} />
+                  <span className="dv-scol-a" style={{ flexGrow: item.a }} />
+                </div>
+              </div>
+              <span className="dv-scol-label">{item.label}</span>
+            </div>
+          );
+        })}
+      </div>
+      <ul className="dv-key">
+        <li>
+          <i className="is-solid-navy" aria-hidden="true" />
+          {names[0]}
+        </li>
+        <li>
+          <i className="is-solid-mist" aria-hidden="true" />
+          {names[1]}
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+/* ── Stars ─────────────────────────────────────────────────────────────────────────────────────── */
+
+/** Five stars, filled to the rating. */
+export function Stars({ rating, label }: { rating: number; label: string }) {
+  const id = useId();
+  const star = "M10 1.5l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L1.4 7.8l6-.8z";
+  const share = Math.min(1, Math.max(0, rating / 5));
+  return (
+    <svg className="dv-stars" viewBox="0 0 100 18" role="img" aria-label={label}>
+      <defs>
+        <clipPath id={`${id}-clip`}>
+          <rect x="0" y="0" width={100 * share} height="18" />
+        </clipPath>
+      </defs>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <path key={i} className="dv-star-off" d={star} transform={`translate(${i * 20} 0)`} />
+      ))}
+      <g clipPath={`url(#${id}-clip)`}>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <path key={i} className="dv-star-on" d={star} transform={`translate(${i * 20} 0)`} />
+        ))}
+      </g>
+    </svg>
   );
 }

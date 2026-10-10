@@ -253,6 +253,10 @@
   color: var(--ink);
   font-weight: 600;
 }
+.adm .dv-kpi > .dv-delta {
+  align-self: flex-start;
+  margin-top: 4px;
+}
 .adm .dv-kpi-foot {
   margin-top: auto;
   padding-top: 10px;
@@ -1019,6 +1023,443 @@
   }
   .adm .dv-num {
     font-size: 2.4rem;
+  }
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+
+.adm .dv-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.adm .dv-tabs::-webkit-scrollbar {
+  display: none;
+}
+.adm .dv-tabs button {
+  position: relative;
+  flex: none;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.25s var(--dv-ease),
+    color 0.2s;
+}
+.adm .dv-tabs button:hover {
+  color: var(--ink);
+}
+.adm .dv-tabs button.is-on {
+  background: var(--dv-navy);
+  color: #fff;
+}
+.adm .dv-tabs button:focus-visible {
+  outline: 2px solid var(--dv-navy);
+  outline-offset: 2px;
+}
+.adm #dv-panel {
+  animation: dv-rise 0.5s var(--dv-ease) both;
+}
+
+/* ── Sample figures ────────────────────────────────────────────────────────── */
+
+.adm .dv-sample {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #eef1f6;
+  color: #55657d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.adm .dv-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--dv-shadow);
+  font-size: 13.5px;
+}
+.adm .dv-banner strong {
+  font-size: 14px;
+}
+.adm .dv-banner p {
+  max-width: 70ch;
+  margin-top: 2px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.adm .dv-banner .dv-sample {
+  vertical-align: 1px;
+}
+.adm .dv-card-tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+}
+.adm .dv-notconnected {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  margin: auto 0;
+  padding: 36px 12px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 13.5px;
+  text-align: center;
+}
+.adm .dv-notconnected svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.adm .dv-notconnected p {
+  max-width: 28ch;
+}
+.adm .dv-kpi.is-sample .dv-sample {
+  margin-left: auto;
+}
+.adm .dv-tone-hatch {
+  background: repeating-linear-gradient(135deg, #2f5d9b 0 5px, #8fb0de 5px 9px);
+}
+.adm .dv-rate {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ── Rings ─────────────────────────────────────────────────────────────────── */
+
+.adm .dv-ring {
+  display: grid;
+  place-items: center;
+}
+.adm .dv-ring svg {
+  width: 148px;
+  height: 148px;
+}
+.adm .dv-ring-bg {
+  fill: none;
+  stroke: var(--dv-tint);
+  stroke-width: 11;
+}
+.adm .dv-ring-arc {
+  fill: none;
+  stroke: var(--dv-navy);
+  stroke-width: 11;
+  stroke-linecap: round;
+}
+.adm .dv-ring-arc.is-green {
+  stroke: #1a9e62;
+}
+.adm .dv-ring-arc.is-steel {
+  stroke: var(--dv-steel);
+}
+.adm .dv-ring-num {
+  fill: var(--ink);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.adm .dv-ring-sub {
+  fill: var(--muted);
+  font-size: 11px;
+}
+.adm .dv-target-card {
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+.adm .dv-target-card .dv-facts {
+  width: 100%;
+  margin: 0;
+}
+.adm .dv-facts-tight {
+  margin: 14px 0 0;
+}
+
+/* ── Charts: target line, stacked columns, stars ───────────────────────────── */
+
+.adm .dv-target {
+  stroke: #1a9e62;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+}
+.adm .dv-target-label {
+  fill: #11703f;
+  font-size: 11px;
+  font-weight: 600;
+}
+.adm .dv-key i.is-target {
+  border-top: 2px dashed #1a9e62;
+}
+.adm .dv-key i.is-solid-navy,
+.adm .dv-key i.is-solid-mist {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--dv-navy);
+}
+.adm .dv-key i.is-solid-mist {
+  background: var(--dv-mist);
+}
+.adm .dv-scols {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  height: 250px;
+}
+.adm .dv-scol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+.adm .dv-scol-value {
+  height: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.2s;
+}
+.adm .dv-scol-track {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  width: 100%;
+}
+.adm .dv-scol-stack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  border-radius: 10px 10px 5px 5px;
+  overflow: hidden;
+  transition: filter 0.2s;
+}
+.adm .dv-scol.is-hot .dv-scol-stack {
+  filter: brightness(1.12);
+}
+.adm .dv-scol-a {
+  background: var(--dv-navy);
+}
+.adm .dv-scol-b {
+  background: var(--dv-mist);
+}
+.adm .dv-scol-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.adm .dv-stars {
+  display: block;
+  width: 88px;
+  height: 16px;
+}
+.adm .dv-star-off {
+  fill: #dbe1ea;
+}
+.adm .dv-star-on {
+  fill: #e0a526;
+}
+.adm .dv-rating {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.adm .dv-rating strong {
+  color: var(--ink);
+}
+
+/* ── Tables ────────────────────────────────────────────────────────────────── */
+
+.adm .dv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.adm .dv-table th,
+.adm .dv-table td {
+  padding: 13px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+.adm .dv-table thead th {
+  padding-top: 0;
+  padding-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.adm .dv-table tbody tr {
+  border-top: 1px solid var(--dv-line);
+}
+.adm .dv-table tbody th {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+.adm .dv-table tbody th small {
+  display: block;
+  margin-left: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.adm .dv-table .is-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.adm .dv-inline-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+}
+.adm .dv-inline-bar .dv-track {
+  flex: 1;
+}
+.adm .dv-inline-bar span {
+  min-width: 44px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.adm .dv-rate-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.adm .dv-rate-cell .dv-stars {
+  width: 78px;
+}
+
+/* ── Trips, payments ───────────────────────────────────────────────────────── */
+
+.adm .dv-datebox {
+  display: grid;
+  flex: none;
+  place-content: center;
+  width: 42px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--dv-soft);
+  text-align: center;
+  line-height: 1.1;
+}
+.adm .dv-datebox small {
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.adm .dv-datebox strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+.adm .dv-status {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--dv-tint);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.adm .dv-status.is-new {
+  background: #fdf1d8;
+  color: #8a5a00;
+}
+.adm .dv-status.is-contacted {
+  background: #e3ecf8;
+  color: #23487c;
+}
+.adm .dv-sub-title {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.adm .dv-pay {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 28px;
+  align-items: start;
+}
+.adm .dv-pay-ring {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+}
+.adm .dv-pay-ring .dv-facts {
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+.adm .dv-money {
+  flex: none;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1180px) {
+  .adm .dv-pay {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adm .dv-pay-ring {
+    grid-column: 1 / -1;
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    gap: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .adm .dv-pay {
+    grid-template-columns: 1fr;
+  }
+  .adm .dv-table {
+    display: block;
+    overflow-x: auto;
+  }
+  .adm .dv-scols {
+    gap: 6px;
   }
 }
 
