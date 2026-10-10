@@ -4,6 +4,7 @@ import "./globals.css";
 import "./packages.css";
 import "./destinations.css";
 import "./enquiries.css";
+import "./dashboard.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 // One plain, highly legible UI face for everything (headings, tables, forms).

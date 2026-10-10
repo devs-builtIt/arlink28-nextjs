@@ -5,25 +5,52 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("overview", () => {
-  test("shows the session and real staff numbers", async ({ page }) => {
-    await expect(page.getByText("Signed in as anna_bello.")).toBeVisible();
+  test("shows the enquiry numbers, the catalogue, the team and the session", async ({ page }) => {
+    await expect(page.getByRole("heading", { name: "Overview", level: 1 })).toBeVisible();
+
+    // The four headline figures.
+    for (const label of ["Enquiries", "Waiting for a reply", "Time to act", "Quoted"]) {
+      await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
+    }
+
+    // The oldest unanswered enquiry comes first, and links to it.
+    const waiting = page.getByRole("region", { name: "Needs a reply" });
+    await expect(waiting.getByRole("listitem")).toHaveCount(5);
+    await expect(waiting.getByRole("listitem").first()).toContainText("Adaeze Okafor");
+    await expect(waiting.getByRole("link", { name: /Adaeze Okafor/ })).toHaveAttribute("href", "/admin/enquiries/a1");
+
+    await expect(page.getByRole("region", { name: "Enquiries over time" }).getByRole("img")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Catalogue" })).toContainText("9 live, 2 draft, 1 archived");
+    await expect(page.getByRole("region", { name: "Finish these" })).toContainText("Kenya tourist visa");
 
     const session = page.getByRole("region", { name: "Your session" });
     await expect(session.getByRole("img", { name: /^[78]h \d+m left$/ })).toBeVisible();
     await expect(session.getByText("Super admin")).toBeVisible();
 
-    const accounts = page.getByRole("region", { name: "Staff accounts" });
-    await expect(accounts.getByText("5 active")).toBeVisible();
-    await expect(accounts.getByRole("img", { name: "5 of 6 accounts active" })).toBeVisible();
+    // Staff numbers come from the staff list. Most recent first; yusuf_bakare has never signed in, so isn't listed.
+    const team = page.getByRole("region", { name: "Team" });
+    await expect(team.getByText("Active")).toBeVisible();
+    await expect(team).toContainText("2 super admins, 3 operators.");
+    await expect(team.getByRole("listitem").first()).toContainText("anna_bello");
+    await expect(team).not.toContainText("yusuf_bakare");
+  });
 
-    const roles = page.getByRole("region", { name: "Roles" });
-    await expect(roles.getByText("Super admins")).toBeVisible();
+  test("changing the period asks for that many days and says so", async ({ page }) => {
+    const chart = page.getByRole("region", { name: "Enquiries over time" });
+    await expect(chart).toContainText("The last 30 days");
+    const request = page.waitForRequest((r) => r.url().includes("/api/v1/admin/dashboard?days=7"));
+    await page.getByRole("button", { name: "Last 7 days" }).click();
+    await request;
+    await expect(page.getByRole("button", { name: "Last 7 days" })).toHaveAttribute("aria-pressed", "true");
+    await expect(chart).toContainText("The last 7 days");
+  });
 
-    // Most recent first; yusuf_bakare has never signed in, so isn't listed.
-    const recent = page.getByRole("region", { name: "Recent sign-ins" }).getByRole("listitem");
-    await expect(recent).toHaveCount(5);
-    await expect(recent.first()).toContainText("anna_bello");
-    await expect(page.getByRole("region", { name: "Recent sign-ins" })).not.toContainText("yusuf_bakare");
+  test("the comparison line can be switched off", async ({ page }) => {
+    const chart = page.getByRole("region", { name: "Enquiries over time" });
+    await expect(chart.getByText("The period before", { exact: true })).toBeVisible();
+    await chart.getByText("Compare", { exact: true }).click(); // the label, as a visitor would
+    await expect(chart.getByRole("checkbox", { name: "Compare" })).not.toBeChecked();
+    await expect(chart.getByText("The period before", { exact: true })).toBeHidden();
   });
 
   test("the current page is marked in the navigation", async ({ page }) => {
