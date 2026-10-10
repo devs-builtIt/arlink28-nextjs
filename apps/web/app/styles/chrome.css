@@ -644,8 +644,8 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--canvas);
+  background: var(--red);
+  color: #fff;
   opacity: 0;
   transform: scale(0.8);
   transition:
@@ -838,9 +838,16 @@ body:has(.hm-phero) .sh:not(.is-scrolled) {
   font-size: 14px;
   opacity: 1;
 }
+/* The arrow badge is red, as on the site's other buttons, and the button turns red on hover. */
+.sh-nav .sh-mega-btn::before {
+  background: var(--red);
+}
 .sh-nav .sh-mega-btn:hover {
-  background: var(--ink);
-  color: var(--canvas);
+  background: var(--red);
+  color: #fff;
+}
+.sh-nav .sh-mega-btn:hover::before {
+  background: #fff;
 }
 
 /* ---- The round arrow badge at the end of a button -------------------------------------------------

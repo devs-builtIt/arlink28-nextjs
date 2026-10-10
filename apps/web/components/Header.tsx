@@ -18,8 +18,8 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
     href: "/about",
     label: "About us",
     text: "Who we are, and where we are taking ARLink28.",
-    photo: "/images/home/proof-farnborough.webp",
-    focus: "30% 45%",
+    photo: "/images/home/livery-1200.webp",
+    focus: "62% 28%",
   },
   {
     href: "/team",
