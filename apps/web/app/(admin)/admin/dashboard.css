@@ -1005,6 +1005,7 @@
 }
 @media (max-width: 760px) {
   .adm .dv-span-4,
+  .adm .dv-span-6,
   .adm .dv-span-8 {
     grid-column: 1 / -1;
   }

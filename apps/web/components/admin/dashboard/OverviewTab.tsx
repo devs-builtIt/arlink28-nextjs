@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { DashboardResponse, EnquiryListItem, EnquiryStatus } from "@arlink28/api-client";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
 import { fullDate, initials, money, timeAgo } from "@/components/admin/format";
-import { Count, Sparkline } from "./charts";
+import { BarList, Count, Sparkline } from "./charts";
 import { useInView } from "./motion";
 import { Card, Delta, PERIODS, PRODUCT, TYPE, ageTone, duration, seriesPoints } from "./shared";
 
@@ -283,12 +283,68 @@ export function Awaiting({ data }: { data: DashboardResponse }) {
   );
 }
 
+/** What people are asking for: a ranked bar for each, with how many enquiries and their share of the period. */
+function Demand({
+  title,
+  note,
+  items,
+  empty,
+  index,
+}: {
+  title: string;
+  note: string;
+  items: { key: string; label: string; value: number }[];
+  empty: string;
+  index: number;
+}) {
+  items = [...items].sort((a, b) => b.value - a.value);
+  const total = items.reduce((sum, i) => sum + i.value, 0);
+  const bars = items.map((i, n) => ({ ...i, color: n === 0 ? "#0b1726" : "#7da3d6" }));
+  return (
+    <Card title={title} note={note} span={6} index={index}>
+      {(inView) =>
+        items.length === 0 ? (
+          <p className="dv-empty">{empty}</p>
+        ) : (
+          <>
+            <BarList
+              items={bars}
+              start={inView}
+              format={(n) => `${n} · ${Math.round((n / Math.max(1, total)) * 100)}%`}
+            />
+            <p className="dv-foot">
+              <strong>{items[0].label}</strong> leads with {items[0].value}{" "}
+              {items[0].value === 1 ? "enquiry" : "enquiries"}.
+            </p>
+          </>
+        )
+      }
+    </Card>
+  );
+}
+
 export function OverviewTab({ data }: { data: DashboardResponse }) {
+  const e = data.enquiries;
+  const period = PERIODS.find((p) => p.days === data.days)?.label ?? `${data.days} days`;
   return (
     <>
       <Kpis data={data} />
       <RecentEnquiries data={data} />
       <Awaiting data={data} />
+      <Demand
+        title="Top destinations"
+        note={`Where people want to go, last ${period}.`}
+        items={e.byDestination.map((d) => ({ key: d.name, label: d.name, value: d.count }))}
+        empty="No enquiries about a listing in this period."
+        index={6}
+      />
+      <Demand
+        title="Top services"
+        note={`What they are asking for, last ${period}.`}
+        items={e.byProduct.map((p) => ({ key: p.product, label: PRODUCT[p.product] ?? p.product, value: p.count }))}
+        empty="No enquiries in this period yet."
+        index={7}
+      />
     </>
   );
 }

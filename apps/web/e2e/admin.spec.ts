@@ -19,8 +19,9 @@ test.describe("overview", () => {
     const waiting = page.getByRole("region", { name: "Needs a reply" });
     await expect(waiting.getByRole("listitem")).toHaveCount(5);
     await expect(waiting.getByRole("listitem").first()).toContainText("Adaeze Okafor");
+    await expect(page.getByRole("region", { name: "Top destinations" })).toContainText("Kenya");
+    await expect(page.getByRole("region", { name: "Top services" })).toBeVisible();
     await expect(waiting.getByRole("link", { name: /Adaeze Okafor/ })).toHaveAttribute("href", "/admin/enquiries/a1");
-
   });
 
   test("changing the period asks for that many days and says so", async ({ page }) => {
