@@ -1476,3 +1476,230 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* ── Overview, in the style of a booking console ───────────────────────────── */
+
+.adm .dv-card,
+.adm .dv-kpi {
+  border-radius: 24px;
+}
+.adm .dv-kpis {
+  --tone: var(--dv-steel);
+  --tone-wash: #e8effa;
+}
+.adm .dv-kpi {
+  min-height: 0;
+  gap: 10px;
+  padding: 22px 24px 20px;
+}
+.adm .dv-kpi.is-blue {
+  --tone: #2f5d9b;
+  --tone-wash: #e8effa;
+}
+.adm .dv-kpi.is-red {
+  --tone: #d4202c;
+  --tone-wash: #fdecee;
+}
+.adm .dv-kpi.is-green {
+  --tone: #1a9e62;
+  --tone-wash: #e4f5ec;
+}
+.adm .dv-kpi.is-amber {
+  --tone: #c98a1b;
+  --tone-wash: #fdf3dc;
+}
+.adm .dv-kpi-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+.adm .dv-kpi-row .dv-spark {
+  width: 46%;
+  height: 40px;
+  margin: 0;
+  color: var(--tone);
+}
+.adm .dv-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--tone-wash);
+  color: var(--tone);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.adm .dv-kpi .dv-delta {
+  border-radius: 8px;
+}
+.adm .dv-kpi.is-blue .dv-delta.is-flat {
+  background: var(--tone-wash);
+  color: var(--tone);
+}
+
+.adm .dv-side {
+  display: flex;
+  flex-direction: column;
+  grid-column: span 4;
+  gap: 16px;
+  min-width: 0;
+}
+.adm .dv-side > .dv-card {
+  flex: 1;
+}
+.adm .dv-card.is-tint {
+  background: #f1f3f9;
+  box-shadow: none;
+}
+
+/* The table */
+.adm .dv-table-card {
+  padding-inline: 0;
+}
+.adm .dv-table-card .dv-card-head {
+  padding-inline: 24px;
+}
+.adm .dv-table-wrap {
+  position: relative;
+  overflow-x: auto;
+}
+.adm .dv-enq {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.adm .dv-enq th {
+  padding: 12px 12px;
+  border-top: 1px solid var(--dv-line);
+  border-bottom: 1px solid var(--dv-line);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+.adm .dv-enq td {
+  padding: 12px;
+  border-bottom: 1px solid var(--dv-line);
+  vertical-align: middle;
+}
+.adm .dv-enq tr:last-child td {
+  border-bottom: 0;
+}
+.adm .dv-enq :is(th, td):first-child {
+  padding-left: 24px;
+}
+.adm .dv-enq :is(th, td):last-child {
+  padding-right: 24px;
+}
+.adm .dv-enq tbody tr:hover {
+  background: var(--dv-soft);
+}
+.adm .dv-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 190px;
+  color: inherit;
+  text-decoration: none;
+}
+.adm .dv-who:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.adm .dv-nowrap {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.adm .dv-tone {
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.adm .dv-tone.is-blue {
+  color: #2f5d9b;
+}
+.adm .dv-tone.is-amber {
+  color: #c98a1b;
+}
+.adm .dv-tone.is-green {
+  color: #1a9e62;
+}
+.adm .dv-tone.is-red {
+  color: #d4202c;
+}
+.adm .dv-tone.is-slate {
+  color: var(--muted);
+}
+.adm .dv-acts {
+  display: inline-flex;
+  gap: 10px;
+}
+.adm .dv-act {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.adm .dv-act svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.adm .dv-act:hover:not(:disabled) {
+  background: var(--ink);
+  color: #fff;
+}
+.adm .dv-act:disabled {
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  color: var(--line-strong);
+  cursor: default;
+}
+
+/* Share rows on the tinted cards */
+.adm .dv-shares {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.adm .dv-shares li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dv-line);
+  font-size: 15px;
+  font-weight: 500;
+}
+.adm .dv-shares li:last-child {
+  border-bottom: 0;
+}
+.adm .dv-shares strong {
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1100px) {
+  .adm .dv-side {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,12 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import type { DashboardResponse } from "@arlink28/api-client";
+import type { DashboardResponse, EnquiryListItem, EnquiryStatus } from "@arlink28/api-client";
+import { adminEnquiriesApi } from "@/utils/api/enquiries";
 import { fullDate, initials, money, timeAgo } from "@/components/admin/format";
-import { AreaChart, BarList, Count, Donut, Sparkline, type Slice } from "./charts";
-import { useCountUp, useInView, useReveal } from "./motion";
-import { Card, Delta, PALETTE, PERIODS, TYPE, ageTone, duration, seriesPoints } from "./shared";
+import { AreaChart, Count, Sparkline } from "./charts";
+import { useInView } from "./motion";
+import { Card, Delta, PERIODS, PRODUCT, TYPE, ageTone, duration, seriesPoints } from "./shared";
+
+/** One headline figure: the label, the number, then a tinted pill and, where there is a series, its line. */
+function Kpi({
+  index,
+  tone,
+  label,
+  alert,
+  children,
+  pill,
+  spark,
+}: {
+  index: number;
+  tone: "blue" | "red" | "green" | "amber";
+  label: string;
+  alert?: boolean;
+  children: React.ReactNode;
+  pill: React.ReactNode;
+  spark?: React.ReactNode;
+}) {
+  return (
+    <div className={`dv-kpi is-${tone}${alert ? " is-alert" : ""}`} style={{ ["--i" as string]: index }}>
+      <span className="dv-kpi-label">{label}</span>
+      {children}
+      <div className="dv-kpi-row">
+        {pill}
+        {spark}
+      </div>
+    </div>
+  );
+}
 
 export function Kpis({ data }: { data: DashboardResponse }) {
   const e = data.enquiries;
@@ -15,60 +46,53 @@ export function Kpis({ data }: { data: DashboardResponse }) {
   const period = PERIODS.find((p) => p.days === data.days)?.label ?? `${data.days} days`;
   const oldest = e.awaiting[0];
   const quoted = e.quoted[0];
-  const otherCurrencies = e.quoted.length - 1;
-  const late = oldest ? ageTone(oldest.createdAt) === "late" : false;
   const handled = e.contacted + e.closed;
 
   return (
     <div className="dv-kpis" ref={ref}>
-      <div className="dv-kpi" style={{ ["--i" as string]: 0 }}>
-        <div className="dv-kpi-top">
-          <span className="dv-kpi-label">Enquiries</span>
-          <Delta now={e.total} before={e.previousTotal} />
-        </div>
+      <Kpi
+        index={0}
+        tone="blue"
+        label={`Enquiries, ${period}`}
+        pill={<Delta now={e.total} before={e.previousTotal} />}
+        spark={<Sparkline values={values} start={inView} label={`Enquiries over the last ${period}`} />}
+      >
         <Count value={e.total} start={inView} />
-        <p className="dv-kpi-sub">
-          Last {period}. {e.previousTotal.toLocaleString()} the period before.
-        </p>
-        <Sparkline values={values} start={inView} label={`Enquiries over the last ${period}`} />
-      </div>
+      </Kpi>
 
-      <div className={`dv-kpi${e.awaitingAll > 0 ? " is-alert" : ""}`} style={{ ["--i" as string]: 1 }}>
-        <div className="dv-kpi-top">
-          <span className="dv-kpi-label">Waiting for a reply</span>
-          {e.awaitingAll > 0 && <span className={`dv-pulse${late ? " is-late" : ""}`} aria-hidden="true" />}
-        </div>
+      <Kpi
+        index={1}
+        tone="red"
+        label="Waiting for a reply"
+        alert={e.awaitingAll > 0}
+        pill={
+          <span className="dv-pill">
+            {oldest ? `Oldest ${timeAgo(oldest.createdAt)}` : "All replied to"}
+          </span>
+        }
+      >
         <Count value={e.awaitingAll} start={inView} />
-        <p className="dv-kpi-sub">
-          {oldest ? (
-            <>
-              The oldest came in <strong>{timeAgo(oldest.createdAt)}</strong>.
-            </>
-          ) : (
-            "Everything has had a reply."
-          )}
-        </p>
-        <div className="dv-kpi-foot">
-          <Link href="/admin/enquiries?status=New">Open the queue</Link>
-        </div>
-      </div>
+      </Kpi>
 
-      <div className="dv-kpi" style={{ ["--i" as string]: 2 }}>
-        <div className="dv-kpi-top">
-          <span className="dv-kpi-label">Time to act</span>
-        </div>
+      <Kpi
+        index={2}
+        tone="green"
+        label="Time to act"
+        pill={<span className="dv-pill">{handled} handled</span>}
+      >
         <span className="dv-num">{e.medianHandleHours === null ? "—" : duration(e.medianHandleHours)}</span>
-        <p className="dv-kpi-sub">
-          {e.medianHandleHours === null
-            ? "Shows once an enquiry has been handled."
-            : `Median, from an enquiry arriving to a staff update. ${handled} handled.`}
-        </p>
-      </div>
+      </Kpi>
 
-      <div className="dv-kpi" style={{ ["--i" as string]: 3 }}>
-        <div className="dv-kpi-top">
-          <span className="dv-kpi-label">Quoted</span>
-        </div>
+      <Kpi
+        index={3}
+        tone="amber"
+        label="Quoted"
+        pill={
+          <span className="dv-pill">
+            {quoted ? `${quoted.count} ${quoted.count === 1 ? "quote" : "quotes"}` : "No quotes yet"}
+          </span>
+        }
+      >
         {quoted ? (
           <Count
             value={quoted.totalMinor / 100}
@@ -78,88 +102,140 @@ export function Kpis({ data }: { data: DashboardResponse }) {
         ) : (
           <span className="dv-num">—</span>
         )}
-        <p className="dv-kpi-sub">
-          {quoted
-            ? `${quoted.count} ${quoted.count === 1 ? "quote" : "quotes"} sent${otherCurrencies > 0 ? `, plus ${otherCurrencies} more ${otherCurrencies === 1 ? "currency" : "currencies"}` : ""}.`
-            : "Package enquiries with a quote appear here."}
-        </p>
-      </div>
+      </Kpi>
     </div>
   );
 }
 
-export function Pipeline({ data }: { data: DashboardResponse }) {
-  const e = data.enquiries;
-  const handled = e.contacted + e.closed;
-  const stages = [
-    { key: "received", label: "Received", value: e.total, tone: "navy" },
-    { key: "handled", label: "Handled", value: handled, tone: "steel" },
-    { key: "closed", label: "Closed", value: e.closed, tone: "green" },
-  ];
-  const rate = e.total ? Math.round((e.closed / e.total) * 100) : 0;
-  return (
-    <Card title="Pipeline" note="Where this period's enquiries have got to." span={4} index={5}>
-      {(inView) => <PipelineBody stages={stages} total={e.total} rate={rate} inView={inView} />}
-    </Card>
-  );
-}
+const STATUS_TONE: Record<EnquiryStatus, string> = { New: "blue", Contacted: "amber", Closed: "green" };
+const KIND_TONE: Record<string, string> = {
+  HolidayPackage: "green",
+  Flight: "blue",
+  HotelReservation: "amber",
+  VisaSupport: "slate",
+  PrivateCharter: "red",
+};
 
-function PipelineBody({
-  stages,
-  total,
-  rate,
-  inView,
-}: {
-  stages: { key: string; label: string; value: number; tone: string }[];
-  total: number;
-  rate: number;
-  inView: boolean;
-}) {
-  const progress = useReveal(inView, 1100, total);
-  const shownRate = useCountUp(rate, inView);
-  return (
-    <>
-      <ul className="dv-funnel">
-        {stages.map((s, i) => {
-          const local = Math.min(1, Math.max(0, progress * 1.4 - i * 0.18));
-          return (
-            <li key={s.key}>
-              <div className="dv-funnel-row">
-                <span>{s.label}</span>
-                <strong>{s.value}</strong>
-              </div>
-              <div className="dv-track dv-track-lg">
-                <div
-                  className={`dv-fill dv-tone-${s.tone}`}
-                  style={{ width: `${(total ? (s.value / total) * 100 : 0) * local}%` }}
-                />
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="dv-callout">
-        <span className="dv-big">{Math.round(shownRate)}%</span>
-        <span>of this period&apos;s enquiries are closed.</span>
-      </div>
-    </>
-  );
-}
+/** The latest enquiries, with the two things staff do to one: mark it contacted, or close it. */
+export function RecentEnquiries({ data }: { data: DashboardResponse }) {
+  const [items, setItems] = useState<EnquiryListItem[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [saving, setSaving] = useState<string | null>(null);
 
-export function ByType({ data }: { data: DashboardResponse }) {
-  const slices: Slice[] = data.enquiries.byType.map((t, i) => ({
-    key: t.type,
-    label: TYPE[t.type] ?? t.type,
-    value: t.count,
-    color: PALETTE[i % PALETTE.length],
-  }));
+  const load = useCallback(() => {
+    adminEnquiriesApi
+      .list({ pageSize: 7 })
+      .then((r) => {
+        setItems(r.items);
+        setFailed(false);
+      })
+      .catch(() => setFailed(true));
+  }, []);
+  useEffect(load, [load, data.generatedAt]);
+
+  const move = (id: string, status: EnquiryStatus) => {
+    setSaving(id);
+    adminEnquiriesApi
+      .setStatus(id, status)
+      .then(load)
+      .catch(() => setFailed(true))
+      .finally(() => setSaving(null));
+  };
+
   return (
-    <Card title="What they asked about" note="Enquiries by type." span={4} index={6}>
-      {(inView) =>
-        slices.length === 0 ? (
-          <p className="dv-empty">No enquiries in this period yet.</p>
+    <Card
+      title="Recent enquiries"
+      span={8}
+      index={4}
+      className="dv-table-card"
+      action={
+        <Link className="dv-link" href="/admin/enquiries">
+          View all
+        </Link>
+      }
+    >
+      {() =>
+        failed && !items ? (
+          <p className="dv-empty">The latest enquiries couldn&apos;t be loaded.</p>
+        ) : !items ? (
+          <p className="dv-empty">Loading…</p>
+        ) : items.length === 0 ? (
+          <p className="dv-empty">No enquiries yet.</p>
         ) : (
-          <Donut slices={slices} start={inView} centreLabel="enquiries" />
+          <div className="dv-table-wrap">
+            <table className="dv-enq">
+              <thead>
+                <tr>
+                  <th scope="col">Enquiry</th>
+                  <th scope="col">About</th>
+                  <th scope="col">Quote</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((r) => {
+                  const kind = r.productType ?? "";
+                  return (
+                    <tr key={r.id}>
+                      <td>
+                        <Link href={`/admin/enquiries/${r.id}`} className="dv-who">
+                          <span className="dv-avatar" aria-hidden="true">
+                            {initials(r.name)}
+                          </span>
+                          <span className="dv-list-text">
+                            <strong>{r.name}</strong>
+                            <small>{r.packageTitle ?? r.subject ?? r.reference}</small>
+                          </span>
+                        </Link>
+                      </td>
+                      <td>
+                        <span className={`dv-tone is-${KIND_TONE[kind] ?? "slate"}`}>
+                          {PRODUCT[kind] ?? TYPE[r.type] ?? r.type}
+                        </span>
+                      </td>
+                      <td className="dv-nowrap">
+                        {r.quotedTotalMinor ? money(r.quotedTotalMinor, r.currency ?? "USD") : "—"}
+                      </td>
+                      <td>
+                        <span className={`dv-tone is-${STATUS_TONE[r.status]}`}>{r.status}</span>
+                      </td>
+                      <td>
+                        <span className="dv-acts">
+                          <button
+                            type="button"
+                            className="dv-act"
+                            aria-label={`Mark ${r.name} contacted`}
+                            title="Mark contacted"
+                            disabled={r.status !== "New" || saving === r.id}
+                            onClick={() => move(r.id, "Contacted")}
+                          >
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="m6 12.5 4 4 8-9" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            className="dv-act"
+                            aria-label={`Close ${r.name}`}
+                            title="Close"
+                            disabled={r.status === "Closed" || saving === r.id}
+                            onClick={() => move(r.id, "Closed")}
+                          >
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="m7 7 10 10M17 7 7 17" />
+                            </svg>
+                          </button>
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )
       }
     </Card>
@@ -171,9 +247,8 @@ export function Awaiting({ data }: { data: DashboardResponse }) {
   return (
     <Card
       title="Needs a reply"
-      note={e.awaitingAll > 0 ? "Oldest first." : undefined}
       span={4}
-      index={9}
+      index={5}
       action={
         <Link className="dv-link" href="/admin/enquiries?status=New">
           View all {e.awaitingAll > 0 && <span>({e.awaitingAll})</span>}
@@ -217,6 +292,41 @@ export function Awaiting({ data }: { data: DashboardResponse }) {
   );
 }
 
+/** A ranked list with each share on the right, on a tinted card. */
+function Shares({
+  title,
+  note,
+  items,
+  empty,
+  index,
+}: {
+  title: string;
+  note: string;
+  items: { key: string; label: string; value: number }[];
+  empty: string;
+  index: number;
+}) {
+  const total = items.reduce((s, i) => s + i.value, 0);
+  return (
+    <Card title={title} note={note} span={4} index={index} className="is-tint">
+      {() =>
+        items.length === 0 ? (
+          <p className="dv-empty">{empty}</p>
+        ) : (
+          <ul className="dv-shares">
+            {items.map((i) => (
+              <li key={i.key}>
+                <span>{i.label}</span>
+                <strong>{Math.round((i.value / Math.max(1, total)) * 100)}%</strong>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Card>
+  );
+}
+
 export function EnquiryChart({ data }: { data: DashboardResponse }) {
   const [showPrevious, setShowPrevious] = useState(true);
   const chart = seriesPoints(data);
@@ -227,7 +337,7 @@ export function EnquiryChart({ data }: { data: DashboardResponse }) {
       title="Enquiries over time"
       note={`The last ${period}${showPrevious ? ", against the period before." : "."}`}
       span={8}
-      index={4}
+      index={6}
       action={
         <label className="dv-switch">
           <input type="checkbox" checked={showPrevious} onChange={(e) => setShowPrevious(e.target.checked)} />
@@ -264,35 +374,21 @@ export function EnquiryChart({ data }: { data: DashboardResponse }) {
   );
 }
 
-export function Destinations({ data }: { data: DashboardResponse }) {
-  const items = data.enquiries.byDestination.map((d, i) => ({
-    key: d.name,
-    label: d.name,
-    value: d.count,
-    color: i === 0 ? "#0b1726" : "#7da3d6",
-  }));
-  return (
-    <Card title="Where people want to go" note="Enquiries about a listing, by destination." span={4} index={10}>
-      {(inView) =>
-        items.length === 0 ? (
-          <p className="dv-empty">No enquiries about a listing in this period.</p>
-        ) : (
-          <BarList items={items} start={inView} />
-        )
-      }
-    </Card>
-  );
-}
-
 export function OverviewTab({ data }: { data: DashboardResponse }) {
+  const e = data.enquiries;
   return (
     <>
       <Kpis data={data} />
-      <EnquiryChart data={data} />
+      <RecentEnquiries data={data} />
       <Awaiting data={data} />
-      <Pipeline data={data} />
-      <ByType data={data} />
-      <Destinations data={data} />
+      <EnquiryChart data={data} />
+      <Shares
+        title="Where people want to go"
+        note="Share of listing enquiries."
+        items={e.byDestination.map((d) => ({ key: d.name, label: d.name, value: d.count }))}
+        empty="No enquiries about a listing in this period."
+        index={7}
+      />
     </>
   );
 }
