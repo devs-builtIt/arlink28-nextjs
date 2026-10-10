@@ -96,7 +96,7 @@ test.describe("the banner at the top of the inner pages", () => {
       radius: "12px",
       font: "Satoshi",
       weight: "500",
-      size: "64px",
+      size: "60px",
     });
   });
 
@@ -175,7 +175,7 @@ test.describe("the banner at the top of the inner pages", () => {
     for (const path of ["/about", "/engagement", "/packages", "/book/flight", "/privacy-policy", "/contact"]) {
       await page.goto(path);
       const m = await measure(page);
-      expect(m.size, `${path}: title size`).toBe("36px");
+      expect(m.size, `${path}: title size`).toBe("30px");
       expect(m.sideways, `${path}: no sideways scroll`).toBe(false);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     }

@@ -607,7 +607,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 176px;
+  min-height: 156px;
   padding: 20px;
   border-radius: 20px;
   background: var(--canvas-2);
@@ -624,45 +624,45 @@
   box-shadow: 0 14px 34px rgba(11, 23, 38, 0.12);
   transform: translateY(-2px);
 }
-/* The icon sits in a round white badge, and a round arrow badge waits in the corner. */
-.sh-mega-cards .hm-icon {
-  box-sizing: border-box;
-  width: 46px;
-  height: 46px;
-  padding: 12px;
+/* A round photograph stands in for an icon, and a round arrow badge waits in the corner. */
+.sh-mega-thumb {
+  width: 52px;
+  height: 52px;
   margin-bottom: auto;
   border-radius: 50%;
-  background: var(--canvas);
-  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.06);
-  color: var(--ink);
-  transition: background-color 0.25s ease;
+  object-fit: cover;
+  box-shadow:
+    0 0 0 3px var(--canvas),
+    0 2px 8px rgba(11, 23, 38, 0.12);
 }
-.sh-mega-cards a:hover .hm-icon {
-  background: var(--canvas-2);
-}
-.sh-mega-cards a::after {
-  content: "";
+.sh-mega-go {
   position: absolute;
   top: 20px;
   right: 20px;
+  display: grid;
+  place-items: center;
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background: var(--ink);
+  color: var(--canvas);
   opacity: 0;
-  transform: scale(0.8) rotate(-45deg);
+  transform: scale(0.8);
   transition:
     opacity 0.25s ease,
     transform 0.3s var(--ease);
-  -webkit-mask:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path d='M0 0h30v30H0z'/></svg>")
-      center / 100% 100%,
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M9 15h12M16.5 10.5 21 15l-4.5 4.5'/></svg>")
-      center / 100% 100%;
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
 }
-.sh-mega-cards a:hover::after {
+.sh-mega-go svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sh-mega-cards a:hover .sh-mega-go,
+.sh-mega-cards a:focus-visible .sh-mega-go {
   opacity: 1;
   transform: none;
 }
@@ -677,7 +677,8 @@
   border-radius: 50%;
   background: var(--red);
 }
-.sh-mega-cards a[aria-current="page"]:hover::before {
+.sh-mega-cards a[aria-current="page"]:hover::before,
+.sh-mega-cards a[aria-current="page"]:focus-visible::before {
   opacity: 0;
 }
 .sh-mega-title {
@@ -688,9 +689,6 @@
   font-weight: 500;
   letter-spacing: -0.04em;
   color: var(--ink);
-}
-.sh-mega-cards .sh-mega-title svg {
-  display: none;
 }
 .sh-mega-title svg,
 .sh-mega-links svg {
@@ -834,7 +832,7 @@ body:has(.hm-phero) .sh:not(.is-scrolled) {
   padding: 0 18px;
   border: 0;
   box-shadow: none;
-  margin-top: 14px;
+  margin-top: 18px;
   background: var(--canvas-2);
   color: var(--ink);
   font-size: 14px;
