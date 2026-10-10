@@ -5,6 +5,7 @@ import Gallery, { type GalleryImage } from "@/components/packages/Gallery";
 import SectionTabs from "@/components/packages/SectionTabs";
 import ProductEnquiryCard from "@/components/products/ProductEnquiryCard";
 import { paragraphs } from "@/utils/packages";
+import { isUploaded, testPhotosEnabled, testPhotosFor } from "@/utils/testPhotos";
 import { PUBLIC, headline, notes, publicPath, specRows, type PublicType } from "@/utils/publicProducts";
 
 /** The page's title, description and share image, the same way the holiday package page sets them. */
@@ -29,10 +30,20 @@ export function productMetadata(pkg: PackageDetail, type: PublicType): Metadata 
 export default function ProductDetail({ pkg, type }: { pkg: PackageDetail; type: PublicType }) {
   const copy = PUBLIC[type];
 
-  const images: GalleryImage[] = [...pkg.media]
+  const ownImages: GalleryImage[] = [...pkg.media]
     .filter((m) => !m.videoProvider)
     .sort((a, b) => (a.role === "Hero" ? -1 : b.role === "Hero" ? 1 : a.sortKey - b.sortKey))
     .map((m) => ({ id: m.id, src: m.path, alt: m.alt ?? pkg.title, caption: m.caption }));
+  // While there is no real photography (see utils/testPhotos.ts), a listing with no uploaded photo gets stock ones.
+  const images: GalleryImage[] =
+    testPhotosEnabled() && !ownImages.some((i) => isUploaded(i.src))
+      ? testPhotosFor(pkg.slug, pkg.destination.slug, { count: 5, width: 1400 }).map((p, i) => ({
+          id: `test-${i}`,
+          src: p.src,
+          alt: p.alt,
+          label: "Test photo",
+        }))
+      : ownImages;
 
   const rows = specRows(type, pkg.details, pkg.baseCurrency);
   const extra = notes(type, pkg.details);

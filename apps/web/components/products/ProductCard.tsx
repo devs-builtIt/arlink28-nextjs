@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { PackageCard as Card } from "@arlink28/api-client";
 import SaveButton from "@/components/packages/SaveButton";
 import { priceLabel } from "@/utils/packages";
+import { isUploaded, testPhotosEnabled, testPhotosFor } from "@/utils/testPhotos";
 import { PUBLIC, cardFacts, headline, publicPath, type PublicType } from "@/utils/publicProducts";
 
 /** One flight, hotel or visa in a listing: the photo if there is one, what it is, and what it costs. */
@@ -17,19 +18,17 @@ export default function ProductCard({
   const copy = PUBLIC[type];
   const line = headline(type, pkg.details);
   const facts = cardFacts(type, pkg.details);
+  // While there is no real photography (see utils/testPhotos.ts), a stock photo stands in for a missing one.
+  const photo =
+    testPhotosEnabled() && !isUploaded(pkg.heroImagePath)
+      ? testPhotosFor(pkg.slug, pkg.destination.slug, { count: 1, width: 900 })[0].src
+      : pkg.heroImagePath;
 
   return (
     <article className="pkgs-card">
       <div className="pkgs-card-media">
-        {pkg.heroImagePath ? (
-          <img
-            src={pkg.heroImagePath}
-            alt=""
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            width={720}
-            height={576}
-          />
+        {photo ? (
+          <img src={photo} alt="" loading={priority ? "eager" : "lazy"} decoding="async" width={720} height={576} />
         ) : (
           <span className="pkgs-card-noimage">
             <i className="fa-regular fa-image" aria-hidden="true"></i>
