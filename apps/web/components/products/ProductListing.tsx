@@ -12,9 +12,9 @@ import PageBanner from "@/components/PageBanner";
 type SearchParams = Record<string, string | string[] | undefined>;
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? "";
 
-const PHOTO: Record<PublicType, "flights" | "hotels" | "visas"> = {
+const PHOTO: Record<PublicType, "banner" | "flights" | "visas"> = {
   Flight: "flights",
-  HotelReservation: "hotels",
+  HotelReservation: "banner",
   VisaSupport: "visas",
 };
 
