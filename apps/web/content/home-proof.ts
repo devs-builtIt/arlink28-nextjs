@@ -187,6 +187,10 @@ export const FAQ = [
     a: "Send a quote request with your route and dates. A member of the team replies with options and a price, and books it once you agree.",
   },
   {
+    q: "Do I pay anything when I send a request?",
+    a: "No. Sending a quote request is free, and nothing is charged until you have seen the price and agreed to it.",
+  },
+  {
     q: "Can you help with visas as well as flights?",
     a: "Yes. We guide the application and the documents for the country you are travelling to, and can arrange it alongside your flight so it is one conversation.",
   },

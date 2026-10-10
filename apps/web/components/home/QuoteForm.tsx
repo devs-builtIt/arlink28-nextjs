@@ -225,7 +225,7 @@ export default function QuoteForm() {
           {failure}
         </p>
       )}
-      <button type="submit" className="hm-btn hm-btn-dark" disabled={sending}>
+      <button type="submit" className="hm-btn hm-btn-primary" disabled={sending}>
         {sending ? "Sending..." : "Send my request"}
       </button>
     </form>

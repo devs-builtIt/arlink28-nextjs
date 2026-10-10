@@ -48,10 +48,14 @@ export default function ResultsBar({
     params.partner && { key: "partner" as const, label: partnerName ?? params.partner },
   ].filter(Boolean) as { key: keyof ListingParams; label: string }[];
 
+  // With nothing to count, the empty-state card below says so; the bar only stays to let filters be removed.
+  const empty = total === 0;
+  if (empty && chips.length === 0) return null;
+
   return (
     <div className="pkgs-resultsbar" id="results">
       <div className="pkgs-resultsbar-main">
-        <h2 role="status">
+        <h2 role="status" className={empty ? "sr-only" : undefined}>
           {total === null
             ? noun[1].charAt(0).toUpperCase() + noun[1].slice(1)
             : total === 1
@@ -83,7 +87,7 @@ export default function ResultsBar({
         )}
       </div>
 
-      <div className="pkgs-sort">
+      <div className="pkgs-sort" hidden={empty}>
         <span>Sort by</span>
         <Dropdown
           id="pkgs-sort"

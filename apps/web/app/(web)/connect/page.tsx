@@ -1,24 +1,141 @@
 import type { Metadata } from "next";
-import "../styles/destinations.css";
-
-import "../styles/connect-inline.css";
-
 import Link from "next/link";
+import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
+import ClosingCta from "@/components/home/ClosingCta";
+import Reveal from "@/components/home/Reveal";
 
 export const metadata: Metadata = {
-  title: "Connect | ARLink28 - Connecting Dreams, Connecting Africa",
+  title: "Connect | ARLink28",
   description:
-    "ARLink28 is a Pan-African travel and aviation company building the foundations for seamless regional mobility, strategic partnerships, and African connectivity.",
+    "ARLink28 is a Pan-African travel company building towards an airline, with the aim of making movement across Africa easier and better connected.",
 };
+
+// The vision and the work, in plain statements. What is planned is written as planned, not as done.
+const VISION = [
+  {
+    title: "Accessible travel",
+    text: "We want people to move easily between countries for business, tourism, education, investment, family and culture. By reducing the barriers to travel within Africa, we aim to make regional mobility open to everyone.",
+  },
+  {
+    title: "Cross-regional links",
+    text: "We aim to strengthen direct connections between West, East, Central, Southern and North Africa, reducing unnecessary multi-stop journeys and linking key commercial and cultural hubs.",
+  },
+  {
+    title: "An aviation future",
+    text: "We are building towards a wider aviation future, with a role in connecting underserved African markets, on routes where there is commercial demand but few travel options.",
+  },
+  {
+    title: "Sustainable growth",
+    text: "Our expansion is grounded in connectivity before scale, partnerships before ownership, and solid operational foundations before rapid growth.",
+  },
+];
+
+type Activity = {
+  title: string;
+  line: string;
+  text: string;
+  image: string;
+  alt: string;
+  focus?: string;
+  cta?: string;
+  href?: string;
+};
+
+const TODAY: Activity[] = [
+  {
+    title: "Travel booking",
+    line: "From first search to arrival",
+    text: "We provide supported travel booking through our website and direct channels such as WhatsApp, guiding each customer from the first search to arrival.",
+    image: "/images/home/team-support.webp",
+    alt: "A member of the ARLink28 team on the phone at a desk",
+    focus: "50% 12%",
+    cta: "Get a quote",
+    href: "/quote",
+  },
+  {
+    title: "Hotels and resort packages",
+    line: "Curated stays and escapes",
+    text: "We work with African hospitality properties, such as Blue Ocean Resort & Residences in Zanzibar, on curated stays, escapes and safari packages.",
+    image: "/images/home/hero-zanzibar-1920.webp",
+    alt: "A sandbar surrounded by turquoise water, seen from above, in Zanzibar",
+    cta: "See packages",
+    href: "/packages",
+  },
+  {
+    title: "Tourism and destinations",
+    line: "Working with local partners",
+    text: "We work with tourism boards, hospitality providers and local tour operators to bring visitors to emerging and established destinations.",
+    image: "/images/connect/tourism.webp",
+    alt: "Three members of the ARLink28 team at the Spotlight on Africa and Indian Ocean Islands TravelExpo",
+    focus: "50% 30%",
+    cta: "Explore destinations",
+    href: "/destinations",
+  },
+  {
+    title: "Private aviation",
+    line: "An asset-light approach to charter",
+    text: "We connect corporate executives, government delegations and institutional clients with appropriately licensed aircraft operators.",
+    image: "/images/home/jet-challenger-604-1600.webp",
+    alt: "A silver Challenger 604 with a red stripe on the apron",
+    cta: "See the tiers",
+    href: "/elite-jets",
+  },
+  {
+    title: "Aviation partnerships",
+    line: "Airlines, airports, regulators",
+    text: "We engage with airlines, airport authorities, regulators and industry leaders, including at global summits, to build regional networks and better links between airlines.",
+    image: "/images/connect/farnborough.webp",
+    alt: "The Apex of Aviation lettering at the Farnborough International Airshow",
+    cta: "See our engagements",
+    href: "/engagement",
+  },
+  {
+    title: "Building a network",
+    line: "UK, Nigeria and East Africa",
+    text: "We are setting up operations in key gateways, starting with the UK and Nigeria, with a focus on East Africa (Kenya and Ethiopia), and will extend to markets where there is clear demand.",
+    image: "/images/connect/network.webp",
+    alt: "A map of Africa at night with the planned routes between Lagos, Addis Ababa, Nairobi, Johannesburg, Dakar, Accra and Cairo",
+  },
+  {
+    title: "Technology",
+    line: "The data behind the routes",
+    text: "We use travel data and booking patterns to see where route demand is emerging and to improve the customer experience, which will inform future route planning.",
+    image: "/images/services/flights.webp",
+    alt: "A passport in the shape of Africa beside a laptop showing a flight search",
+    focus: "50% 88%",
+  },
+  {
+    title: "Compliance and readiness",
+    line: "Foundations before flying",
+    text: "We are building corporate governance, legal frameworks and regulatory credentials step by step before moving to full airline operations.",
+    image: "/images/connect/lords.webp",
+    alt: "Guests gathered under a large painting at an African leadership event in the House of Lords",
+    focus: "50% 40%",
+  },
+];
+
+const WHY = [
+  { title: "Internal connectivity", text: "Making travel between African countries easier, faster and more direct." },
+  { title: "Discoverable destinations", text: "Showing African culture, commercial centres and natural wonders." },
+  { title: "Business mobility", text: "Helping entrepreneurs and investors move across regional markets." },
+  { title: "Economic opportunity", text: "Supporting local jobs, hospitality providers and tourism growth." },
+];
 
 export default function ConnectPage() {
   return (
-    <>
+    <div className="hm">
+      <Reveal />
       <PageBanner
         label="Connect"
-        title="ARLink28, connecting Africa"
-        intro="ARLink28 is a Pan-African travel and aviation-focused company created with a long-term vision of making movement across Africa easier, more connected, more efficient, and more commercially accessible."
+        title={
+          <>
+            ARLink28,
+            <br />
+            connecting Africa
+          </>
+        }
+        intro="A Pan-African travel company building towards an airline, to make moving across Africa easier and better connected."
         actions={
           <>
             <a className="pb-btn pb-btn-primary" href="#vision">
@@ -30,320 +147,149 @@ export default function ConnectPage() {
           </>
         }
       />
-      <section className="connect-section" id="overview">
-        <div
-          className="dest-section-header reveal"
-          style={{ textAlign: "center", maxWidth: "860px", margin: "0 auto 40px" }}
-        >
-          <span className="section-tag">Building The Ecosystem</span>
-          <h2>
-            Connecting The Links Between <span className="highlight-red">African Nations</span>
+
+      <section className="hm-sec hm-sec-white" id="overview" data-tone="light" aria-labelledby="cn-gap">
+        <div className="hm-wrap">
+          <div className="ab-split">
+            <div className="ab-side">
+              <h2 className="hm-title hm-title-left" id="cn-gap" data-rv>
+                <span className="hm-sticker" aria-hidden="true">
+                  The gap
+                </span>
+                Moving between
+                <br />
+                <span className="hm-dim">African countries.</span>
+              </h2>
+            </div>
+            <div className="ab-body">
+              <p className="ab-lead" data-rv>
+                Africa is a continent of enormous opportunity, yet moving between its countries is still harder than it
+                should be.
+              </p>
+              <p data-rv style={{ ["--i" as string]: 1 }}>
+                Travellers often connect through Europe or the Middle East to reach another African destination.
+                Businesses face complicated routes, tourists meet fragmented booking, and many destinations stay
+                underserved despite their economic and tourism potential.
+              </p>
+            </div>
+          </div>
+
+          <figure className="cn-quote" data-rv>
+            <span className="hm-sticker" aria-hidden="true">
+              Foundations first
+            </span>
+            <blockquote>
+              A connected Africa takes more than aircraft. It takes tourism, technology, infrastructure, partnerships,
+              distribution, trust, regulation and strong commercial relationships, and an understanding of how people
+              actually move across the continent. That is what ARLink28 is building.
+            </blockquote>
+          </figure>
+        </div>
+      </section>
+
+      <section className="hm-sec" id="vision" aria-labelledby="cn-vision">
+        <div className="hm-wrap">
+          <h2 className="hm-title hm-title-left cn-heading" id="cn-vision" data-rv>
+            <span className="hm-sticker" aria-hidden="true">
+              Our vision
+            </span>
+            Where we are
+            <br />
+            <span className="hm-dim">heading.</span>
           </h2>
-          <p style={{ fontSize: "16.5px", lineHeight: "1.8", color: "var(--text-muted)", marginTop: "16px" }}>
-            Africa is a continent of enormous opportunity, yet moving between its countries can still be more difficult
-            than it should be. In many cases, travellers must connect through Europe or the Middle East before reaching
-            another African destination. Businesses face complex travel routes, tourists encounter fragmented booking
-            experiences, and many destinations remain underserved despite their economic and tourism potential.
-          </p>
-        </div>
-        <div className="philosophy-banner reveal-scale">
-          <h3>Foundations First Philosophy</h3>
-          <p>
-            "We believe that a truly connected Africa requires more than aircraft. It requires tourism, technology,
-            infrastructure, partnerships, distribution, trust, regulation, strong commercial relationships, and an
-            understanding of how people actually move across the continent. That is the ecosystem ARLink28 is building."
-          </p>
+          <ul className="cn-vision">
+            {VISION.map((v, i) => (
+              <li key={v.title} data-rv style={{ ["--i" as string]: i % 2 }}>
+                <h3>{v.title}</h3>
+                <p>{v.text}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
-      <section className="connect-section" id="vision" style={{ paddingTop: "0" }}>
-        <div className="dest-section-header reveal">
-          <div className="dest-section-header-left">
-            <span className="section-tag">Our Vision</span>
-            <h2>
-              Shaping The Future of <span className="highlight-red">African Mobility</span>
-            </h2>
-          </div>
-          <p>
-            Building a future where travelling across Africa feels simpler, more natural, and accessible for everyone.
-          </p>
-        </div>
-        <div className="editorial-content-box reveal">
-          <div className="editorial-paragraph-item">
-            <div className="editorial-item-header">
-              <div className="connect-icon-inline">
-                <i className="fa-solid fa-earth-africa"></i>
-              </div>
-              <h3>Accessible Travel</h3>
-            </div>
-            <p>
-              We envision an Africa where people move easily between countries for business, tourism, education,
-              investment, family, culture, and opportunity. By breaking down traditional barriers to intra-African
-              travel, we aim to make regional mobility seamless and universally accessible for all travellers.
-            </p>
-          </div>
-          <div className="editorial-paragraph-item">
-            <div className="editorial-item-header">
-              <div className="connect-icon-inline">
-                <i className="fa-solid fa-diagram-project"></i>
-              </div>
-              <h3>Cross-Regional Links</h3>
-            </div>
-            <p>
-              Our mission centers on creating stronger, direct connections between West Africa, East Africa, Central
-              Africa, Southern Africa, and North Africa. Through integrated travel systems, we eliminate unnecessary
-              multi-stop detours and connect key commercial and cultural hubs directly across regions.
-            </p>
-          </div>
-          <div className="editorial-paragraph-item">
-            <div className="editorial-item-header">
-              <div className="connect-icon-inline">
-                <i className="fa-solid fa-plane-up"></i>
-              </div>
-              <h3>Aviation Future</h3>
-            </div>
-            <p>
-              We are actively building towards a wider, more inclusive aviation future. Our goal is to play a
-              meaningful, transformative role in connecting underserved and fragmented African markets, laying down
-              routes where commercial demand exists but travel options have traditionally been limited.
-            </p>
-          </div>
-          <div className="editorial-paragraph-item">
-            <div className="editorial-item-header">
-              <div className="connect-icon-inline">
-                <i className="fa-solid fa-seedling"></i>
-              </div>
-              <h3>Sustainable Growth</h3>
-            </div>
-            <p>
-              Our strategic expansion is grounded in connectivity before scale, strategic partnerships before
-              unnecessary ownership, and rock-solid operational foundations before rapid growth. This disciplined focus
-              ensures long-term commercial viability and sustainable value for African communities.
-            </p>
-          </div>
-        </div>
-      </section>
-      <section className="connect-section" id="pillars">
-        <div className="dest-section-header reveal">
-          <div className="dest-section-header-left">
-            <span className="section-tag">Current Operations</span>
-            <h2>
-              What ARLink28
-              <span className="highlight-red">Does Today</span>
-            </h2>
-          </div>
-          <p>
-            Developing commercial and strategic foundations while delivering high-quality travel services across the
-            continent.
-          </p>
-        </div>
-        <div className="editorial-pillars-container">
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">01</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-ticket"></i>
-                <h3>Travel Booking Services</h3>
-              </div>
-              <p>
-                ARLink28 provides fully supported travel booking services through intuitive digital platforms and direct
-                personalized channels such as WhatsApp. We ensure every customer feels guided, informed, and cared for
-                from their initial search through to final arrival at their destination.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">02</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-hotel"></i>
-                <h3>Hotels & Resort Packages</h3>
-              </div>
-              <p>
-                We collaborate closely with premium African hospitality properties—such as Blue Ocean Resort &
-                Residences in Zanzibar—to deliver curated stays, luxury escapes, and safari packages that showcase the
-                finest destinations across the continent.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">03</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-route"></i>
-                <h3>Tourism & Destination Development</h3>
-              </div>
-              <p>
-                We actively strengthen regional tourism ecosystems by partnering with tourism boards, hospitality
-                providers, and local tour operators. Together, we drive visitor traffic and foster vibrant economic
-                activity across emerging and established African destinations.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">04</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-jet-fighter-up"></i>
-                <h3>Private Aviation Development</h3>
-              </div>
-              <p>
-                Pioneering an asset-light charter model, we connect corporate executives, government delegations, and
-                institutional clients with appropriately licensed aircraft operators, providing flexible, confidential,
-                and efficient private air travel solutions.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">05</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-handshake"></i>
-                <h3>Strategic Aviation Partnerships</h3>
-              </div>
-              <p>
-                We engage proactively with commercial airlines, airport authorities, aviation regulators, and industry
-                leaders at global summits to build collaborative regional networks and streamline inter-airline
-                connectivity across African markets.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">06</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-network-wired"></i>
-                <h3>Building an African Network</h3>
-              </div>
-              <p>
-                We are establishing deliberate operational hubs starting with key gateways in the UK and Nigeria,
-                focusing strategically on East Africa (Kenya & Ethiopia), and expanding into new markets wherever clear
-                economic and commercial demand exists.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">07</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-code"></i>
-                <h3>Technology & Digital Systems</h3>
-              </div>
-              <p>
-                By leveraging advanced travel data analytics and passenger booking patterns, we identify emerging route
-                demand, optimize customer touchpoints, and map future flight schedules to better serve underserved
-                travel corridors across Africa.
-              </p>
-            </div>
-          </div>
-          <div className="editorial-pillar-row reveal">
-            <div className="editorial-pillar-badge">08</div>
-            <div className="editorial-pillar-content">
-              <div className="editorial-pillar-title">
-                <i className="fa-solid fa-shield-halved"></i>
-                <h3>Compliance & Aviation Readiness</h3>
-              </div>
-              <p>
-                We prioritize building robust corporate governance structures, legal frameworks, and regulatory
-                credentials progressively before initiating full operational airline scaling, ensuring total safety,
-                trust, and regulatory alignment.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="connect-section" style={{ paddingTop: "0" }}>
-        <div className="why-exists-box reveal">
-          <span className="section-tag" style={{ background: "rgba(230,30,43,0.15)", color: "#e61e2b" }}>
-            Our Core Purpose
-          </span>
-          <h2 style={{ fontSize: "32px", fontWeight: "800", color: "var(--text-main)", marginTop: "12px" }}>
-            Why ARLink28 Exists
+
+      <section className="hm-sec hm-sec-white" id="pillars" data-tone="light" aria-labelledby="cn-today">
+        <div className="hm-wrap">
+          <h2 className="hm-title hm-title-left cn-heading" id="cn-today" data-rv>
+            <span className="hm-sticker" aria-hidden="true">
+              Today
+            </span>
+            What ARLink28
+            <br />
+            <span className="hm-dim">does today.</span>
           </h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "16px", marginTop: "8px" }}>
-            Africa deserves stronger internal connectivity. ARLink28 exists because the future of African travel should
-            increasingly be shaped by organisations that understand Africa’s markets, people, challenges, and potential.
-          </p>
-          <div className="why-exists-list">
-            <div className="why-exists-item">
-              <i className="fa-solid fa-circle-check"></i>
-              <p>
-                <strong>Internal Connectivity:</strong>
-                Making travel between African countries easier, faster, and direct.
-              </p>
+          <ul className="svc-list is-stack">
+            {TODAY.map((t, i) => (
+              <li key={t.title} className="svc" style={{ ["--i" as string]: i }}>
+                <div className="svc-info">
+                  <span className="cn-no">{String(i + 1).padStart(2, "0")}</span>
+                  <h3>
+                    {t.title}
+                    <br />
+                    <span className="hm-dim">{t.line}</span>
+                  </h3>
+                  <p>{t.text}</p>
+                  {t.cta && t.href && (
+                    <Link className="hm-btn hm-btn-primary" href={t.href}>
+                      {t.cta}
+                    </Link>
+                  )}
+                </div>
+                <div className="svc-photo">
+                  <img
+                    src={t.image}
+                    alt={t.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={1600}
+                    height={1000}
+                    style={t.focus ? { objectPosition: t.focus } : undefined}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="hm-sec" aria-labelledby="cn-why">
+        <div className="hm-wrap">
+          <div className="ab-split">
+            <div className="ab-side">
+              <h2 className="hm-title hm-title-left" id="cn-why" data-rv>
+                <span className="hm-sticker" aria-hidden="true">
+                  Our purpose
+                </span>
+                Why ARLink28
+                <br />
+                <span className="hm-dim">exists.</span>
+              </h2>
             </div>
-            <div className="why-exists-item">
-              <i className="fa-solid fa-circle-check"></i>
-              <p>
-                <strong>Discoverable Destinations:</strong>
-                Showcasing extraordinary African culture, commercial centers, and natural wonders.
+            <div className="ab-body">
+              <p className="ab-lead" data-rv>
+                Africa deserves stronger connections within itself. The future of African travel should increasingly be
+                shaped by organisations that understand Africa&rsquo;s markets, people, challenges and potential.
               </p>
-            </div>
-            <div className="why-exists-item">
-              <i className="fa-solid fa-circle-check"></i>
-              <p>
-                <strong>Business Mobility:</strong>
-                Enabling entrepreneurs and investors to move efficiently across regional markets.
-              </p>
-            </div>
-            <div className="why-exists-item">
-              <i className="fa-solid fa-circle-check"></i>
-              <p>
-                <strong>Economic Opportunity:</strong>
-                Supporting local jobs, hospitality providers, and tourism growth.
-              </p>
+              <ul className="cn-why">
+                {WHY.map((w, i) => (
+                  <li key={w.title} data-rv style={{ ["--i" as string]: i }}>
+                    <strong>{w.title}</strong>
+                    <span>{w.text}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
-      <section className="cta-adventure">
-        <div className="cta-banner reveal-scale">
-          <div className="cta-content">
-            <h2>
-              Join Us In Building
-              <br />
-              The Future of African Travel
-            </h2>
-            <p>Connect with our team for strategic partnerships, travel arrangements, or commercial collaborations.</p>
-            <Link className="btn btn-primary" href="/contact">
-              Get in Touch
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-          <div className="cta-visual">
-            <img
-              alt="ARLinks Airplane"
-              loading="lazy"
-              width="580"
-              height="350"
-              decoding="async"
-              className="cta-plane"
-              src="/images/IMG_5238.png"
-              style={{ width: "130%", height: "auto", objectFit: "contain" }}
-            />
-          </div>
-        </div>
-      </section>
-      <section className="newsletter-bar" id="register">
-        <div className="newsletter-container">
-          <div className="newsletter-info reveal-left">
-            <i className="fa-regular fa-envelope-open newsletter-icon"></i>
-            <div className="newsletter-text">
-              <h4>Stay connected with ARLink28</h4>
-              <p>Get the latest updates on regional travel routes, destination packages, and aviation announcements.</p>
-            </div>
-          </div>
-          <div className="newsletter-form-container reveal-right">
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email address" required aria-label="Email for newsletter" />
-              <button type="submit">Subscribe</button>
-            </form>
-            <div className="newsletter-agree">
-              <input type="checkbox" id="newsletter-check" required />
-              <label htmlFor="newsletter-check">I agree to terms & privacy policy</label>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+
+      <ClosingCta
+        pill="Partnerships"
+        heading={["Partner with us.", "Let's connect Africa."]}
+        text="Tell us how you would like to work with ARLink28: strategic partnerships, travel arrangements or commercial collaborations."
+        cta="Get in touch"
+        href="/contact"
+      />
+    </div>
   );
 }

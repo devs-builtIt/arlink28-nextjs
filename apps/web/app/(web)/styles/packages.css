@@ -3,7 +3,7 @@
  *
  * The site's dark header and footer stay. Between them the content sits on a light, high-contrast
  * surface, because a package is a lot of information (what is included, what it costs, what
- * to book) and it has to be read, compared and trusted. Same typeface (Outfit) and the same red
+ * to book) and it has to be read, compared and trusted. Same typeface (Satoshi) and the same red
  * for the one primary action. No glows, no blur.
  *
  * Every rule hangs off a .pkgs-* class. The site's own bare `nav`, `nav a` and `header` rules
@@ -90,7 +90,7 @@
   padding-right: var(--gutter);
   background: var(--canvas);
   color: var(--ink);
-  font-family: Outfit, sans-serif;
+  font-family: var(--font);
 }
 .pkgs-page :where(h1, h2, h3, p, ul, ol, dl, dd, figure, fieldset),
 .pkgs-detail :where(h1, h2, h3, p, ul, ol, dl, dd, figure, fieldset) {
@@ -112,22 +112,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 22px;
+  gap: 10px;
+  min-height: 48px;
+  padding: 9px 9px 9px 24px;
   border: 1px solid var(--red);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--red);
   color: #fff;
-  font:
-    600 15px/1 Outfit,
-    sans-serif;
+  font: 700 14px/1 var(--font);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 0.15s,
     border-color 0.15s;
+  text-transform: capitalize;
 }
 .pkgs-button:hover {
   border-color: var(--red-deep);
@@ -142,9 +141,7 @@
   border: 0;
   background: none;
   color: var(--ink);
-  font:
-    500 14px Outfit,
-    sans-serif;
+  font: 500 14px var(--font);
   text-decoration: underline;
   cursor: pointer;
 }
@@ -225,11 +222,10 @@
   grid-template-columns: 1.7fr 1fr 1fr 1fr auto;
   align-items: stretch;
   gap: 0;
-  padding: 4px;
-  border: 3px solid var(--red);
-  border-radius: 12px;
+  padding: 6px 6px 6px 12px;
+  border-radius: 999px;
   background: var(--surface);
-  box-shadow: 0 6px 20px rgba(11, 23, 38, 0.14);
+  box-shadow: 0 10px 28px rgba(11, 23, 38, 0.12);
 }
 .pkgs-search-short {
   grid-template-columns: 2fr 1fr auto;
@@ -242,13 +238,17 @@
   align-content: center;
   gap: 2px;
   min-width: 0;
-  padding: 8px 16px;
-  border-right: 1px solid var(--line);
+  padding: 10px 22px;
+  /* A short divider between fields, drawn as a background so it stops short of the bar's edges. */
+  background: linear-gradient(var(--line), var(--line)) right center / 1px 52% no-repeat;
   cursor: pointer;
+}
+.pkgs-seg:has(+ .pkgs-search-button) {
+  background-image: none;
 }
 .pkgs-seg:focus-within {
   background: var(--canvas);
-  border-radius: 8px;
+  border-radius: 999px;
 }
 .pkgs-seg-label {
   color: var(--muted);
@@ -273,9 +273,7 @@
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font:
-    500 16px Outfit,
-    sans-serif;
+  font: 500 16px var(--font);
   text-overflow: ellipsis;
 }
 .pkgs-seg select {
@@ -289,18 +287,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 132px;
   margin-left: 4px;
-  padding: 0 28px;
+  padding: 6px 6px 6px 26px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--red);
   color: #fff;
-  font:
-    600 17px Outfit,
-    sans-serif;
+  font: 700 15px/1 var(--font);
   cursor: pointer;
+  text-transform: capitalize;
 }
 .pkgs-search-button:hover {
   background: var(--red-deep);
@@ -354,9 +351,7 @@
   border-radius: 999px;
   background: var(--surface);
   color: var(--ink);
-  font:
-    500 14px Outfit,
-    sans-serif;
+  font: 500 14px var(--font);
   cursor: pointer;
 }
 .pkgs-chip:hover {
@@ -374,6 +369,9 @@
   color: var(--muted);
   font-size: 14px;
 }
+.pkgs-sort[hidden] {
+  display: none;
+}
 .pkgs-sort select {
   min-width: 190px;
   height: 40px;
@@ -382,9 +380,7 @@
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
-  font:
-    500 15px Outfit,
-    sans-serif;
+  font: 500 15px var(--font);
 }
 
 .pkgs-results {
@@ -433,13 +429,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 12px;
   background: var(--surface);
-  transition: border-color 0.15s;
+  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
+  transition: box-shadow 0.2s;
 }
 .pkgs-card:hover {
-  border-color: var(--line-strong);
+  box-shadow: 0 12px 32px rgba(11, 23, 38, 0.1);
 }
 .pkgs-card-media {
   position: relative;
@@ -538,10 +535,10 @@
 }
 .pkgs-tag {
   justify-self: start;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--green);
-  color: #fff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 14%, transparent);
+  color: var(--green);
   font-size: 13px;
   font-weight: 500;
 }
@@ -590,15 +587,17 @@
 .pkgs-card-cta {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 0 16px;
-  border-radius: 8px;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 6px 6px 6px 20px;
+  border-radius: 999px;
   background: var(--red);
   color: #fff;
   font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
+  font: 700 14px/1 var(--font);
+  text-transform: capitalize;
 }
 .pkgs-card:hover .pkgs-card-cta {
   background: var(--red-deep);
@@ -669,10 +668,10 @@
   margin-bottom: 20px;
 }
 .pkgs-detail-head h1 {
-  font-size: clamp(28px, 3.6vw, 40px);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-size: clamp(30px, 4.2vw, 48px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
 }
 .pkgs-detail-sub {
   margin-top: 8px;
@@ -758,9 +757,7 @@
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
-  font:
-    500 14px Outfit,
-    sans-serif;
+  font: 500 14px var(--font);
   cursor: pointer;
 }
 .pkgs-gallery-all:hover {
@@ -901,12 +898,12 @@
 .pkgs-main {
   min-width: 0;
   padding: 0 34px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--surface);
+  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
 }
 .pkgs-section {
-  padding: 28px 0 8px;
+  padding: 28px 0 28px;
   scroll-margin-top: 80px;
 }
 .pkgs-section:last-child {
@@ -914,9 +911,9 @@
 }
 .pkgs-section h2 {
   margin-bottom: 18px;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
 }
 .pkgs-section-head {
   display: flex;
@@ -956,16 +953,13 @@
 .pkgs-keyfacts {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
   margin-bottom: 24px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
 }
 .pkgs-keyfacts > div {
   padding: 14px 18px;
-  border-left: 1px solid var(--line);
-}
-.pkgs-keyfacts > div:first-child {
-  border-left: 0;
+  border-radius: 12px;
+  background: var(--canvas);
 }
 .pkgs-keyfacts dt {
   color: var(--muted);
@@ -1213,8 +1207,8 @@
 }
 .pkgs-reviews li {
   padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
+  background: var(--canvas);
 }
 .pkgs-review-top {
   display: flex;
@@ -1244,9 +1238,9 @@
   display: grid;
   gap: 16px;
   padding: 24px;
-  border: 1px solid var(--line-strong);
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--surface);
+  box-shadow: 0 12px 32px rgba(11, 23, 38, 0.08);
 }
 .pkgs-book-price {
   position: relative;
@@ -1292,9 +1286,7 @@
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
-  font:
-    400 16px Outfit,
-    sans-serif;
+  font: 400 16px var(--font);
 }
 .pkgs-book-coverage {
   margin: 0;
@@ -1318,9 +1310,9 @@
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--canvas);
   color: var(--ink);
   font-size: 14px;
   cursor: pointer;
@@ -1398,8 +1390,8 @@
     align-items: center;
     gap: 10px;
     padding: 10px 4%;
-    border-top: 1px solid var(--line-strong);
     background: var(--surface);
+    box-shadow: 0 -8px 24px rgba(11, 23, 38, 0.08);
   }
   .pkgs-mobilebar div {
     display: grid;
@@ -1417,10 +1409,13 @@
   }
   .pkgs-mobilebar .pkgs-button {
     min-height: 42px;
-    padding: 0 16px;
-    background: var(--surface);
+    padding: 0 18px;
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
     color: var(--ink);
-    border-color: var(--line-strong);
+    border-color: transparent;
+  }
+  .pkgs-mobilebar .pkgs-button::before {
+    display: none;
   }
   .pkgs-mobilebar .pkgs-button-solid {
     border-color: var(--red);
@@ -1432,6 +1427,11 @@
 @media (max-width: 900px) {
   .pkgs-search {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 8px;
+    border-radius: 28px;
+  }
+  .pkgs-seg {
+    background-image: none;
   }
   .pkgs-seg-wide {
     grid-column: 1 / -1;
@@ -1441,12 +1441,6 @@
   }
   .pkgs-keyfacts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .pkgs-keyfacts > div:nth-child(3) {
-    border-left: 0;
-  }
-  .pkgs-keyfacts > div:nth-child(n + 3) {
-    border-top: 1px solid var(--line);
   }
   .pkgs-included,
   .pkgs-reviews {
@@ -1482,9 +1476,10 @@
   .pkgs-search {
     grid-template-columns: minmax(0, 1fr);
     padding: 8px;
+    border-radius: 24px;
   }
   .pkgs-seg {
-    border-right: 0;
+    border-radius: 16px;
     border-bottom: 1px solid var(--line);
   }
   .pkgs-seg:last-of-type {
@@ -1520,15 +1515,17 @@
 /* ── Flights, hotels and visas: the details table on their pages ────── */
 
 .pkgs-spec {
+  display: grid;
+  gap: 8px;
   margin: 0 0 24px;
-  border-top: 1px solid var(--line);
 }
 .pkgs-spec > div {
   display: grid;
   grid-template-columns: minmax(120px, 200px) minmax(0, 1fr);
   gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: var(--canvas);
 }
 .pkgs-spec dt {
   color: var(--muted);

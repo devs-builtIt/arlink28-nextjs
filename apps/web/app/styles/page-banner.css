@@ -61,13 +61,12 @@
 .pb-in {
   width: 100%;
 }
-/* The area this page belongs to: a small outlined pill with a dash, above the title. */
+/* The area this page belongs to: a small outlined pill above the title. */
 .pb-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   margin-bottom: 18px;
-  padding: 6px 14px 6px 12px;
+  padding: 6px 14px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
@@ -76,22 +75,16 @@
   font-weight: 500;
   line-height: 1.2;
 }
-.pb-label::before {
-  content: "";
-  width: 14px;
-  height: 1.5px;
-  background: currentColor;
-}
 
+/* Light and large, tracked in tight, on two lines: the break is set in each page's title. */
 .pb .pb-in h1 {
-  max-width: 20ch;
   margin: 0;
   color: #fff;
   font-family: var(--font, sans-serif);
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(30px, 5.2vw, 60px);
   font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
   text-wrap: balance;
 }
 .pb .pb-in .pb-intro {
@@ -115,16 +108,39 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   min-height: 46px;
-  padding: 0 22px;
+  padding: 9px 9px 9px 22px;
   border: 1px solid transparent;
-  border-radius: 8px;
-  font: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1;
+  border-radius: 999px;
+  font: 700 14px/1 var(--font, sans-serif);
+  text-transform: capitalize;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
+}
+/* The same round arrow badge as every other button on the site, at the end of the label. */
+.pb-btn::before {
+  content: "";
+  flex: none;
+  order: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: currentColor;
+  -webkit-mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  mask-composite: exclude;
+  transition: transform 0.5s var(--ease, ease);
+}
+.pb-btn:hover::before,
+.pb-btn:focus-visible::before {
+  transform: rotate(45deg);
 }
 .pb-btn:focus-visible {
   outline: 2px solid #fff;

@@ -14,6 +14,10 @@ export type EnquiryPackage = {
   adults: number;
   children: number;
   extraNightsSold: boolean;
+  /** The package photo, or null when it has none. */
+  photo: string | null;
+  /** "Zanzibar, Tanzania". */
+  place: string;
 };
 
 export type GeneralType = "General" | "Booking" | "Partnership" | "Career" | "Investor";

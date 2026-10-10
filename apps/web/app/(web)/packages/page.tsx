@@ -63,7 +63,13 @@ export default async function PackagesPage({ searchParams }: { searchParams: Sea
       <PageBanner
         overlap
         above={<KindSwitcher active="/packages" />}
-        title="Find your next safari"
+        title={
+          <>
+            Find your
+            <br />
+            next safari
+          </>
+        }
         intro="Safari and lodge packages across Africa, with the price up front."
       />
 

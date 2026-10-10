@@ -18,6 +18,8 @@
   --logo: url("/images/logo-horizontal-black.png");
   --red: #e61e2b;
   --red-hover: #c91621;
+  /* The arrow drawn on the card badges, reused to cut an arrow out of the button circle. */
+  --btn-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12 12 4M5.5 4H12v6.5'/></svg>");
 
   --radius: 12px;
   --radius-sticker: 20px;

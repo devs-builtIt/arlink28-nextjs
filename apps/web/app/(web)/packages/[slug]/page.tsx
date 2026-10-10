@@ -23,7 +23,13 @@ import "../../styles/packages.css";
 type Params = { params: { slug: string } };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const pkg = await getPackage(params.slug).catch(() => null);
+  // A failure to reach the catalogue is not the same as a package that does not exist.
+  let failed = false;
+  const pkg = await getPackage(params.slug).catch(() => {
+    failed = true;
+    return null;
+  });
+  if (failed) return { title: "Holiday package | ARLink28", robots: { index: false } };
   if (!pkg) return { title: "Package not found | ARLink28" };
   if (pkg.productType && pkg.productType !== "HolidayPackage") return { title: `${pkg.title} | ARLink28` };
   const hero = pkg.media.find((m) => m.role === "Hero" && !m.videoProvider);

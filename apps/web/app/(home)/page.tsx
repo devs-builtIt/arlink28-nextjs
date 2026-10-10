@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "../styles/home.css";
 
+import ClosingCta from "@/components/home/ClosingCta";
 import ContactBar from "@/components/home/ContactBar";
+import PartnerLogos from "@/components/home/PartnerLogos";
 import HeroRipple from "@/components/home/HeroRipple";
 import Icon from "@/components/home/Icon";
 import QuoteWidget from "@/components/home/QuoteWidget";
@@ -13,13 +15,13 @@ import {
   GOOGLE_REVIEWS_URL,
   HAPPY,
   PARTNERS,
-  PARTNER_LOGOS,
   RATING,
   REVIEWS,
   REVIEW_SUMMARY,
   SAMPLE,
   WHY,
 } from "@/content/home-proof";
+import { BLOG_TEASERS } from "@/content/blog-teasers";
 import { priceLabel } from "@/utils/packages";
 import { listPackages } from "@/utils/server/catalogue";
 import { loadEliteTiers } from "@/utils/server/elite";
@@ -119,25 +121,6 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-// Blog teasers. There are no published posts yet, so the cards say "Coming soon" and link to the blog page.
-const POSTS = [
-  {
-    title: "Lagos to London: what to know before you fly",
-    image: "/images/home/route-lhr.webp",
-    alt: "Big Ben and the London Eye under a blue sky",
-  },
-  {
-    title: "Dubai from Abuja: a plain checklist for visas and flights",
-    image: "/images/home/route-dxb.webp",
-    alt: "The Dubai skyline at sunset, with the Burj Khalifa",
-  },
-  {
-    title: "Zanzibar for first-timers: when to go and where to stay",
-    image: "/images/home/hero-zanzibar-900.webp",
-    alt: "A sandbar surrounded by turquoise water in Zanzibar",
-  },
-];
-
 function Title({ sticker, children, id }: { sticker: string; children: React.ReactNode; id: string }) {
   return (
     <h2 className="hm-title" id={id} data-rv>
@@ -187,21 +170,7 @@ export default async function HomePage() {
       </section>
 
       {/* Partner logos, a quiet strip straight after the hero */}
-      <div className="hm-logos-band">
-        <div className="hm-logos">
-          <div className="hm-logos-track">
-            {[0, 1].map((n) => (
-              <ul key={n} aria-hidden={n === 1 ? "true" : undefined} aria-label={n === 0 ? "Our partners" : undefined}>
-                {PARTNER_LOGOS.map((l) => (
-                  <li key={l.name}>
-                    <img src={l.src} alt={n === 0 ? l.name : ""} loading="lazy" decoding="async" height={40} />
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </div>
-      </div>
+      <PartnerLogos />
 
       {/* 2. Destinations, straight after the hero, as the market leaders do */}
       <section className="hm-sec" id="destinations" aria-labelledby="hm-routes">
@@ -211,7 +180,9 @@ export default async function HomePage() {
               <span className="hm-sticker" aria-hidden="true">
                 Destinations
               </span>
-              Trending destinations
+              Trending
+              <br />
+              destinations
             </h2>
             <Link className="hm-btn hm-btn-quiet" href="/destinations">
               More destinations
@@ -240,7 +211,9 @@ export default async function HomePage() {
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-why">
         <div className="hm-wrap">
           <Title id="hm-why" sticker="Why choose us?">
-            Travel planned by people, not algorithms.
+            One team for your
+            <br />
+            flight, hotel and visa.
           </Title>
           <div className="hm-how">
             <div className="hm-how-photo" data-rv>
@@ -307,7 +280,9 @@ export default async function HomePage() {
                 <span className="hm-sticker" aria-hidden="true">
                   Holidays
                 </span>
-                Packages with the price shown.
+                Packages with
+                <br />
+                the price shown.
               </h2>
               <Link className="hm-btn hm-btn-quiet" href="/packages">
                 See all packages
@@ -346,72 +321,108 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* 7b. Reviews, after the packages: heading, rating and a photo on the left; two columns of review cards
-          scrolling slowly in opposite directions on the right. Review text is placeholder until real. */}
+      {/* 7b. Reviews, after the packages: a split heading, then three panels in one row. A rating card on the left,
+          a photo with one featured quote in the middle, and a single column of review cards scrolling slowly on the
+          right. Review text is placeholder until real. */}
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-reviews">
         <div className="hm-wrap">
+          <div className="hm-row-head hm-rv-head">
+            <h2 className="hm-title hm-title-left" id="hm-reviews" data-rv>
+              <span className="hm-sticker" aria-hidden="true">
+                Happy travellers
+              </span>
+              What travellers
+              <br />
+              say about us.
+            </h2>
+            <p data-rv>Every booking is checked by a person, from the first message to the day you fly.</p>
+          </div>
           <div className="hm-rv">
-            <div className="hm-rv-side">
-              <h2 className="hm-title hm-title-left" id="hm-reviews" data-rv>
-                <span className="hm-sticker" aria-hidden="true">
-                  Happy travellers
-                </span>
-                Memorable journeys shared by travellers.
-              </h2>
-              <div className="hm-rv-rating" data-rv>
-                <b>{REVIEW_SUMMARY.score}</b>
-                <div>
-                  <span className="hm-stars" aria-hidden="true">
-                    {"★★★★★"}
-                  </span>
-                  <p>{REVIEW_SUMMARY.basis}</p>
+            <div className="hm-rv-stats" data-rv>
+              <div className="hm-rv-rating">
+                <b>
+                  {REVIEW_SUMMARY.score}
+                  <small>/5</small>
+                </b>
+                <p>{REVIEW_SUMMARY.basis}</p>
+              </div>
+              <ul className="hm-rv-facts">
+                <li>
+                  <Icon name="person" />
+                  {HAPPY.value} {HAPPY.label.toLowerCase()}
+                </li>
+                <li>
+                  <Icon name="message" />A person replies, never a bot
+                </li>
+                <li>
+                  <Icon name="shield" />
+                  Nothing is charged until you agree
+                </li>
+              </ul>
+              <div className="hm-rv-cta">
+                <p>
+                  Ready to plan your own journey?
+                  <br />
+                  <b>Let&rsquo;s get started.</b>
+                </p>
+                <div className="hm-rv-btns">
+                  <Link className="hm-btn hm-btn-primary" href="/quote">
+                    Get a quote
+                  </Link>
+                  <a
+                    className="hm-rv-go"
+                    href={GOOGLE_REVIEWS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Read all reviews on Google"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M4 12 12 4M5.5 4H12v6.5" />
+                    </svg>
+                  </a>
                 </div>
               </div>
-              <a className="hm-rv-link" href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" data-rv>
-                Read all reviews on Google <span aria-hidden="true">&rsaquo;</span>
-              </a>
+            </div>
+            <figure className="hm-rv-feature" data-rv style={{ ["--i" as string]: 1 }}>
               <img
-                className="hm-rv-photo"
                 src="/images/home/review-couple-1400.webp"
                 alt="A couple laughing and holding hands in long grass beside a safari vehicle"
                 loading="lazy"
                 decoding="async"
                 width={1400}
                 height={933}
-                data-rv
               />
-            </div>
-            <div className="hm-rv-cols">
-              {[0, 1].map((col) => (
-                <div className={`hm-rv-col hm-rv-col-${col}`} key={col}>
-                  <div className="hm-rv-track">
-                    {[0, 1].map((copy) => (
-                      <ul key={copy} aria-hidden={copy === 1 ? "true" : undefined}>
-                        {REVIEWS.filter((_, i) => i % 2 === col).map((r, i) => (
-                          <li key={i} className="hm-rv-card">
-                            <div className="hm-rv-top">
-                              <span className="hm-stars" aria-hidden="true">
-                                {"★★★★★"}
-                              </span>
-                              <span className="hm-rv-src">{r.source}</span>
-                            </div>
-                            <blockquote className={SAMPLE ? "hm-placeholder" : undefined}>{r.text}</blockquote>
-                            <footer>
-                              <span className="hm-rv-av" aria-hidden="true">
-                                {initials(r.name)}
-                              </span>
-                              <span>
-                                <strong>{r.name}</strong>
-                                <small>{r.route}</small>
-                              </span>
-                            </footer>
-                          </li>
-                        ))}
-                      </ul>
+              <figcaption>
+                <blockquote className={SAMPLE ? "hm-placeholder" : undefined}>{REVIEWS[0].text}</blockquote>
+                <cite>
+                  {REVIEWS[0].name}, {REVIEWS[0].route}
+                </cite>
+              </figcaption>
+            </figure>
+            <div className="hm-rv-col" data-rv style={{ ["--i" as string]: 2 }}>
+              <div className="hm-rv-track">
+                {[0, 1].map((copy) => (
+                  <ul key={copy} aria-hidden={copy === 1 ? "true" : undefined}>
+                    {REVIEWS.slice(1).map((r, i) => (
+                      <li key={i} className="hm-rv-card">
+                        <span className="hm-stars" aria-hidden="true">
+                          {"★★★★★"}
+                        </span>
+                        <blockquote className={SAMPLE ? "hm-placeholder" : undefined}>{r.text}</blockquote>
+                        <footer>
+                          <span className="hm-rv-av" aria-hidden="true">
+                            {initials(r.name)}
+                          </span>
+                          <span>
+                            <strong>{r.name}</strong>
+                            <small>{r.route}</small>
+                          </span>
+                        </footer>
+                      </li>
                     ))}
-                  </div>
-                </div>
-              ))}
+                  </ul>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -425,7 +436,9 @@ export default async function HomePage() {
               <span className="hm-sticker" aria-hidden="true">
                 Elite Jets
               </span>
-              Private charter, arranged around you.
+              Private jet charter,
+              <br />
+              in three tiers.
             </h2>
             <div className="hm-jets-side" data-rv>
               <p>Three ways to fly private, from the essentials to a journey designed entirely around you.</p>
@@ -434,22 +447,21 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <ul className="hm-pkgs">
+          <ul className="hm-stack">
             {tiers.map((t, i) => (
               <li key={t.slug} data-rv style={{ ["--i" as string]: i }}>
-                <Link href={`/elite-jets#${t.slug}`}>
-                  <img src={t.image} alt={t.alt} loading="lazy" decoding="async" width={900} height={675} />
-                  <span className="hm-chip">Elite</span>
-                  <span className="hm-go" aria-hidden="true">
-                    <svg viewBox="0 0 16 16">
-                      <path d="M4 12 12 4M5.5 4H12v6.5" />
-                    </svg>
-                  </span>
-                  <span className="hm-pkg-text">
-                    <strong>{t.title}</strong>
-                    <span>{t.tagline}</span>
-                  </span>
-                </Link>
+                <div className="hm-stack-info">
+                  <h3>{t.title}</h3>
+                  <div className="hm-stack-copy">
+                    <p>{t.tagline}</p>
+                    <Link className="hm-btn hm-btn-primary" href={`/elite-jets#${t.slug}`}>
+                      Explore {t.tier}
+                    </Link>
+                  </div>
+                </div>
+                <div className="hm-stack-photo">
+                  <img src={t.image} alt={t.alt} loading="lazy" decoding="async" width={1600} height={1200} />
+                </div>
               </li>
             ))}
           </ul>
@@ -460,7 +472,9 @@ export default async function HomePage() {
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-how">
         <div className="hm-wrap">
           <Title id="hm-how" sticker="How it works">
-            Create journeys with effortless booking flow.
+            Three steps from
+            <br />
+            request to booking.
           </Title>
           <ol className="hm-process">
             {STEPS.map((st, i) => (
@@ -479,58 +493,36 @@ export default async function HomePage() {
       </section>
 
       {/* 8b. Closing call to action, straight after how it works: a white band with a dark card */}
-      <section className="hm-sec hm-sec-white hm-sec-flush" data-tone="light" aria-labelledby="hm-deals">
-        <div className="hm-wrap">
-          <div className="hm-deals" data-theme="dark">
-            <div className="hm-deals-copy">
-              <h2 id="hm-deals" data-rv style={{ ["--i" as string]: 0 }}>
-                <span className="hm-sticker" aria-hidden="true">
-                  Ready to go?
-                </span>
-                Tell us where, and we will price it.
-              </h2>
-              <p data-rv style={{ ["--i" as string]: 2 }}>
-                Send us your route and dates. We come back with a price, and nothing is charged until you agree.
-              </p>
-              <div className="hm-actions" data-rv style={{ ["--i" as string]: 3 }}>
-                <a className="hm-btn hm-btn-primary" href="/quote">
-                  Book now
-                </a>
-              </div>
-            </div>
-            <ul className="hm-deals-photos" aria-hidden="true">
-              {["dxb", "cpt", "lhr"].map((c, i) => (
-                <li key={c}>
-                  <img
-                    src={`/images/home/route-${c}.webp`}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    width={800}
-                    height={1000}
-                    data-rv
-                    style={{ ["--i" as string]: i + 2 }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ClosingCta />
 
       {/* 8c. FAQ, after the closing call to action */}
       <section className="hm-sec" id="faq" aria-labelledby="hm-faq">
         <div className="hm-wrap">
-          <Title id="hm-faq" sticker="Questions">
-            Quick answers before you ask.
-          </Title>
-          <div className="hm-faq">
-            {FAQ.map((f, i) => (
-              <details key={f.q} open={i === 0} data-rv>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
+          <div className="hm-faq-wrap">
+            <div className="hm-faq-side">
+              <h2 className="hm-title hm-title-left" id="hm-faq" data-rv>
+                <span className="hm-sticker" aria-hidden="true">
+                  FAQ
+                </span>
+                Questions
+                <br />
+                <span className="hm-dim">before you book.</span>
+              </h2>
+              <p data-rv style={{ ["--i" as string]: 1 }}>
+                Cannot see your question? Ask the team and a person replies.
+              </p>
+              <Link className="hm-btn hm-btn-primary" href="/contact" data-rv style={{ ["--i" as string]: 2 }}>
+                Contact us
+              </Link>
+            </div>
+            <div className="hm-faq">
+              {FAQ.map((f, i) => (
+                <details key={f.q} open={i === 0} data-rv style={{ ["--i" as string]: i }}>
+                  <summary>{f.q}</summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -543,14 +535,16 @@ export default async function HomePage() {
               <span className="hm-sticker" aria-hidden="true">
                 Our blog
               </span>
-              Guides for the routes you fly.
+              Guides for the
+              <br />
+              routes you fly.
             </h2>
             <Link className="hm-btn hm-btn-quiet" href="/blogs">
               All blogs
             </Link>
           </div>
           <ul className="hm-pkgs hm-blog">
-            {POSTS.map((post, i) => (
+            {BLOG_TEASERS.map((post, i) => (
               <li key={post.title} data-rv style={{ ["--i" as string]: i }}>
                 <Link href="/blogs">
                   <img src={post.image} alt={post.alt} loading="lazy" decoding="async" width={900} height={900} />

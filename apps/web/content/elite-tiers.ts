@@ -31,8 +31,8 @@ export const ELITE_TIERS: EliteTier[] = [
       "Pre-flight travel coordination",
       "Dedicated booking support",
     ],
-    image: "/images/home/jet-tarmac-900.webp",
-    alt: "A private jet on the apron under a sunset sky",
+    image: "/images/home/jet-challenger-604-1600.webp",
+    alt: "A silver Challenger 604 with a red stripe on the apron",
   },
   {
     slug: "arlink28-elite-signature",
@@ -48,7 +48,7 @@ export const ELITE_TIERS: EliteTier[] = [
       "Enhanced guest-experience coordination",
       "Special dietary and hospitality requirements where available",
     ],
-    image: "/images/home/jet-sunset-900.webp",
+    image: "/images/home/jet-sunset-1600.webp",
     alt: "A private jet parked on the tarmac at golden hour",
   },
   {
@@ -71,7 +71,7 @@ export const ELITE_TIERS: EliteTier[] = [
       "Custom gifts and hospitality requirements",
       "Other tailored travel requests based on the client's needs",
     ],
-    image: "/images/home/jet-cabin-900.webp",
+    image: "/images/home/jet-cabin-1600.webp",
     alt: "The leather seats and oval windows of a private jet cabin",
   },
 ];

@@ -55,7 +55,7 @@ export async function loadEliteTiers(): Promise<EliteTier[]> {
         audience: str(d.audience) ?? "",
         basedOn: str(d.basedOn),
         includes: lines(d.includes),
-        image: "/images/home/jet-tarmac-900.webp",
+        image: "/images/home/jet-tarmac-1600.webp",
         alt: "",
       };
     });
