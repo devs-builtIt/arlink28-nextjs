@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Icon, { type IconName } from "@/components/home/Icon";
 import { track } from "@/utils/track";
 
 // What a traveller comes to do, then Essentials (the company) and Elite Jets (private charter).
@@ -13,34 +14,15 @@ const MAIN = [
   { href: "/packages", label: "Holidays" },
 ];
 
-const ESSENTIALS: { href: string; label: string; text: string; photo: string; focus: string }[] = [
-  {
-    href: "/about",
-    label: "About us",
-    text: "Who we are, and where we are taking ARLink28.",
-    photo: "/images/home/proof-farnborough.webp",
-    focus: "50% 30%",
-  },
-  {
-    href: "/team",
-    label: "Team",
-    text: "The people who price and book your trips.",
-    photo: "/images/home/proof-harare.webp",
-    focus: "50% 38%",
-  },
-  {
-    href: "/blogs",
-    label: "Blogs",
-    text: "Travel stories and guides for the routes you fly.",
-    photo: "/images/home/route-vfa.webp",
-    focus: "50% 45%",
-  },
+const ESSENTIALS: { href: string; label: string; text: string; icon: IconName }[] = [
+  { href: "/about", label: "About us", text: "Who we are, and where we are taking ARLink28.", icon: "globe" },
+  { href: "/team", label: "Team", text: "The people who price and book your trips.", icon: "person" },
+  { href: "/blogs", label: "Blogs", text: "Travel stories and guides for the routes you fly.", icon: "layers" },
   {
     href: "/contact",
     label: "Contact",
     text: "Message or call us, or find our Lagos and London offices.",
-    photo: "/images/home/team-support.webp",
-    focus: "50% 30%",
+    icon: "message",
   },
 ];
 
@@ -208,27 +190,26 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                   {ESSENTIALS.map((link, i) => (
                     <li key={link.href} style={{ ["--i" as string]: i }}>
                       <Link href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>
-                        <img
-                          src={link.photo}
-                          alt=""
-                          decoding="async"
-                          width={800}
-                          height={1000}
-                          style={{ objectPosition: link.focus }}
-                        />
-                        <span className="sh-mega-copy">
-                          <span className="sh-mega-title">{link.label}</span>
-                          <span className="sh-mega-text">{link.text}</span>
-                        </span>
-                        <span className="sh-mega-go" aria-hidden="true">
-                          <svg viewBox="0 0 16 16">
-                            <path d="M4 12 12 4M5.5 4H12v6.5" />
+                        <Icon name={link.icon} />
+                        <span className="sh-mega-title">
+                          {link.label}
+                          <svg viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M3 8h10M9 4l4 4-4 4" />
                           </svg>
                         </span>
+                        <span className="sh-mega-text">{link.text}</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
+                <div className="sh-mega-feature" style={{ ["--i" as string]: 4 }}>
+                  <img src="/images/home/proof-harare.webp" alt="" decoding="async" width={900} height={1200} />
+                  <p className="sh-mega-title">ARLink28 on the road</p>
+                  <p className="sh-mega-text">Find the team at aviation and travel events across Africa and the UK.</p>
+                  <Link className="sh-cta sh-cta-quiet sh-mega-btn" href="/contact">
+                    Contact us
+                  </Link>
+                </div>
               </div>
             )}
           </div>

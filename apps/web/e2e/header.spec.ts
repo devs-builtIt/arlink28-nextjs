@@ -23,6 +23,7 @@ test.describe("getting to the portal from the public site", () => {
     for (const name of ["About us", "Team", "Blogs", "Contact"]) {
       await expect(main.getByRole("link", { name: new RegExp(`^${name}`) }).first()).toBeVisible();
     }
+    await expect(main.getByRole("link", { name: "Contact us" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(main.getByRole("link", { name: /^Blogs/ })).toHaveCount(0);
 
