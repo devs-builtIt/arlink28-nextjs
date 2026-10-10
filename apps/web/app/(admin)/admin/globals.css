@@ -1890,3 +1890,47 @@ body {
     grid-row: 3;
   }
 }
+
+/* Fixed column widths, so long names and details wrap inside their cell instead of widening the table. */
+.adm .shell .pk-table {
+  table-layout: fixed;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(2) {
+  width: 120px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(3) {
+  width: 150px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(4) {
+  width: 210px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(5) {
+  width: 110px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(6) {
+  width: 120px;
+}
+.adm .shell .dest-table th:nth-child(2) {
+  width: 120px;
+}
+.adm .shell .dest-table th:nth-child(3) {
+  width: 150px;
+}
+.adm .shell .dest-table th:nth-child(4) {
+  width: 130px;
+}
+.adm .shell .dest-table th:nth-child(5) {
+  width: 120px;
+}
+.adm .shell .enq-table th:nth-child(1) {
+  width: 150px;
+}
+.adm .shell .enq-table th:nth-child(2) {
+  width: 260px;
+}
+.adm .shell .enq-table th:nth-child(4) {
+  width: 120px;
+}
+.adm .shell .enq-table th:nth-child(5) {
+  width: 130px;
+}
