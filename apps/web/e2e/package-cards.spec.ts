@@ -51,3 +51,50 @@ test.describe("package cards", () => {
     await expect(page.getByRole("table")).toBeVisible(); // remembered in this browser
   });
 });
+
+test.describe("row menus in the list", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("arlink-packages-view", "list"));
+    await page.goto("/admin/packages");
+    await expect(page.getByRole("table")).toBeVisible();
+  });
+
+  const row = (page: import("@playwright/test").Page, title: string) =>
+    page.getByRole("row").filter({ hasText: title });
+
+  test("the three dots open a menu without opening the listing", async ({ page }) => {
+    await row(page, "Giraffe Manor Grand Escape")
+      .getByRole("button", { name: /^Actions for/ })
+      .click();
+    await expect(page).toHaveURL(/\/admin\/packages$/);
+    const menu = page.getByRole("menu");
+    await expect(menu.getByRole("menuitem")).toHaveText(["Edit", "Take off the site", "Archive"]);
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+  });
+
+  test("a draft offers Publish, and says what it still needs", async ({ page }) => {
+    await row(page, "Sala's Family Safari")
+      .getByRole("button", { name: /^Actions for/ })
+      .click();
+    await page.getByRole("menuitem", { name: "Publish" }).click();
+    await expect(page.getByRole("alert").filter({ hasText: "Not ready to publish" })).toBeVisible();
+  });
+
+  test("taking a listing off the site asks twice", async ({ page }) => {
+    await row(page, "Giraffe Manor Grand Escape")
+      .getByRole("button", { name: /^Actions for/ })
+      .click();
+    await page.getByRole("menuitem", { name: "Take off the site" }).click();
+    await page.getByRole("menuitem", { name: "Sure?" }).click();
+    await expect(row(page, "Giraffe Manor Grand Escape")).toContainText("Draft");
+  });
+
+  test("Edit opens the editor", async ({ page }) => {
+    await row(page, "Giraffe Manor Grand Escape")
+      .getByRole("button", { name: /^Actions for/ })
+      .click();
+    await page.getByRole("menuitem", { name: "Edit" }).click();
+    await expect(page.getByRole("heading", { name: "Giraffe Manor Grand Escape", level: 1 })).toBeVisible();
+  });
+});

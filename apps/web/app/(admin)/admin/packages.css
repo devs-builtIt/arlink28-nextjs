@@ -1451,3 +1451,82 @@
   background: #fdecee;
   color: #b3202c;
 }
+
+/* The three-dot menu at the end of a table row */
+.adm .pk-table td.pk-actions-col {
+  text-align: right;
+}
+.adm .pk-dots {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.adm .pk-dots:hover,
+.adm .pk-dots[aria-expanded="true"] {
+  background: var(--pk-soft);
+  color: var(--ink);
+}
+.adm .pk-menu {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow:
+    0 2px 6px rgba(11, 23, 38, 0.08),
+    0 18px 40px rgba(11, 23, 38, 0.16);
+  text-align: left;
+}
+.adm .pk-menu > :is(a, button) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink);
+  font: 500 14px/1.2 var(--font);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.adm .pk-menu > :is(a, button):hover:not(:disabled),
+.adm .pk-menu > :is(a, button):focus-visible {
+  background: var(--pk-soft);
+  outline: none;
+}
+.adm .pk-menu > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.adm .pk-menu > .is-danger {
+  background: #fdecee;
+  color: #b3202c;
+}
+.adm .pk-menu-note {
+  margin: 4px 2px 2px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fdf2f3;
+  color: #8f1d26;
+  font-size: 13px;
+}
+.adm .pk-menu-note ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}

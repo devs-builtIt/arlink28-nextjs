@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import type { AdminPackageDetail, AdminPackageList } from "@arlink28/api-client";
+import { usePackageMoves, type PackageMove } from "@/components/admin/usePackageMoves";
 import { StatusBadge } from "@/components/admin/ui";
 import { fullDate, money, party, timeAgo, titleCase } from "@/components/admin/format";
-import { ApiError } from "@/utils/api/client";
 import { adminPackagesApi } from "@/utils/api/packages";
 import { detailsSummary, isHoliday, typeLabel } from "@/utils/productTypes";
 
 type Item = AdminPackageList["items"][number];
-type Move = "publish" | "unpublish" | "archive";
 
 /**
  * One listing as a card: its photo, what it is and where, what is missing, and the moves staff make most
@@ -18,10 +16,7 @@ type Move = "publish" | "unpublish" | "archive";
  * site and archiving ask twice, in place, so a stray click does nothing.
  */
 export default function PackageCard({ item: p, onChanged }: { item: Item; onChanged: () => void }) {
-  const [busy, setBusy] = useState(false);
-  const [confirming, setConfirming] = useState<Move | null>(null);
-  const [missing, setMissing] = useState<string[]>([]);
-  const [error, setError] = useState("");
+  const { busy, confirming, setConfirming, missing, error, move } = usePackageMoves(onChanged);
 
   const published = p.status === "Published";
   const archived = p.status === "Archived";
@@ -29,24 +24,8 @@ export default function PackageCard({ item: p, onChanged }: { item: Item; onChan
     ? []
     : [p.mediaCount === 0 && "No photo", p.fromPriceMinor == null && "No price"].filter(Boolean);
 
-  async function move(action: () => Promise<AdminPackageDetail>) {
-    setBusy(true);
-    setError("");
-    setMissing([]);
-    setConfirming(null);
-    try {
-      await action();
-      onChanged();
-    } catch (err) {
-      if (err instanceof ApiError && err.missing) setMissing(err.missing);
-      else setError(err instanceof Error ? err.message : "That didn't work. Try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   /** The first click asks, the second does it. */
-  const twice = (kind: Move, label: string, run: () => Promise<AdminPackageDetail>, tone = "") =>
+  const twice = (kind: PackageMove, label: string, run: () => Promise<AdminPackageDetail>, tone = "") =>
     confirming === kind ? (
       <button
         type="button"

@@ -7,10 +7,11 @@ import type { AdminPackageList, DestinationResponse } from "@arlink28/api-client
 import ProtectedPage from "@/components/ProtectedPage";
 import Notice from "@/components/admin/Notice";
 import PackageCard from "@/components/admin/PackageCard";
+import PackageRowMenu from "@/components/admin/PackageRowMenu";
 import { Pagination, Skeleton, StatusBadge } from "@/components/admin/ui";
 import { adminPackagesApi, packagesApi } from "@/utils/api/packages";
-import { fullDate, money, party, timeAgo, titleCase } from "@/components/admin/format";
-import { PRODUCT_TYPES, detailsSummary, isHoliday, isProductType, typeLabel } from "@/utils/productTypes";
+import { fullDate, money, timeAgo, titleCase } from "@/components/admin/format";
+import { PRODUCT_TYPES, isHoliday, isProductType, typeLabel } from "@/utils/productTypes";
 
 const CATEGORIES = ["SAFARI", "LODGE"];
 const SIZES = [10, 25, 50, 100];
@@ -67,15 +68,13 @@ function SkeletonRows({ rows = 10 }: { rows?: number }) {
           <td>
             <Skeleton w={90} />
           </td>
-          <td>
-            <Skeleton w={140} />
-          </td>
           <td className="num">
             <Skeleton w={64} />
           </td>
           <td>
             <Skeleton w={70} />
           </td>
+          <td className="pk-actions-col"></td>
         </tr>
       ))}
     </>
@@ -344,11 +343,13 @@ function PackagesList() {
                     <th scope="col">Package</th>
                     <th scope="col">Status</th>
                     <th scope="col">Destination</th>
-                    <th scope="col">Details</th>
                     <th scope="col" className="num">
                       From
                     </th>
                     <th scope="col">Updated</th>
+                    <th scope="col" className="pk-actions-col">
+                      <span className="sr-only">Actions</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -387,11 +388,6 @@ function PackagesList() {
                         <StatusBadge status={p.status} />
                       </td>
                       <td>{p.destination.name}</td>
-                      <td className="muted">
-                        {isHoliday(p.productType)
-                          ? `${p.nights} ${p.nights === 1 ? "night" : "nights"}, ${party(p.adults, p.children)}`
-                          : detailsSummary(p.productType, p.details) || "No details yet"}
-                      </td>
                       <td className="num">
                         {p.fromPriceMinor != null ? (
                           money(p.fromPriceMinor, p.baseCurrency)
@@ -403,6 +399,9 @@ function PackagesList() {
                         <time dateTime={p.updatedAt} title={fullDate(p.updatedAt)}>
                           {timeAgo(p.updatedAt)}
                         </time>
+                      </td>
+                      <td className="pk-actions-col">
+                        <PackageRowMenu item={p} onChanged={() => setRetry((n) => n + 1)} />
                       </td>
                     </tr>
                   ))}

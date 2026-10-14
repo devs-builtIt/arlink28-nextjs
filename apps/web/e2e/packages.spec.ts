@@ -70,8 +70,6 @@ test.describe("packages list", () => {
     await expect(rows(page)).toHaveCount(ALL);
     const grand = rows(page).filter({ hasText: "Giraffe Manor Grand Escape" });
     await expect(grand).toContainText("Nairobi");
-    await expect(grand).toContainText("3 nights");
-    await expect(grand).toContainText("2 adults");
     await expect(grand).toContainText("Published");
     await expect(grand).toContainText("$8,488");
     await expect(rows(page).filter({ hasText: "Sala's Family Safari" })).toContainText("Draft");
