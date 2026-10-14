@@ -55,3 +55,21 @@ sudo docker compose logs --tail=100 api
 ```
 
 Do not run `docker compose down -v`, `docker volume prune` or `docker system prune --volumes`.
+
+## Staged cutover from the old site
+
+`arlink28.com` currently serves the old site from another server, with mail on Google Workspace. DNS is
+managed outside Hostinger (Google Domains / Squarespace nameservers). Never touch the MX, SPF, DKIM or
+DMARC records.
+
+1. **Preview.** Add A records `api` and `new` pointing at `69.62.107.166`. The Caddyfile serves only
+   those two names (`new.arlink28.com` is the preview, marked noindex). Check certificates, the admin
+   login, the seeded content and the enquiry flow there.
+2. **Prepare.** A day before, lower the TTL of the `@` record to 300 seconds.
+3. **Cut over.** In the Caddyfile, uncomment the `arlink28.com` and `www` sites and delete the `new`
+   site, merge to `main`, run `deploy.sh`. Then point `@` and `www` (A or CNAME) at the VPS. Caddy gets
+   the certificates once DNS resolves.
+4. **Roll back** by pointing `@` back at the old server. Leave the old server running until you are sure.
+
+Links in emails (invites, password resets) use `https://arlink28.com`, so they point at the old site until
+the cutover.

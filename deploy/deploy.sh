@@ -36,6 +36,10 @@ export RELEASE_TAG="$WEB_SHA-$API_SHA"
 echo "Releasing web $WEB_SHA + api $API_SHA"
 
 install -d -m 750 "$APP"
+# sudo resets the environment, so the tag cannot reach `sudo docker compose` as a variable. Compose
+# reads $APP/.env, so keep it there (ACME_EMAIL stays).
+{ grep -v '^RELEASE_TAG=' "$APP/.env" 2>/dev/null || true; echo "RELEASE_TAG=$RELEASE_TAG"; } > "$APP/.env.new"
+mv "$APP/.env.new" "$APP/.env"
 install -m 644 "$SRC/web/deploy/compose.yaml" "$APP/compose.yaml"
 install -m 644 "$SRC/web/deploy/Caddyfile" "$APP/Caddyfile"
 
