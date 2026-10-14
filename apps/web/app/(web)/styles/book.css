@@ -28,8 +28,7 @@
   display: flex;
 }
 .book-search-tag {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: color-mix(in srgb, var(--chip) 50%, transparent);
   color: var(--text-muted);
   border-radius: 50px;
   align-items: center;
@@ -53,34 +52,19 @@
   display: grid;
 }
 .partner-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  transition: var(--transition-smooth);
-  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
+  transition: box-shadow 0.2s;
+  border-radius: 12px;
   flex-direction: column;
   gap: 16px;
-  padding: 36px 32px;
+  padding: 32px;
   display: flex;
   position: relative;
   overflow: hidden;
 }
-.partner-card:before {
-  content: "";
-  background: linear-gradient(90deg, var(--primary-red), transparent);
-  opacity: 0;
-  height: 3px;
-  transition: var(--transition-smooth);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-}
 .partner-card:hover {
-  border-color: #c81e1e4d;
-  transform: translateY(-6px);
-}
-.partner-card:hover:before {
-  opacity: 1;
+  box-shadow: 0 12px 32px rgba(11, 23, 38, 0.1);
 }
 .partner-card-logo {
   object-fit: contain;
@@ -100,39 +84,43 @@
   line-height: 1.6;
 }
 .partner-card-tags {
+  margin: 0;
+  padding: 0;
   flex-wrap: wrap;
   gap: 8px;
   display: flex;
 }
 .partner-tag {
-  color: var(--primary-red);
-  background: #c81e1e1a;
-  border: 1px solid #c81e1e33;
-  border-radius: 50px;
-  padding: 4px 10px;
-  font-size: 11px;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--chip) 50%, transparent);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  list-style: none;
 }
 .partner-card-btn {
   background: var(--primary-red);
   color: #fff;
   transition: var(--transition-smooth);
-  border-radius: 10px;
-  justify-content: center;
+  border-radius: 999px;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
-  padding: 14px 24px;
+  padding: 9px 9px 9px 24px;
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
   display: flex;
+  min-height: 48px;
+  font: 700 14px/1 var(--font);
+  text-transform: none;
 }
 .partner-card-btn:hover {
-  background: #a01010;
-  transform: translateY(-1px);
+  background: #c91621;
 }
 .partner-card-btn i {
-  font-size: 13px;
+  display: none;
 }
 .book-back-link {
   color: var(--text-muted);
@@ -157,4 +145,88 @@
   .partners-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.bk-escapes {
+  max-width: 1100px;
+  margin: 88px auto 0;
+}
+.bk-escapes-head {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.bk-tag {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--chip) 50%, transparent);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+.bk-escapes-head h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1.08;
+}
+.bk-dim {
+  color: var(--text-muted);
+}
+.bk-escapes-head p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--text-muted);
+}
+.bk-escapes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bk-escape {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s;
+}
+.bk-escape:hover {
+  box-shadow: 0 12px 32px rgba(11, 23, 38, 0.1);
+}
+.bk-escape img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bk-escape-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.bk-escape-body strong {
+  color: var(--text-main);
+  font-size: 17px;
+  font-weight: 700;
+}
+.bk-escape-body b {
+  color: var(--text-main);
+  font-weight: 700;
+}
+.bk-escape-body .partner-card-btn {
+  margin-top: auto;
 }

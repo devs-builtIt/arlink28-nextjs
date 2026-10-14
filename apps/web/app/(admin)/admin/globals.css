@@ -60,8 +60,6 @@ body {
 }
 
 /* Navy surfaces: same variables, dark values. */
-.adm .rail,
-.adm .topbar,
 .adm .auth-gantry {
   --surface: var(--navy-raised);
   --ink: #eef2f7;
@@ -323,16 +321,16 @@ body {
   color: #0f5c39;
 }
 
-/* ── Signed-out pages: one centred card on a dark page ─────────────── */
+/* ── Signed-out pages: one centred card on a light page, like the public site ─────────────── */
 
 .adm .auth {
-  --canvas: #0a0d12;
-  --surface: #11151c;
-  --ink: #f5f7fa;
-  --muted: #a3adbd;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --field: rgba(255, 255, 255, 0.05);
+  --canvas: #f3f4f8;
+  --surface: #ffffff;
+  --ink: #0b1726;
+  --muted: #5b6b82;
+  --line: rgba(11, 23, 38, 0.08);
+  --line-strong: rgba(11, 23, 38, 0.18);
+  --field: #f3f4f8;
   --font: Satoshi, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-family: var(--font);
   position: relative;
@@ -370,14 +368,17 @@ body {
   max-width: 440px;
   margin: auto;
   padding: clamp(28px, 4vw, 40px);
-  border-radius: 12px;
+  border-radius: 20px;
   background: var(--surface);
+  box-shadow:
+    0 1px 2px rgba(11, 23, 38, 0.04),
+    0 12px 32px rgba(11, 23, 38, 0.08);
 }
 .adm .auth-title {
   font-size: clamp(2rem, 2.4vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
 }
 .adm .auth-intro {
   margin: 12px 0 0;
@@ -396,7 +397,7 @@ body {
   font-size: 16px;
   height: 48px;
   border-color: transparent;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 .adm .auth .input:hover:not(:disabled) {
   border-color: var(--line-strong);
@@ -404,17 +405,17 @@ body {
 .adm .auth .input::placeholder {
   color: #6f7a8c;
 }
-/* Browsers paint autofilled fields pale yellow; keep them on the dark surface. */
+/* Browsers paint autofilled fields pale yellow; keep them on the field colour. */
 .adm .auth .input:-webkit-autofill {
   -webkit-text-fill-color: var(--ink);
-  box-shadow: 0 0 0 100px #1a2029 inset;
+  box-shadow: 0 0 0 100px #f3f4f8 inset;
 }
 .adm .auth .btn-block {
   font-family: var(--font);
   font-weight: 700;
   height: 48px;
   margin-top: 8px;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 15px;
 }
 .adm .auth .notice {
@@ -441,9 +442,11 @@ body {
   position: sticky;
   top: 0;
   order: -1;
-  height: 100vh;
+  height: calc(100vh - 32px);
+  margin: 16px 0 16px 16px;
+  border-radius: 24px;
   overflow: hidden;
-  background: var(--surface);
+  background: #0b121c;
 }
 .adm .auth-photo img {
   width: 100%;
@@ -468,9 +471,9 @@ body {
   color: #fff;
   font-family: var(--font);
   font-size: clamp(1.75rem, 2.8vw, 3rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.05em;
 }
 @media (max-width: 900px) {
   .adm .auth {
@@ -491,7 +494,7 @@ body {
   color: var(--ink);
 }
 
-/* ── Signed-in shell: navy rail + navy top bar around a light main ──── */
+/* ── Signed-in shell: a white rail beside a light main; the top bar only appears on small screens ──── */
 
 .adm .shell {
   display: grid;
@@ -507,31 +510,34 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px 14px;
-  background: var(--navy);
+  z-index: 5;
+  padding: 24px 16px 20px;
+  background: var(--surface);
+  box-shadow: 6px 0 36px rgba(11, 23, 38, 0.05);
 }
 .adm .rail-brand {
-  padding: 4px 8px;
+  padding: 4px 10px;
 }
 .adm .rail-nav {
   display: grid;
   align-items: stretch;
-  gap: 4px;
-  margin-top: 32px;
+  gap: 6px;
+  margin-top: 40px;
 }
 .adm .rail-link {
   display: flex;
   align-items: center;
   gap: 12px;
+  position: relative;
   width: 100%;
-  height: 42px;
-  padding: 0 12px;
+  height: 48px;
+  padding: 0 14px;
   border: 0;
-  border-radius: var(--radius-m);
+  border-radius: 14px;
   background: none;
   color: var(--muted);
   opacity: 1;
-  font: 500 14px/1 var(--font);
+  font: 500 15px/1 var(--font);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -540,20 +546,67 @@ body {
     background-color 0.15s;
 }
 .adm .rail-link i {
-  width: 18px;
+  width: 20px;
   text-align: center;
-  font-size: 15px;
+  font-size: 17px;
 }
 .adm .rail-link:hover {
   color: var(--ink);
   background: var(--hover);
 }
 .adm .rail-link[aria-current="page"] {
-  background: var(--livery);
-  color: #fff;
+  background: none;
+  color: var(--livery);
 }
-.adm .rail-signout {
+/* The current page: red text and a short bar on the rail's edge. */
+.adm .rail-link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--livery);
+}
+.adm .rail-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-top: auto;
+  padding: 12px 8px 0;
+}
+.adm .rail-user .who-tile {
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+}
+.adm .rail-user .who-text {
+  flex: 1;
+}
+.adm .rail-user .who-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+.adm .rail-out {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+.adm .rail-out:hover {
+  color: var(--livery);
+  background: var(--livery-wash);
 }
 
 .adm .frame {
@@ -565,12 +618,16 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
+  display: none;
   align-items: center;
   gap: 16px;
   height: 64px;
   padding: 0 clamp(20px, 3vw, 40px);
-  background: var(--navy);
+  background: var(--surface);
+  box-shadow: 0 1px 0 var(--line);
+}
+.adm .topbar-who {
+  margin-left: auto;
 }
 /* ── Brand: the red mark + name as text ─────────────────────────────── */
 
@@ -1577,6 +1634,9 @@ body {
   .adm .shell {
     grid-template-columns: 1fr;
   }
+  .adm .topbar {
+    display: flex;
+  }
   .adm .topbar-menu {
     display: grid;
   }
@@ -1619,7 +1679,7 @@ body {
   .adm .session {
     flex-wrap: wrap;
   }
-  .adm .who-text {
+  .adm .topbar .who-text {
     display: none;
   }
   .adm .pkg-facts,
@@ -1639,4 +1699,238 @@ body {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ── Signed-in pages: light and flat, to match the dashboard ────────── */
+
+.adm .shell .page-title {
+  font-size: 1.75rem;
+  letter-spacing: -0.035em;
+}
+.adm .shell .card,
+.adm .shell .panel,
+.adm .shell .table-wrap {
+  border: 0;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(11, 23, 38, 0.04),
+    0 8px 24px rgba(11, 23, 38, 0.04);
+}
+.adm .shell .staff th {
+  padding: 14px 16px;
+  background: none;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.adm .shell .staff td {
+  padding: 16px;
+  border-bottom-color: #eef1f5;
+}
+.adm .shell .staff th,
+.adm .shell .staff td {
+  border-bottom-width: 1px;
+}
+.adm .shell .staff :is(th, td):first-child {
+  padding-left: 24px;
+}
+.adm .shell .staff :is(th, td):last-child {
+  padding-right: 24px;
+}
+.adm .shell .staff .who-tile,
+.adm .shell .person-tile {
+  width: 40px;
+  height: 40px;
+}
+.adm .shell .input {
+  border: 0;
+  border-radius: 10px;
+  background-color: #f1f3f7;
+  box-shadow: none;
+}
+.adm .shell .input:focus,
+.adm .shell .input:focus-visible {
+  background-color: #fff;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+.adm .shell .input[aria-invalid="true"] {
+  background-color: #fdf2f3;
+  box-shadow: inset 0 0 0 1.5px #d9363e;
+}
+.adm .shell .input:disabled {
+  opacity: 0.6;
+}
+
+/* ── Tables never scroll sideways ──────────────────────────────────────
+ * On a mid-size screen the least important columns go; on a phone every row
+ * becomes a small card with its most important facts. */
+
+.adm .shell :is(.pkg, .pk-who, .dv-who) {
+  min-width: 0;
+}
+.adm .shell :is(.pk-table, .staff, .dv-enq) td {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1360px) {
+  .adm .shell .pk-table.packages:not(.dest-table) :is(th, td):nth-child(6),
+  .adm .shell .dest-table :is(th, td):nth-child(5) {
+    display: none;
+  }
+}
+@media (max-width: 1180px) {
+  .adm .shell .pk-table.packages:not(.dest-table) :is(th, td):nth-child(4) {
+    display: none;
+  }
+  .adm .shell .staff :is(th, td) {
+    padding-inline: 12px;
+  }
+  .adm .shell .staff :is(th, td):first-child {
+    padding-left: 20px;
+  }
+  .adm .shell .staff :is(th, td):last-child {
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 760px) {
+  .adm .shell :is(.pk-table, .staff, .dv-enq),
+  .adm .shell :is(.pk-table, .staff, .dv-enq) tbody {
+    display: block;
+    width: 100%;
+  }
+  /* The header row stays for screen readers. */
+  .adm .shell :is(.pk-table, .staff, .dv-enq) thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .adm .shell :is(.pk-table, .staff, .dv-enq) tbody tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eef1f5;
+  }
+  .adm .shell :is(.pk-table, .staff, .dv-enq) tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .adm .shell :is(.pk-table, .staff, .dv-enq) tbody td:nth-child(n) {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .adm .shell :is(.pk-table, .staff, .dv-enq) tbody td:first-child {
+    grid-column: 1 / -1;
+  }
+
+  /* packages: name, then status, destination, price */
+  .adm .shell .pk-table.packages:not(.dest-table) tbody td:nth-child(5) {
+    text-align: right;
+  }
+  .adm .shell .pk-table.packages:not(.dest-table) tbody td:nth-child(4),
+  .adm .shell .pk-table.packages:not(.dest-table) tbody td:nth-child(6) {
+    display: none;
+  }
+  /* destinations: name, then status, where, content */
+  .adm .shell .dest-table tbody td:nth-child(5) {
+    display: none;
+  }
+  .adm .shell .dest-table tbody td:nth-child(4) {
+    text-align: right;
+  }
+  /* enquiries: guest, then what it is, status, when */
+  .adm .shell .enq-table tbody td:nth-child(1) {
+    display: none;
+  }
+  .adm .shell .enq-table tbody td:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+  .adm .shell .enq-table tbody td:nth-child(3) {
+    grid-column: 1 / 3;
+  }
+  .adm .shell .enq-table tbody td:nth-child(4) {
+    grid-column: 3;
+  }
+  .adm .shell .enq-table tbody td:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+  /* staff: person, then role, status, last sign-in, actions */
+  .adm .shell .staff tbody td:nth-child(2) {
+    grid-column: 1 / 3;
+  }
+  .adm .shell .staff tbody td:nth-child(3) {
+    grid-column: 3;
+  }
+  .adm .shell .staff tbody td:nth-child(4) {
+    grid-column: 1 / 3;
+  }
+  .adm .shell .staff tbody td:nth-child(5) {
+    grid-column: 3;
+    justify-self: end;
+  }
+  /* dashboard: who, then what it is and its status, the quote and the two buttons */
+  .adm .shell .dv-enq tbody td:nth-child(2) {
+    grid-column: 1 / 3;
+  }
+  .adm .shell .dv-enq tbody td:nth-child(3) {
+    grid-column: 1 / 3;
+  }
+  .adm .shell .dv-enq tbody td:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .adm .shell .dv-enq tbody td:nth-child(5) {
+    grid-column: 3;
+    grid-row: 3;
+  }
+}
+
+/* Fixed column widths, so long names and details wrap inside their cell instead of widening the table. */
+.adm .shell .pk-table {
+  table-layout: fixed;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(2) {
+  width: 120px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(3) {
+  width: 150px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(4) {
+  width: 210px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(5) {
+  width: 110px;
+}
+.adm .shell .pk-table.packages:not(.dest-table) th:nth-child(6) {
+  width: 120px;
+}
+.adm .shell .dest-table th:nth-child(2) {
+  width: 120px;
+}
+.adm .shell .dest-table th:nth-child(3) {
+  width: 150px;
+}
+.adm .shell .dest-table th:nth-child(4) {
+  width: 130px;
+}
+.adm .shell .dest-table th:nth-child(5) {
+  width: 120px;
+}
+.adm .shell .enq-table th:nth-child(1) {
+  width: 150px;
+}
+.adm .shell .enq-table th:nth-child(2) {
+  width: 260px;
+}
+.adm .shell .enq-table th:nth-child(4) {
+  width: 120px;
+}
+.adm .shell .enq-table th:nth-child(5) {
+  width: 130px;
 }

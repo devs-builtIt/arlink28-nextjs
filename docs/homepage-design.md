@@ -1,6 +1,7 @@
 # ARLink28 homepage design system
 
-Reference studied: `https://traveli.framer.website/` (a Framer template by Template Munk), inspected live on 2026-10-02 at a 1440 x 778 viewport.
+Reference studied: `https://traveli.fram
+er.website/` (a Framer template by Template Munk), inspected live on 2026-10-02 at a 1440 x 778 viewport.
 Status: **specification, awaiting approval. Nothing here is built yet.**
 
 This file does two jobs. Part A records the reference system exactly as measured. Part B turns it into the ARLink28 homepage. Where a value was measured it says so; where it is my recommendation it says so.

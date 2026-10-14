@@ -77,6 +77,63 @@ export type EnquiryStatusCounts = Schemas["EnquiryStatusCounts"];
 export type EnquiryDetail = Schemas["EnquiryDetail"];
 export type UpdateEnquiryRequest = Schemas["UpdateEnquiryRequest"];
 
+/**
+ * GET /api/v1/admin/dashboard. Written by hand to match arlink28-api's DashboardResponses.cs until the next
+ * `pnpm --filter @arlink28/api-client sync` picks the endpoint up from the running API.
+ */
+export type DashboardDayCount = { date: string; count: number };
+export type DashboardEnquiries = {
+  total: number;
+  previousTotal: number;
+  new: number;
+  contacted: number;
+  closed: number;
+  awaitingAll: number;
+  medianHandleHours: number | null;
+  series: DashboardDayCount[];
+  previousSeries: DashboardDayCount[];
+  byType: { type: EnquiryType; count: number }[];
+  byProduct: { product: string; count: number }[];
+  /** Monday first. */
+  byWeekday: number[];
+  quoted: { currency: string; totalMinor: number; count: number }[];
+  topPackages: { packageId: string | null; title: string; count: number }[];
+  awaiting: {
+    id: string;
+    reference: string;
+    name: string;
+    type: EnquiryType;
+    packageTitle: string | null;
+    createdAt: string;
+  }[];
+  byDestination: { name: string; count: number }[];
+  staff: { id: string; username: string; handled: number; closed: number }[];
+  upcoming: {
+    id: string;
+    reference: string;
+    name: string;
+    packageTitle: string | null;
+    checkIn: string;
+    nights: number | null;
+    status: EnquiryStatus;
+  }[];
+  upcomingNext30: number;
+};
+export type DashboardCatalogue = {
+  byProduct: { product: string; published: number; draft: number; archived: number }[];
+  featured: number;
+  destinationsPublished: number;
+  destinationsDraft: number;
+  needingAttention: number;
+  toFix: { id: string; title: string; product: string; reason: string }[];
+};
+export type DashboardResponse = {
+  generatedAt: string;
+  days: number;
+  enquiries: DashboardEnquiries;
+  catalogue: DashboardCatalogue;
+};
+
 /** Query for GET /api/v1/packages (the public list: published packages only). */
 export type PackageListQuery = NonNullable<paths["/api/v1/packages"]["get"]["parameters"]["query"]>;
 

@@ -12,6 +12,12 @@ import PageBanner from "@/components/PageBanner";
 type SearchParams = Record<string, string | string[] | undefined>;
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? "";
 
+const PHOTO: Record<PublicType, "flights" | "hotels" | "visas"> = {
+  Flight: "flights",
+  HotelReservation: "hotels",
+  VisaSupport: "visas",
+};
+
 const SORTS: [string, string][] = [
   ["", "Featured first"],
   ["price", "Price, lowest first"],
@@ -47,7 +53,13 @@ export default async function ProductListing({ type, searchParams }: { type: Pub
 
   return (
     <ListingProvider params={params}>
-      <PageBanner overlap above={<KindSwitcher active={copy.path} />} title={copy.heroTitle} intro={copy.heroText} />
+      <PageBanner
+        overlap
+        photo={PHOTO[type]}
+        above={<KindSwitcher active={copy.path} />}
+        title={copy.heroTitle}
+        intro={copy.heroText}
+      />
 
       <div className="pkgs-searchwrap">
         <ProductSearch destinations={destinations} placeholder={copy.searchHint} label={copy.plural} />

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Icon, { type IconName } from "@/components/home/Icon";
 import { track } from "@/utils/track";
 
 // What a traveller comes to do, then Essentials (the company) and Elite Jets (private charter).
@@ -14,15 +13,34 @@ const MAIN = [
   { href: "/packages", label: "Holidays" },
 ];
 
-const ESSENTIALS: { href: string; label: string; text: string; icon: IconName }[] = [
-  { href: "/about", label: "About us", text: "Who we are, and where we are taking ARLink28.", icon: "globe" },
-  { href: "/team", label: "Team", text: "The people who price and book your trips.", icon: "person" },
-  { href: "/blogs", label: "Blogs", text: "Travel stories and guides for the routes you fly.", icon: "layers" },
+const ESSENTIALS: { href: string; label: string; text: string; photo: string; focus: string }[] = [
+  {
+    href: "/about",
+    label: "About us",
+    text: "Who we are, and where we are taking ARLink28.",
+    photo: "/images/home/livery-1200.webp",
+    focus: "62% 28%",
+  },
+  {
+    href: "/team",
+    label: "Team",
+    text: "The people who price and book your trips.",
+    photo: "/images/home/proof-harare.webp",
+    focus: "50% 25%",
+  },
+  {
+    href: "/blogs",
+    label: "Blogs",
+    text: "Travel stories and guides for the routes you fly.",
+    photo: "/images/home/route-giza.webp",
+    focus: "55% 38%",
+  },
   {
     href: "/contact",
     label: "Contact",
     text: "Message or call us, or find our Lagos and London offices.",
-    icon: "message",
+    photo: "/images/home/team-support.webp",
+    focus: "50% 22%",
   },
 ];
 
@@ -181,7 +199,7 @@ export default function Header({ themable = false }: { themable?: boolean }) {
             >
               Essentials
               <svg viewBox="0 0 12 12" aria-hidden="true">
-                <path d="m2.5 4.5 3.5 3.5 3.5-3.5" />
+                <path d="m2.5 4.25 3.5 3.5 3.5-3.5" />
               </svg>
             </button>
             {essentialsOpen && (
@@ -190,14 +208,22 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                   {ESSENTIALS.map((link, i) => (
                     <li key={link.href} style={{ ["--i" as string]: i }}>
                       <Link href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>
-                        <Icon name={link.icon} />
-                        <span className="sh-mega-title">
-                          {link.label}
-                          <svg viewBox="0 0 16 16" aria-hidden="true">
-                            <path d="M3 8h10M9 4l4 4-4 4" />
+                        <img
+                          className="sh-mega-thumb"
+                          src={link.photo}
+                          alt=""
+                          decoding="async"
+                          width={96}
+                          height={96}
+                          style={{ objectPosition: link.focus }}
+                        />
+                        <span className="sh-mega-title">{link.label}</span>
+                        <span className="sh-mega-text">{link.text}</span>
+                        <span className="sh-mega-go" aria-hidden="true">
+                          <svg viewBox="0 0 16 16">
+                            <path d="M4 12 12 4M5.5 4H12v6.5" />
                           </svg>
                         </span>
-                        <span className="sh-mega-text">{link.text}</span>
                       </Link>
                     </li>
                   ))}

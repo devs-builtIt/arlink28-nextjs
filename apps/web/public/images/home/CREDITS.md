@@ -10,7 +10,7 @@
   Used under the Unsplash License (free for commercial use, no attribution required). Photographer listed on Unsplash as Denice Alex; confirm on that page.
   Stock photo of strangers: not an ARLink28 customer. Swap for a real customer photo, with permission, when one is available.
 
-- `jet-tarmac-900.webp`, `jet-sunset-900.webp`, `jet-cabin-900.webp`: private jet photos for the Elite Jets teaser.
+- `jet-tarmac-1600.webp`, `jet-sunset-1600.webp`, `jet-cabin-1600.webp`: private jet photos for the Elite Jets cards (re-fetched at 1800 px from the same Unsplash photos, tarmac cropped from portrait to landscape, re-encoded as WebP).
   Unsplash, used under the Unsplash License (free for commercial use, no attribution required). Photo ids:
   photo-1619659085985-f51a00f0160a (Jakob Rosen), photo-1474302770737-173ee21bab63 (Chris Leipelt),
   photo-1625513123245-fcb02d69ad12 (Yaroslav Muzychenko). Photographer names are as listed on Unsplash; confirm on the pages.
@@ -27,3 +27,13 @@
 - `route-giza.webp`: the Great Pyramid and the Sphinx at Giza, Egypt.
   Unsplash, photo by Dilip Poddar (https://unsplash.com/photos/1k7JC31SRyI). Used under the Unsplash License
   (free for commercial use, no attribution required). Cropped to portrait for the destination card.
+
+- `jet-challenger-604-1600.webp`: ARLink28's own Challenger 604, from the company's jets folder (`Company docs/Packages/jets/Jets/Jets/Challenger 604.webp`, 1920 px), resized to 1600 px. Used for the Elite tier.
+  The Hawker 900XP and the other Challenger photos in that folder are 384 px thumbnails, too small for the large cards; ask for the originals.
+
+- `../contact/victoria-falls.webp`: Victoria Falls at sunset, from the full original (4008 x 6012), resized to 1600 px wide for the contact page panel.
+  Unsplash, photo by Ed Wingate (https://unsplash.com/photos/PnxYaSxn6zQ). Used under the Unsplash License (free for commercial use, no attribution required).
+
+- `../quote/giza.webp`: the Great Pyramid of Khafre at Giza, cropped to portrait from the full original (2400 x 1608) of the photo used for
+  `route-giza.webp`. Unsplash, photo by Dilip Poddar (https://unsplash.com/photos/1k7JC31SRyI). Used under the Unsplash License (free for
+  commercial use, no attribution required). Used in the Quote page's side panel.

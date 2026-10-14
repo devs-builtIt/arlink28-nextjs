@@ -5,33 +5,67 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("overview", () => {
-  test("shows the session and real staff numbers", async ({ page }) => {
-    await expect(page.getByText("Signed in as anna_bello.")).toBeVisible();
+  test("the overview shows the real enquiry numbers", async ({ page }) => {
+    await expect(
+      page.getByRole("heading", { name: /^Good (morning|afternoon|evening), Anna$/, level: 1 }),
+    ).toBeVisible();
 
-    const session = page.getByRole("region", { name: "Your session" });
-    await expect(session.getByRole("img", { name: /^[78]h \d+m left$/ })).toBeVisible();
-    await expect(session.getByText("Super admin")).toBeVisible();
+    // The four headline figures.
+    for (const label of ["Enquiries", "Waiting for a reply", "Time to act", "Quoted"]) {
+      await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
+    }
 
-    const accounts = page.getByRole("region", { name: "Staff accounts" });
-    await expect(accounts.getByText("5 active")).toBeVisible();
-    await expect(accounts.getByRole("img", { name: "5 of 6 accounts active" })).toBeVisible();
+    // The latest enquiries, newest first, each linking to its page.
+    const recent = page.getByRole("region", { name: "Recent enquiries" });
+    await expect(recent.getByRole("row")).toHaveCount(4); // the header and the three seeded enquiries
+    await expect(recent.getByRole("link", { name: /Sam Roe/ })).toBeVisible();
 
-    const roles = page.getByRole("region", { name: "Roles" });
-    await expect(roles.getByText("Super admins")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Top destinations" })).toContainText("Kenya");
+    await expect(page.getByRole("region", { name: "Top services" })).toContainText("Holidays");
+  });
 
-    // Most recent first; yusuf_bakare has never signed in, so isn't listed.
-    const recent = page.getByRole("region", { name: "Recent sign-ins" }).getByRole("listitem");
-    await expect(recent).toHaveCount(5);
-    await expect(recent.first()).toContainText("anna_bello");
-    await expect(page.getByRole("region", { name: "Recent sign-ins" })).not.toContainText("yusuf_bakare");
+  test("the waiting card opens the unanswered enquiries", async ({ page }) => {
+    await page.getByRole("link", { name: /Waiting for a reply/ }).click();
+    await expect(page).toHaveURL(/\/admin\/enquiries\?status=New$/);
+  });
+
+  test("recent enquiries are paged ten at a time", async ({ page, request }) => {
+    for (let i = 1; i <= 9; i++) {
+      await request.post("http://localhost:5399/api/v1/enquiries", {
+        data: {
+          type: "General",
+          name: `Guest ${i}`,
+          email: `guest${i}@example.test`,
+          subject: "Hello",
+          message: "Hi",
+          consent: true,
+        },
+      });
+    }
+    await page.reload();
+    const recent = page.getByRole("region", { name: "Recent enquiries" });
+    await expect(recent.getByRole("row")).toHaveCount(11); // the header and ten rows
+    await expect(recent.getByText("Showing 1 to 10 of 12 enquiries")).toBeVisible();
+    await recent.getByRole("button", { name: "Next" }).click();
+    await expect(recent.getByText("Showing 11 to 12 of 12 enquiries")).toBeVisible();
+    await expect(recent.getByRole("row")).toHaveCount(3);
+  });
+
+  test("changing the period asks for that many days and says so", async ({ page }) => {
+    await expect(page.getByText("Enquiries, 30 days")).toBeVisible();
+    const request = page.waitForRequest((r) => r.url().includes("/api/v1/admin/dashboard?days=7"));
+    await page.getByRole("button", { name: "Last 7 days" }).click();
+    await request;
+    await expect(page.getByRole("button", { name: "Last 7 days" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByText("Enquiries, 7 days")).toBeVisible();
   });
 
   test("the current page is marked in the navigation", async ({ page }) => {
     const nav = page.getByRole("navigation", { name: "Admin" });
-    await expect(nav.getByRole("link", { name: "Overview" })).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
     await nav.getByRole("link", { name: "Staff" }).click();
     await expect(nav.getByRole("link", { name: "Staff" })).toHaveAttribute("aria-current", "page");
-    await expect(nav.getByRole("link", { name: "Overview" })).not.toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: "Dashboard" })).not.toHaveAttribute("aria-current", "page");
   });
 });
 

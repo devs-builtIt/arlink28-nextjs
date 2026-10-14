@@ -36,14 +36,20 @@ export default function QuotePage() {
       <PageBanner
         label="Get a quote"
         id="hm-qp-h"
-        title="Tell us where, and we will price it."
+        title={
+          <>
+            Tell us where,
+            <br />
+            and we will price it.
+          </>
+        }
         intro="Send us your route and dates, or just the idea. A person replies with options and a price, and nothing is charged until you agree."
       />
 
       <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Quote request">
         <div className="hm-qp hm-wrap">
           <div className="hm-qp-side">
-            <img src="/images/home/route-dxb.webp" alt="" width={800} height={1000} />
+            <img src="/images/quote/giza.webp" alt="" width={970} height={1608} />
             <div className="hm-qp-copy">
               <h2>Prefer to talk?</h2>
               <p>Call us, or visit one of our offices. The team answers every request personally.</p>

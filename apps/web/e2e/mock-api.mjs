@@ -919,6 +919,192 @@ async function readJson(req) {
   }
 }
 
+// A small seeded generator, so the dashboard shows the same numbers on every load.
+function dashboardFor(days) {
+  let seed = 7;
+  const rand = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const day = (offset) => new Date(today.getTime() + offset * 86400000).toISOString().slice(0, 10);
+  const count = (i) => {
+    const wave = 3 + 2.2 * Math.sin(i / 3.1) + 1.4 * Math.sin(i / 9);
+    return Math.max(0, Math.round(wave + rand() * 3 - 0.8 + i / (days * 0.8)));
+  };
+  const series = Array.from({ length: days }, (_, i) => ({ date: day(i - (days - 1)), count: count(i) }));
+  const previousSeries = Array.from({ length: days }, (_, i) => ({
+    date: day(i - (days - 1)),
+    count: Math.max(0, Math.round(count(i) * 0.78 - 0.5 + rand())),
+  }));
+  const total = series.reduce((n, d) => n + d.count, 0);
+  const previousTotal = previousSeries.reduce((n, d) => n + d.count, 0);
+  const share = (f) => Math.round(total * f);
+  const closed = share(0.34);
+  const contacted = share(0.41);
+  const hoursAgo = (h) => new Date(Date.now() - h * 3600000).toISOString();
+  return {
+    generatedAt: new Date().toISOString(),
+    days,
+    enquiries: {
+      total,
+      previousTotal,
+      new: total - closed - contacted,
+      contacted,
+      closed,
+      awaitingAll: 9,
+      medianHandleHours: 6.4,
+      series,
+      previousSeries,
+      byType: [
+        { type: "Package", count: share(0.46) },
+        { type: "Booking", count: share(0.21) },
+        { type: "General", count: share(0.17) },
+        { type: "Partnership", count: share(0.09) },
+        { type: "Career", count: share(0.05) },
+        { type: "Investor", count: share(0.02) },
+      ],
+      byProduct: [
+        { product: "HolidayPackage", count: share(0.38) },
+        { product: "Flight", count: share(0.22) },
+        { product: "HotelReservation", count: share(0.13) },
+        { product: "VisaSupport", count: share(0.08) },
+        { product: "General", count: share(0.19) },
+      ],
+      byWeekday: [0.17, 0.19, 0.16, 0.15, 0.13, 0.08, 0.12].map((f) => share(f)),
+      quoted: [
+        { currency: "USD", totalMinor: 4_286_000, count: 14 },
+        { currency: "GBP", totalMinor: 612_000, count: 3 },
+      ],
+      topPackages: [
+        { packageId: null, title: "Ultimate Safari Collection Journey", count: 11 },
+        { packageId: null, title: "Giraffe Manor Stay", count: 8 },
+        { packageId: null, title: "Lagos to Nairobi", count: 6 },
+        { packageId: null, title: "Zanzibar Beach Escape", count: 4 },
+        { packageId: null, title: "Kenya tourist visa", count: 2 },
+      ],
+      awaiting: [
+        {
+          id: "a1",
+          reference: "ENQ-2026-0211",
+          name: "Adaeze Okafor",
+          type: "Package",
+          packageTitle: "Ultimate Safari Collection Journey",
+          createdAt: hoursAgo(98),
+        },
+        {
+          id: "a2",
+          reference: "ENQ-2026-0219",
+          name: "Tendai Moyo",
+          type: "Booking",
+          packageTitle: "Lagos to Nairobi",
+          createdAt: hoursAgo(41),
+        },
+        {
+          id: "a3",
+          reference: "ENQ-2026-0224",
+          name: "Samuel Mensah",
+          type: "General",
+          packageTitle: null,
+          createdAt: hoursAgo(19),
+        },
+        {
+          id: "a4",
+          reference: "ENQ-2026-0227",
+          name: "Amina Yusuf",
+          type: "Package",
+          packageTitle: "Giraffe Manor Stay",
+          createdAt: hoursAgo(6),
+        },
+        {
+          id: "a5",
+          reference: "ENQ-2026-0229",
+          name: "Daniel Kimani",
+          type: "Partnership",
+          packageTitle: null,
+          createdAt: hoursAgo(2),
+        },
+      ],
+      byDestination: [
+        { name: "Kenya", count: share(0.31) },
+        { name: "Tanzania", count: share(0.19) },
+        { name: "Zanzibar", count: share(0.14) },
+        { name: "Ghana", count: share(0.09) },
+        { name: "Egypt", count: share(0.06) },
+      ],
+      staff: [
+        { id: "u1", username: "anna_bello", handled: share(0.34), closed: share(0.14) },
+        { id: "u2", username: "kwame_mensah", handled: share(0.26), closed: share(0.1) },
+        { id: "u3", username: "fatima_diallo", handled: share(0.19), closed: share(0.07) },
+        { id: "u4", username: "tunde_okafor", handled: share(0.08), closed: share(0.03) },
+      ],
+      upcoming: [
+        {
+          id: "t1",
+          reference: "ENQ-2026-0188",
+          name: "Chidi Eze",
+          packageTitle: "Ultimate Safari Collection Journey",
+          checkIn: day(4),
+          nights: 10,
+          status: "Contacted",
+        },
+        {
+          id: "t2",
+          reference: "ENQ-2026-0196",
+          name: "Naledi Dube",
+          packageTitle: "Giraffe Manor Stay",
+          checkIn: day(9),
+          nights: 3,
+          status: "Contacted",
+        },
+        {
+          id: "t3",
+          reference: "ENQ-2026-0203",
+          name: "Esther Wanjiru",
+          packageTitle: "Zanzibar Beach Escape",
+          checkIn: day(16),
+          nights: 7,
+          status: "New",
+        },
+        {
+          id: "t4",
+          reference: "ENQ-2026-0210",
+          name: "Kofi Asante",
+          packageTitle: "Lagos to Nairobi",
+          checkIn: day(23),
+          nights: null,
+          status: "Contacted",
+        },
+        {
+          id: "t5",
+          reference: "ENQ-2026-0217",
+          name: "Zanele Khumalo",
+          packageTitle: "Sasaab Stay",
+          checkIn: day(38),
+          nights: 4,
+          status: "New",
+        },
+      ],
+      upcomingNext30: 4,
+    },
+    catalogue: {
+      byProduct: [
+        { product: "HolidayPackage", published: 9, draft: 2, archived: 1 },
+        { product: "Flight", published: 4, draft: 0, archived: 0 },
+        { product: "HotelReservation", published: 3, draft: 1, archived: 0 },
+        { product: "VisaSupport", published: 2, draft: 2, archived: 0 },
+      ],
+      featured: 3,
+      destinationsPublished: 6,
+      destinationsDraft: 2,
+      needingAttention: 4,
+      toFix: [
+        { id: "p1", title: "Kenya tourist visa", product: "VisaSupport", reason: "No photo" },
+        { id: "p2", title: "Sasaab Stay", product: "HotelReservation", reason: "No price" },
+        { id: "p3", title: "Zanzibar Beach Escape", product: "HolidayPackage", reason: "No summary" },
+      ],
+    },
+  };
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://mock");
   const path = url.pathname;
@@ -952,6 +1138,13 @@ const server = http.createServer(async (req, res) => {
   const auth = req.headers.authorization?.replace(/^Bearer /, "");
   const me = auth && db.tokens.has(auth) ? db.users.find((u) => u.id === db.tokens.get(auth)) : null;
   const requireUser = () => (me && me.isActive ? me : null);
+
+  // ── Dashboard: the same shape as arlink28-api's GET /admin/dashboard, with plausible, repeatable numbers ──
+  if (method === "GET" && path === "/api/v1/admin/dashboard") {
+    if (!requireUser()) return problem(res, 401);
+    const days = Math.min(365, Math.max(7, Number(url.searchParams.get("days")) || 30));
+    return send(res, 200, dashboardFor(days));
+  }
 
   // ── Auth ──
   if (method === "POST" && path === "/api/v1/auth/login") {

@@ -17,7 +17,7 @@ interface Props {
 type NavItem = { href: string; label: string; icon: string; superAdminOnly?: boolean };
 
 const NAV: NavItem[] = [
-  { href: "/admin/dashboard", label: "Overview", icon: "fa-table-cells-large" },
+  { href: "/admin/dashboard", label: "Dashboard", icon: "fa-table-cells-large" },
   { href: "/admin/packages", label: "Packages", icon: "fa-suitcase-rolling" },
   { href: "/admin/destinations", label: "Destinations", icon: "fa-earth-africa" },
   { href: "/admin/enquiries", label: "Enquiries", icon: "fa-inbox" },
@@ -77,10 +77,18 @@ export default function ProtectedPage({ children, requireSuperAdmin = false, wid
           ))}
         </nav>
 
-        <button className="rail-link rail-signout" onClick={logout}>
-          <i className="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-          Sign out
-        </button>
+        <div className="rail-user">
+          <span className="who-tile" aria-hidden="true">
+            {initials(user.username)}
+          </span>
+          <span className="who-text">
+            <span className="who-name">{user.username}</span>
+            <span className="who-role">{roleLabel(user.role)}</span>
+          </span>
+          <button className="rail-out" onClick={logout} aria-label="Sign out" title="Sign out">
+            <i className="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+          </button>
+        </div>
       </aside>
       <div className="scrim" aria-hidden="true" onClick={() => setNavOpen(false)}></div>
 
@@ -100,15 +108,9 @@ export default function ProtectedPage({ children, requireSuperAdmin = false, wid
             <Brand />
           </span>
 
-          <div className="who">
-            <span className="who-tile" aria-hidden="true">
-              {initials(user.username)}
-            </span>
-            <span className="who-text">
-              <span className="who-name">{user.username}</span>
-              <span className="who-role">{roleLabel(user.role)}</span>
-            </span>
-          </div>
+          <span className="who-tile topbar-who" aria-hidden="true">
+            {initials(user.username)}
+          </span>
         </div>
 
         <main className="main">

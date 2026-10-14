@@ -9,6 +9,11 @@ const PNG = Buffer.from(
   "base64",
 );
 
+// These tests read the table, so they ask for the list view; the cards are the default.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("arlink-packages-view", "list"));
+});
+
 test.describe("flights, hotel reservations and visa support", () => {
   test.beforeEach(async ({ page }) => {
     await signIn(page, SUPER_ADMIN);

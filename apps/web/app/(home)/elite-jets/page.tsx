@@ -35,8 +35,15 @@ export default async function EliteJetsPage() {
       <Reveal />
       <PageBanner
         label="Elite Jets"
+        photo="elite"
         id="el-h1"
-        title="Private aviation, arranged around you."
+        title={
+          <>
+            Private aircraft charter,
+            <br />
+            ground transfers included.
+          </>
+        }
         intro="Three ways to fly private with ARLink28, from the essentials done well to a journey designed entirely for you."
       />
 
@@ -67,7 +74,7 @@ export default async function EliteJetsPage() {
                         <li key={x}>{x}</li>
                       ))}
                     </ul>
-                    <Link className="hm-btn hm-btn-dark" href={`/contact?type=Booking&slug=${t.slug}`}>
+                    <Link className="hm-btn hm-btn-primary" href={`/contact?type=Booking&slug=${t.slug}`}>
                       Enquire about {t.tier}
                     </Link>
                   </div>

@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures";
 
-// Every inner page opens with the same banner (components/PageBanner.tsx): the same photo, the same height,
+// Every inner page opens with the same banner (components/PageBanner.tsx): the same height and shape (the photo differs on holidays, flights, hotels, visas and Elite Jets),
 // the same typeface. This visits them all so one page cannot quietly drift from the rest.
 
 const PAGES = [
@@ -65,7 +65,7 @@ async function measure(page: import("@playwright/test").Page) {
 }
 
 test.describe("the banner at the top of the inner pages", () => {
-  test("is the same on every page: one photo, one height, one typeface", async ({ page }) => {
+  test("is the same on every page: one height, one shape, one typeface", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     const seen = new Map<string, string[]>();
     for (const path of PAGES) {
@@ -83,7 +83,6 @@ test.describe("the banner at the top of the inner pages", () => {
         font: m.font,
         weight: m.weight,
         size: m.size,
-        photo: m.photo,
       });
       seen.set(key, [...(seen.get(key) ?? []), path]);
     }
@@ -97,8 +96,30 @@ test.describe("the banner at the top of the inner pages", () => {
       radius: "12px",
       font: "Satoshi",
       weight: "500",
-      size: "64px",
+      size: "60px",
     });
+  });
+
+  test("gives holidays, flights, hotels, visas and Elite Jets a photo of their own and everything else the safari", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const photos = new Map<string, string>();
+    for (const [path, expected] of [
+      ["/packages", "holidays"],
+      ["/about", "banner"],
+      ["/flights", "flights"],
+      ["/hotels", "hotels"],
+      ["/visas", "visas"],
+      ["/elite-jets", "elite"],
+    ] as const) {
+      await page.goto(path);
+      const m = await measure(page);
+      expect(m.loaded, `${path}: the photo loads`).toBe(true);
+      expect(m.photo, path).toBe(`banner/${expected}-1920.webp`);
+      photos.set(path, m.photo);
+    }
+    expect(new Set(["/flights", "/hotels", "/visas", "/packages"].map((p) => photos.get(p))).size).toBe(4);
   });
 
   test("is a rounded card inset from the page edges, the same shape as the homepage hero", async ({ page }) => {
@@ -154,7 +175,7 @@ test.describe("the banner at the top of the inner pages", () => {
     for (const path of ["/about", "/engagement", "/packages", "/book/flight", "/privacy-policy", "/contact"]) {
       await page.goto(path);
       const m = await measure(page);
-      expect(m.size, `${path}: title size`).toBe("36px");
+      expect(m.size, `${path}: title size`).toBe("30px");
       expect(m.sideways, `${path}: no sideways scroll`).toBe(false);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     }

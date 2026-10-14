@@ -43,6 +43,12 @@ export function greeting(hour = new Date().getHours()): string {
   return "Good evening";
 }
 
+/** "Anna" from the username "anna_bello": the part before the first separator, capitalised. */
+export function firstName(username: string): string {
+  const first = username.split(/[._\-\s]/)[0] || username;
+  return first.charAt(0).toUpperCase() + first.slice(1);
+}
+
 /** "$8,488" from 848800 USD minor units; cents only when there are any. */
 export function money(minor: number, currency: string): string {
   const whole = minor % 100 === 0;

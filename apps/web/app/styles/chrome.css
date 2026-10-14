@@ -184,8 +184,8 @@
   justify-content: center;
   gap: 8px;
   min-height: 46px;
-  padding: 0 18px;
-  border-radius: var(--radius);
+  padding: 0 9px 0 22px;
+  border-radius: 999px;
   border: 1px solid transparent;
   background: var(--red);
   color: #fff;
@@ -203,18 +203,24 @@
 .sh-cta::before {
   content: "";
   flex: none;
-  width: 18px;
-  height: 18px;
+  order: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   background: currentColor;
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'/></svg>")
-    center / contain no-repeat;
-  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'/></svg>")
-    center / contain no-repeat;
-  transition: transform 0.6s var(--ease);
+  -webkit-mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  mask-composite: exclude;
+  transition: transform 0.5s var(--ease);
 }
 .sh-cta:hover::before,
 .sh-cta:focus-visible::before {
-  transform: translate(3px, -3px);
+  transform: rotate(45deg);
 }
 .sh-cta-quiet {
   background: var(--btn2-bg);
@@ -333,7 +339,7 @@
   }
   .sh-bar > .sh-actions > .sh-cta {
     min-height: 42px;
-    padding: 0 14px;
+    padding: 0 7px 0 16px;
   }
 }
 /* Between phone and wide desktop the bar is tight: smaller gaps keep every item on one line. */
@@ -396,7 +402,6 @@
 /* ---- Footer --------------------------------------------------------------------------------- */
 .sf {
   background: var(--footer-bg);
-  border-top: 1px solid var(--hairline);
   padding: clamp(56px, 7vw, 96px) var(--gutter) 28px;
 }
 .sf-inner {
@@ -568,10 +573,11 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
   gap: 20px;
   padding: calc(var(--bar) - 4px) 20px 20px;
-  border: 1px solid var(--hairline);
   border-radius: 28px;
   background: var(--canvas);
-  box-shadow: var(--shadow-float);
+  box-shadow:
+    0 1px 2px rgba(11, 23, 38, 0.06),
+    0 28px 64px rgba(11, 23, 38, 0.14);
   animation: sh-mega-in 0.22s var(--ease) both;
 }
 .sh.is-scrolled .sh-mega {
@@ -597,34 +603,93 @@
   list-style: none;
 }
 .sh-mega-cards a {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 176px;
-  padding: 16px;
-  border-radius: var(--radius);
+  min-height: 156px;
+  padding: 20px;
+  border-radius: 20px;
   background: var(--canvas-2);
   color: var(--ink);
   opacity: 1;
   border-bottom: 0;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s var(--ease);
 }
-.sh-mega-cards a:hover,
-.sh-mega-cards a[aria-current="page"] {
-  background: var(--chip);
+.sh-mega-cards a:hover {
+  background: var(--canvas);
+  box-shadow: 0 14px 34px rgba(11, 23, 38, 0.12);
+  transform: translateY(-2px);
 }
-.sh-mega-cards .hm-icon {
-  width: 36px;
-  height: 36px;
+/* A round photograph stands in for an icon, and a round arrow badge waits in the corner. */
+.sh-mega-thumb {
+  width: 52px;
+  height: 52px;
   margin-bottom: auto;
-  color: var(--ink-2);
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow:
+    0 0 0 3px var(--canvas),
+    0 2px 8px rgba(11, 23, 38, 0.12);
+}
+.sh-mega-go {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s var(--ease);
+}
+.sh-mega-go svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sh-mega-cards a:hover .sh-mega-go,
+.sh-mega-cards a:focus-visible .sh-mega-go {
+  opacity: 1;
+  transform: none;
+}
+/* The page you are on is marked with a small red dot, so it does not look like a stuck hover. */
+.sh-mega-cards a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.sh-mega-cards a[aria-current="page"]:hover::before,
+.sh-mega-cards a[aria-current="page"]:focus-visible::before {
+  opacity: 0;
 }
 .sh-mega-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 500;
+  letter-spacing: -0.04em;
   color: var(--ink);
 }
 .sh-mega-title svg,
@@ -646,8 +711,8 @@
 .sh-mega-text {
   margin-top: 6px;
   color: var(--ink-2);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 .sh-mega-feature {
   display: flex;
@@ -657,10 +722,10 @@
 .sh-mega-feature img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius);
-  margin-bottom: 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
 }
 .sh-mega-links {
   margin-top: auto;
@@ -767,12 +832,63 @@ body:has(.hm-phero) .sh:not(.is-scrolled) {
   align-self: flex-start;
   margin-top: auto;
   padding: 0 18px;
-  border-bottom: 1px solid var(--btn2-line);
-  color: var(--btn2-ink);
+  border: 0;
+  box-shadow: none;
+  margin-top: 18px;
+  background: var(--canvas-2);
+  color: var(--ink);
   font-size: 14px;
   opacity: 1;
 }
+/* The arrow badge is red, as on the site's other buttons, and the button turns red on hover. */
+.sh-nav .sh-mega-btn::before {
+  background: var(--red);
+}
 .sh-nav .sh-mega-btn:hover {
-  border-color: var(--ink);
-  color: var(--canvas);
+  background: var(--red);
+  color: #fff;
+}
+.sh-nav .sh-mega-btn:hover::before {
+  background: #fff;
+}
+
+/* ---- The round arrow badge at the end of a button -------------------------------------------------
+   The same badge as the site's own buttons, for the older stylesheets of the listing and booking pages. The
+   arrow is cut out of a circle in the button's text colour, and a quarter-turn on hover points it on. */
+.pkgs-button:not(.pkgs-button-block)::before,
+.pkgs-search-button::before,
+.pkgs-card-cta::before,
+.dst-button::before,
+.partner-card-btn::before {
+  content: "";
+  flex: none;
+  order: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: currentColor;
+  -webkit-mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0),
+    var(--btn-arrow) center / 16px 16px no-repeat;
+  mask-composite: exclude;
+  transition: transform 0.5s var(--ease, ease);
+}
+.pkgs-search-button::before {
+  width: 36px;
+  height: 36px;
+}
+.pkgs-button:not(.pkgs-button-block):hover::before,
+.pkgs-button:not(.pkgs-button-block):focus-visible::before,
+.pkgs-search-button:hover::before,
+.pkgs-search-button:focus-visible::before,
+.pkgs-card:hover .pkgs-card-cta::before,
+.dst-button:hover::before,
+.dst-button:focus-visible::before,
+.partner-card-btn:hover::before,
+.partner-card-btn:focus-visible::before {
+  transform: rotate(45deg);
 }

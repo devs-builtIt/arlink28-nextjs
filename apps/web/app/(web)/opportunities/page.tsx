@@ -1,23 +1,76 @@
 import type { Metadata } from "next";
-import "../styles/opportunities-inline.css";
-
-import "../styles/content-shared.css";
-
 import Link from "next/link";
+import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
+import ClosingCta from "@/components/home/ClosingCta";
+import Reveal from "@/components/home/Reveal";
 
 export const metadata: Metadata = {
-  title: "Opportunities | ARLink28 - Shape The Future Of African Aviation",
-  description: "Explore career openings, investor relations, and strategic partnership opportunities with ARLink28.",
+  title: "Opportunities | ARLink28",
+  description: "Careers, investor information and partnership opportunities with ARLink28.",
 };
+
+// Openings are listed here as they exist. Add a role to this list when one opens; do not list a role that is not open.
+const ROLES = [
+  {
+    title: "Development Team Member",
+    place: "Remote / Lagos, Nigeria",
+    team: "Technology",
+    text: "Build and maintain the ARLink28 digital platform: booking engines, admin dashboards and customer-facing web applications.",
+    skills: ["React", "Node.js", "AWS", "TypeScript"],
+  },
+];
+
+// What is planned is written as planned. No figures, returns or market projections are stated here until the
+// business has confirmed them and they have been reviewed for use in investor material.
+const INVEST = [
+  {
+    title: "A planned base in Ethiopia",
+    text: "We intend to base the airline in Addis Ababa, one of Africa's main aviation gateways.",
+  },
+  {
+    title: "A staged approach",
+    text: "We are building governance, regulatory compliance and financial discipline before entering full airline operations.",
+  },
+  {
+    title: "Leadership",
+    text: "Our team spans aviation, technology and finance. You can read about them on the team page.",
+  },
+];
+
+const PARTNERS = [
+  {
+    title: "Airlines",
+    text: "African and global carriers we can work with on code-share and interline arrangements.",
+  },
+  {
+    title: "Hospitality",
+    text: "Hotel groups, resorts and accommodation providers, to bundle into travel packages.",
+  },
+  {
+    title: "Technology",
+    text: "Booking platforms, payment providers and aviation software vendors.",
+  },
+  {
+    title: "Finance",
+    text: "Banks, investment firms and financial institutions supporting our growth.",
+  },
+];
 
 export default function OpportunitiesPage() {
   return (
-    <>
+    <div className="hm">
+      <Reveal />
       <PageBanner
         label="Opportunities"
-        title="Shape the future of African aviation"
-        intro="Whether you're a talented professional, a strategic investor, or an ambitious partner, ARLink28 has a place for you in building Africa's next great airline."
+        title={
+          <>
+            Shape the future
+            <br />
+            of African aviation
+          </>
+        }
+        intro="Whether you are a professional, an investor or a potential partner, here is how to work with ARLink28 as it builds towards an airline."
         actions={
           <>
             <a className="pb-btn pb-btn-primary" href="#careers">
@@ -29,308 +82,144 @@ export default function OpportunitiesPage() {
           </>
         }
       />
-      <section className="pb-stats" aria-label="Opportunities at a glance">
-        <div className="pb-stats-in">
-          <div className="opp-hero-stats">
-            <div className="opp-stat-card glass-panel">
-              <div className="opp-stat-icon">
-                <i className="fa-solid fa-users"></i>
-              </div>
-              <div className="opp-stat-num">50+</div>
-              <div className="opp-stat-lbl">Open Roles</div>
+
+      <section className="hm-sec hm-sec-white" id="careers" data-tone="light" aria-labelledby="op-careers">
+        <div className="hm-wrap">
+          <div className="ab-split">
+            <div className="ab-side">
+              <h2 className="hm-title hm-title-left" id="op-careers" data-rv>
+                <span className="hm-sticker" aria-hidden="true">
+                  Careers
+                </span>
+                Join the
+                <br />
+                <span className="hm-dim">team.</span>
+              </h2>
             </div>
-            <div className="opp-stat-card glass-panel">
-              <div className="opp-stat-icon">
-                <i className="fa-solid fa-handshake"></i>
-              </div>
-              <div className="opp-stat-num">20+</div>
-              <div className="opp-stat-lbl">Partners</div>
-            </div>
-            <div className="opp-stat-card glass-panel">
-              <div className="opp-stat-icon">
-                <i className="fa-solid fa-globe"></i>
-              </div>
-              <div className="opp-stat-num">30+</div>
-              <div className="opp-stat-lbl">Countries</div>
-            </div>
-            <div className="opp-stat-card glass-panel">
-              <div className="opp-stat-icon">
-                <i className="fa-solid fa-chart-line"></i>
-              </div>
-              <div className="opp-stat-num">$5M+</div>
-              <div className="opp-stat-lbl">Investment Target</div>
+            <div className="ab-body">
+              <p className="ab-lead" data-rv>
+                We are building towards an airline from the ground up, and we hire people who want to help shape it.
+              </p>
+              <ul className="opp-roles">
+                {ROLES.map((r, i) => (
+                  <li key={r.title} data-rv style={{ ["--i" as string]: i }}>
+                    <p className="opp-meta">
+                      {r.team} · {r.place}
+                    </p>
+                    <h3>{r.title}</h3>
+                    <p>{r.text}</p>
+                    <ul className="ab-values">
+                      {r.skills.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ul>
+                    <Link className="hm-btn hm-btn-primary" href="/contact?type=Career">
+                      Apply now
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="opp-note" data-rv>
+                We hire as we grow. If your skills fit what we are building, send us a message and choose Career, or
+                write to <a href="mailto:careers@arlink28.com">careers@arlink28.com</a>.
+              </p>
             </div>
           </div>
         </div>
       </section>
-      <section className="opp-section" id="careers">
-        <div className="section-header reveal">
-          <span className="section-tag">Career Openings</span>
-          <h2>
-            Join The <span className="highlight-red">ARLink28</span> Team
+
+      <section className="hm-sec" id="invest" aria-labelledby="op-invest">
+        <div className="hm-wrap">
+          <div className="ab-split">
+            <div className="ab-side">
+              <h2 className="hm-title hm-title-left" id="op-invest" data-rv>
+                <span className="hm-sticker" aria-hidden="true">
+                  Investors
+                </span>
+                Invest in what
+                <br />
+                <span className="hm-dim">we are building.</span>
+              </h2>
+            </div>
+            <div className="ab-body">
+              <figure className="opp-photo" data-rv>
+                <img
+                  src="/images/connect/farnborough.webp"
+                  alt="The Apex of Aviation lettering at the Farnborough International Airshow"
+                  loading="lazy"
+                  decoding="async"
+                  width={1600}
+                  height={1231}
+                />
+              </figure>
+              <p className="ab-lead" data-rv>
+                We are looking for strategic investment partners to help us build towards a regional airline, and we
+                will share our plans and our approach with serious investors.
+              </p>
+              <ul className="cn-why">
+                {INVEST.map((v, i) => (
+                  <li key={v.title} data-rv style={{ ["--i" as string]: i }}>
+                    <strong>{v.title}</strong>
+                    <span>{v.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="ab-actions" data-rv>
+                <Link className="hm-btn hm-btn-primary" href="/contact?type=Investor">
+                  Request investor information
+                </Link>
+              </div>
+              <p className="opp-note" data-rv>
+                Nothing on this page is an offer to sell, or a solicitation to buy, any securities.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hm-sec hm-sec-white" id="partnerships" data-tone="light" aria-labelledby="op-partners">
+        <div className="hm-wrap">
+          <h2 className="hm-title hm-title-left cn-heading" id="op-partners" data-rv>
+            <span className="hm-sticker" aria-hidden="true">
+              Partnerships
+            </span>
+            Partner with
+            <br />
+            <span className="hm-dim">ARLink28.</span>
           </h2>
-          <p>
-            We're building a world-class airline from the ground up. We want passionate, talented people ready to shape
-            the future of African aviation.
-          </p>
-        </div>
-        <div className="jobs-carousel-container reveal">
-          <button className="carousel-control prev" id="carousel-prev" aria-label="Previous">
-            <i className="fa-solid fa-chevron-left"></i>
-          </button>
-          <button className="carousel-control next" id="carousel-next" aria-label="Next">
-            <i className="fa-solid fa-chevron-right"></i>
-          </button>
-          <div className="jobs-carousel-viewport">
-            <div className="jobs-tickets" id="jobs-track">
-              <div className="job-ticket">
-                <div className="ticket-stub ticket-stub-green">
-                  <div className="ticket-num">01</div>
-                  <div className="ticket-stub-icon">
-                    <i className="fa-solid fa-code"></i>
-                  </div>
-                  <span className="ticket-type badge-remote">Remote</span>
-                </div>
-                <div className="ticket-tear">
-                  <div className="ticket-notch top"></div>
-                  <div className="ticket-dash-line"></div>
-                  <div className="ticket-notch bottom"></div>
-                </div>
-                <div className="ticket-body">
-                  <div className="ticket-body-top">
-                    <div>
-                      <h3>Development Team Member</h3>
-                      <p className="ticket-location">
-                        <i className="fa-solid fa-location-dot"></i>
-                        Remote / Lagos, Nigeria
-                      </p>
-                    </div>
-                    <span className="ticket-dept">Technology</span>
-                  </div>
-                  <p className="ticket-desc">
-                    Build and maintain the ARLink28 digital platform — booking engines, admin dashboards, and
-                    customer-facing web applications at scale.
-                  </p>
-                  <div className="ticket-skills">
-                    <span>React</span>
-                    <span>Node.js</span>
-                    <span>AWS</span>
-                    <span>TypeScript</span>
-                  </div>
-                </div>
-                <div className="ticket-action-panel">
-                  <div className="ticket-ref">ARK-001</div>
-                  <Link className="ticket-apply-btn" href="/contact">
-                    Apply Now
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </Link>
-                  <div className="ticket-mini-barcode">
-                    <div className="tbc w2"></div>
-                    <div className="tbc w1"></div>
-                    <div className="tbc w3"></div>
-                    <div className="tbc w1"></div>
-                    <div className="tbc w2"></div>
-                    <div className="tbc w4"></div>
-                    <div className="tbc w1"></div>
-                    <div className="tbc w2"></div>
-                    <div className="tbc w1"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="carousel-dots" id="carousel-dots"></div>
-        </div>
-      </section>
-      <section className="opp-section opp-invest-section" id="invest">
-        <div className="invest-row">
-          <div className="invest-text reveal-left">
-            <span className="section-tag">Investor Relations</span>
-            <h2>
-              Invest In <span className="highlight-red">Africa's Aviation Future</span>
-            </h2>
-            <p>
-              ARLink28 is seeking strategic investment partners to help build a new era of African air travel. We offer
-              transparent reporting, strong growth projections, and meaningful impact at continental scale.
-            </p>
-            <ul className="invest-list">
-              <li>
-                <i className="fa-solid fa-check"></i>
-                Projected $5M+ Series A round
-              </li>
-              <li>
-                <i className="fa-solid fa-check"></i>
-                30%+ CAGR in African aviation market
-              </li>
-              <li>
-                <i className="fa-solid fa-check"></i>
-                Operational base in Ethiopia — Africa's gateway hub
-              </li>
-              <li>
-                <i className="fa-solid fa-check"></i>
-                Sustainable aviation technology advantage
-              </li>
-              <li>
-                <i className="fa-solid fa-check"></i>
-                Experienced leadership team with aviation & tech backgrounds
-              </li>
-            </ul>
-            <div style={{ marginTop: "30px" }}>
-              <Link className="btn btn-primary" href="/contact">
-                Request Investor Deck
-                <i className="fa-solid fa-arrow-right"></i>
-              </Link>
-            </div>
-          </div>
-          <div className="invest-card-stack reveal-right">
-            <div className="invest-metric-card glass-panel">
-              <i className="fa-solid fa-chart-line"></i>
-              <div>
-                <h4>Market Size</h4>
-                <p>African aviation projected to grow to $25B by 2035.</p>
-              </div>
-            </div>
-            <div className="invest-metric-card glass-panel">
-              <i className="fa-solid fa-plane"></i>
-              <div>
-                <h4>Fleet Strategy</h4>
-                <p>Fuel-efficient aircraft with SAF capability from day one.</p>
-              </div>
-            </div>
-            <div className="invest-metric-card glass-panel">
-              <i className="fa-solid fa-shield-halved"></i>
-              <div>
-                <h4>Risk Management</h4>
-                <p>Robust compliance framework aligned with ICAO standards.</p>
-              </div>
-            </div>
-            <div className="invest-metric-card glass-panel">
-              <i className="fa-solid fa-users"></i>
-              <div>
-                <h4>Management Team</h4>
-                <p>Multi-disciplinary team spanning aviation, tech, and finance.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="opp-section" id="partnerships">
-        <div className="section-header reveal">
-          <span className="section-tag">Partnerships</span>
-          <h2>
-            Partner With <span className="highlight-red">ARLink28</span>
-          </h2>
-          <p>
-            We're actively building a network of strategic partners across aviation, technology, hospitality, and
-            financial services.
-          </p>
-        </div>
-        <div className="partner-types-grid">
-          <div className="partner-type-card glass-panel reveal">
-            <div className="pt-icon">
-              <i className="fa-solid fa-plane"></i>
-            </div>
-            <h3>Airline Partners</h3>
-            <p>
-              Code-share agreements and interline partnerships with African and global carriers for seamless passenger
-              connections.
-            </p>
-            <Link className="pt-link" href="/contact">
-              Get in touch
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-          <div className="partner-type-card glass-panel reveal">
-            <div className="pt-icon">
-              <i className="fa-solid fa-hotel"></i>
-            </div>
-            <h3>Hospitality Partners</h3>
-            <p>
-              Hotel chains, resorts, and accommodation providers to bundle travel packages and deliver end-to-end
-              journeys.
-            </p>
-            <Link className="pt-link" href="/contact">
-              Get in touch
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-          <div className="partner-type-card glass-panel reveal">
-            <div className="pt-icon">
-              <i className="fa-solid fa-laptop-code"></i>
-            </div>
-            <h3>Technology Partners</h3>
-            <p>
-              Booking platforms, payment processors, and aviation software vendors building the digital backbone of
-              ARLink28.
-            </p>
-            <Link className="pt-link" href="/contact">
-              Get in touch
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-          <div className="partner-type-card glass-panel reveal">
-            <div className="pt-icon">
-              <i className="fa-solid fa-building-columns"></i>
-            </div>
-            <h3>Financial Partners</h3>
-            <p>
-              Banks, investment firms, and financial institutions supporting our capitalization and growth strategy.
-            </p>
-            <Link className="pt-link" href="/contact">
-              Get in touch
-              <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-        </div>
-      </section>
-      <section className="cta-adventure">
-        <div className="cta-banner reveal-scale">
-          <div className="cta-content">
-            <h2>
-              Shape Africa's
-              <br />
-              Aviation Future
-            </h2>
-            <p>Whether as a team member, investor, or partner — there's a place for you in the ARLink28 story.</p>
-            <Link className="btn btn-primary" href="/contact">
-              Get In Touch
-              <i className="fa-solid fa-plane"></i>
-            </Link>
-          </div>
-          <div className="cta-visual">
+          <figure className="opp-photo opp-photo-wide" data-rv>
             <img
-              alt="ARLinks Airplane"
+              src="/images/connect/summit.webp"
+              alt="Guests holding certificates on stage at the African Business and Leadership Summit 2026"
               loading="lazy"
-              width="580"
-              height="350"
-              className="cta-plane"
-              src="/images/IMG_5238.png"
-              style={{ color: "transparent", width: "130%", height: "auto", objectFit: "contain" }}
+              decoding="async"
+              width={1600}
+              height={1103}
             />
+          </figure>
+          <ul className="cn-vision">
+            {PARTNERS.map((p, i) => (
+              <li key={p.title} data-rv style={{ ["--i" as string]: i % 2 }}>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="opp-cta" data-rv>
+            <Link className="hm-btn hm-btn-primary" href="/contact?type=Partnership">
+              Talk to us about a partnership
+            </Link>
           </div>
         </div>
       </section>
-      <section className="newsletter-bar" id="register">
-        <div className="newsletter-container">
-          <div className="newsletter-info reveal-left">
-            <i className="fa-regular fa-envelope-open newsletter-icon"></i>
-            <div className="newsletter-text">
-              <h4>Stay in the loop</h4>
-              <p>Get the latest deals, destinations, and travel tips delivered straight to your inbox.</p>
-            </div>
-          </div>
-          <div className="newsletter-form-container reveal-right">
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email address" required aria-label="Email for newsletter" />
-              <button type="submit">Subscribe</button>
-            </form>
-            <div className="newsletter-agree">
-              <input type="checkbox" id="newsletter-check" required />
-              <label htmlFor="newsletter-check">I agree to terms & privacy policy</label>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+
+      <ClosingCta
+        pill="Work with us"
+        heading={["Join us.", "Build it with us."]}
+        text="Whether as a team member, an investor or a partner, tell us how you would like to be involved."
+        cta="Get in touch"
+        href="/contact"
+      />
+    </div>
   );
 }

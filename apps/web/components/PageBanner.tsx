@@ -13,21 +13,32 @@ type Props = {
   above?: ReactNode;
   /** The page docks a search bar into the card's bottom edge: leaves room for it. */
   overlap?: boolean;
+  /** Which photo: the safari by default; holidays, flights, hotels, visas and Elite Jets each have their own. */
+  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas" | "elite";
   id?: string;
 };
 
 /**
  * The banner at the top of every inner page: a rounded photo card sitting under the header, like the
- * homepage's hero but shorter. The same photo, size and layout on every page.
+ * homepage's hero but shorter. The same size and layout on every page; the photo is the one thing that can differ.
  */
-export default function PageBanner({ title, label, intro, actions, above, overlap = false, id = "page-title" }: Props) {
+export default function PageBanner({
+  title,
+  label,
+  intro,
+  actions,
+  above,
+  overlap = false,
+  photo = "banner",
+  id = "page-title",
+}: Props) {
   return (
-    <section className={`pb${overlap ? " pb-overlap" : ""}`} aria-labelledby={id}>
+    <section className={`pb${overlap ? " pb-overlap" : ""}`} data-photo={photo} aria-labelledby={id}>
       <div className="pb-card">
         <img
           className="pb-img"
-          src="/images/banner/banner-1920.webp"
-          srcSet="/images/banner/banner-1280.webp 1280w, /images/banner/banner-1920.webp 1920w, /images/banner/banner-2560.webp 2560w"
+          src={`/images/banner/${photo}-1920.webp`}
+          srcSet={`/images/banner/${photo}-1280.webp 1280w, /images/banner/${photo}-1920.webp 1920w, /images/banner/${photo}-2560.webp 2560w`}
           sizes="100vw"
           alt=""
           width={2560}

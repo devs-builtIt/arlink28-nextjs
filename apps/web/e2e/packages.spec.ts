@@ -52,6 +52,11 @@ async function section(page: Page, name: string) {
   return page.getByRole("region", { name });
 }
 
+// These tests read the table, so they ask for the list view; the cards are the default.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("arlink-packages-view", "list"));
+});
+
 test.describe("packages list", () => {
   test.beforeEach(async ({ page }) => {
     await signIn(page, SUPER_ADMIN);

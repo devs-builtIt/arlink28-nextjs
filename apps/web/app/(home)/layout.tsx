@@ -11,11 +11,11 @@ import BackToTop from "@/components/BackToTop";
 
 export const metadata = siteMetadata;
 
-// The redesigned pages: light or dark, following the visitor's system setting or the header toggle.
+// The redesigned pages: light only for now. Pass `themable` to Header to bring the theme toggle back.
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="home-root">
-      <Header themable />
+      <Header />
       <main id="main" style={{ flex: 1 }}>
         {children}
       </main>

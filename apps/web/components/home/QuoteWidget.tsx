@@ -470,8 +470,8 @@ export default function QuoteWidget() {
       )}
       <ul className="hm-quote-assure">
         <li>No payment until you agree</li>
-        <li>Secure payment, 100% guaranteed</li>
-        <li>24/7 travel support</li>
+        <li>A person replies to every request</li>
+        <li>Sending a request is free</li>
       </ul>
     </div>
   );

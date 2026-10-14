@@ -14,7 +14,13 @@ type Params = { params: { slug: string } };
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const d = await getDestination(params.slug).catch(() => null);
+  // A failure to reach the catalogue is not the same as a destination that does not exist.
+  let failed = false;
+  const d = await getDestination(params.slug).catch(() => {
+    failed = true;
+    return null;
+  });
+  if (failed) return { title: "Destination | ARLink28", robots: { index: false } };
   if (!d) return { title: "Destination not found | ARLink28" };
   const description = d.summary ?? d.tagline ?? undefined;
   return {
@@ -32,7 +38,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function DestinationPage({ params }: Params) {
-  const d = await getDestination(params.slug).catch(() => null);
+  // Only a destination that is not there is a 404. If the catalogue cannot be reached, the error page is shown instead.
+  const d = await getDestination(params.slug).catch(() => {
+    throw new Error("The destination could not be loaded.");
+  });
   if (!d) notFound();
 
   // Packages for this place, or for any place inside it when this is a country. A failure only hides the section.

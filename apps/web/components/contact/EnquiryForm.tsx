@@ -197,14 +197,27 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
     <form className="ct-form" ref={form} onSubmit={submit} noValidate aria-label="Enquiry form">
       {pkg && (
         <div className="ct-about">
-          <p className="ct-about-label">You are enquiring about</p>
-          <p className="ct-about-title">
-            <Link href={pkg.path}>{pkg.title}</Link>
-          </p>
+          <div className="ct-about-head">
+            {pkg.photo && <img className="ct-about-photo" src={pkg.photo} alt="" width={96} height={96} />}
+            <div className="ct-about-text">
+              <p className="ct-about-label">You are enquiring about</p>
+              <p className="ct-about-title">
+                <Link href={pkg.path}>{pkg.title}</Link>
+              </p>
+              <p className="ct-about-place">{pkg.place}</p>
+            </div>
+          </div>
           {(holiday || pkg.summary) && (
-            <p className="ct-about-meta">
-              {holiday ? `${partyLabel(pkg.adults, pkg.children)}, ${nightsLabel(nights)}` : pkg.summary}
-            </p>
+            <ul className="ct-about-facts" aria-label="Package details">
+              {holiday ? (
+                <>
+                  <li>{partyLabel(pkg.adults, pkg.children)}</li>
+                  <li>{nightsLabel(nights)}</li>
+                </>
+              ) : (
+                <li>{pkg.summary}</li>
+              )}
+            </ul>
           )}
           <div className="ct-about-fields">
             {pkg.kind !== "VisaSupport" && (
@@ -441,7 +454,7 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
       )}
 
       <div className="ct-actions">
-        <button type="submit" className="ct-button" disabled={sending}>
+        <button type="submit" className="hm-btn hm-btn-primary" disabled={sending}>
           {sending ? "Sending…" : isPackage ? "Send enquiry" : "Send message"}
         </button>
       </div>

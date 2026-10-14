@@ -8,7 +8,7 @@ import ProtectedPage from "@/components/ProtectedPage";
 import Notice from "@/components/admin/Notice";
 import { Pagination, Skeleton } from "@/components/admin/ui";
 import { EnquiryStatusBadge, STATUSES, tripLine, typeLabel } from "@/components/admin/EnquiryParts";
-import { fullDate, timeAgo } from "@/components/admin/format";
+import { fullDate, initials, timeAgo } from "@/components/admin/format";
 import { adminEnquiriesApi } from "@/utils/api/enquiries";
 import { PRODUCT_TYPES, isHoliday, isProductType, typeLabel as kindLabel } from "@/utils/productTypes";
 
@@ -212,8 +212,15 @@ function EnquiriesList() {
                     >
                       <td className="enq-ref">{e.reference}</td>
                       <td>
-                        <span className="enq-guest">{e.name}</span>
-                        <span className="enq-sub">{e.email}</span>
+                        <span className="pk-who">
+                          <span className="pk-avatar" aria-hidden="true">
+                            {initials(e.name)}
+                          </span>
+                          <span>
+                            <span className="enq-guest">{e.name}</span>
+                            <span className="enq-sub">{e.email}</span>
+                          </span>
+                        </span>
                       </td>
                       <td>
                         <Link

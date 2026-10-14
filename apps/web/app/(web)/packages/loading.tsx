@@ -7,7 +7,14 @@ export default function Loading() {
     <>
       <PageBanner
         overlap
-        title="Find your next safari"
+        photo="holidays"
+        title={
+          <>
+            Find your
+            <br />
+            next safari
+          </>
+        }
         intro="Safari and lodge packages across Africa, with the price up front."
       />
       <div className="pkgs-searchwrap" aria-hidden="true">

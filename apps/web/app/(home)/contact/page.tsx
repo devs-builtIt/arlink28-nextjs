@@ -4,6 +4,7 @@ import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
 import { headline, publicPath } from "@/utils/publicProducts";
 import { getPackage } from "@/utils/server/catalogue";
+import { isUploaded, testPhotosEnabled, testPhotosFor } from "@/utils/testPhotos";
 import "../../styles/home.css";
 import "../../(web)/styles/contact.css";
 
@@ -16,9 +17,18 @@ type Search = { searchParams: { [key: string]: string | string[] | undefined } }
 
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
+/** The package photo, with the same stand-in the package cards use while packages have no real photography. */
+function photoFor(d: NonNullable<Awaited<ReturnType<typeof getPackage>>>): string | null {
+  const hero = d.media.find((m) => m.role === "Hero")?.path ?? null;
+  if (testPhotosEnabled() && !isUploaded(hero)) {
+    return testPhotosFor(d.slug, d.destination.slug, { count: 1, width: 400 })[0].src;
+  }
+  return hero;
+}
+
 const FAQ = [
   {
-    q: "How do I book a flight with ARLinks?",
+    q: "How do I book a flight with ARLink28?",
     a: "Send a quote request from the homepage with your route and dates. A member of our team replies with options and a price, and books it once you agree.",
   },
   {
@@ -34,7 +44,7 @@ const FAQ = [
     a: 'Use the form on this page and choose "Investor" or "Partnership", or email partners@arlink28.com. We\'ll arrange a private briefing and share our investor deck within 72 hours of your enquiry.',
   },
   {
-    q: "Does ARLinks offer group booking discounts?",
+    q: "Does ARLink28 offer group booking discounts?",
     a: "Yes. For groups of 10 or more passengers, we offer preferential pricing and dedicated booking support. Contact our team directly and we'll prepare a tailored group quote within 24 hours.",
   },
 ];
@@ -55,6 +65,8 @@ export default async function ContactPage({ searchParams }: Search) {
     adults: detail.adults,
     children: detail.children,
     extraNightsSold: detail.rates.some((r) => r.extraNightPriceMinor != null),
+    photo: photoFor(detail),
+    place: `${detail.destination.name}, ${detail.destination.country}`,
   };
   // A link whose package no longer exists still says what the guest was looking at.
   const aboutTitle = pkg ? null : title || null;
@@ -82,7 +94,7 @@ export default async function ContactPage({ searchParams }: Search) {
       <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Send a message">
         <div className="hm-qp hm-wrap">
           <div className="hm-qp-side">
-            <img src="/images/home/route-lhr.webp" alt="" width={800} height={1000} />
+            <img src="/images/contact/victoria-falls.webp" alt="" width={1600} height={2400} />
             <div className="hm-qp-copy">
               <h2>Prefer to talk?</h2>
               <p>Call us, write to us, or visit one of our offices. The team answers every request personally.</p>
@@ -105,7 +117,7 @@ export default async function ContactPage({ searchParams }: Search) {
                   </span>
                   <div>
                     <span>Bookings and support</span>
-                    <a href="mailto:support@arlinks.com">support@arlinks.com</a>
+                    <a href="mailto:support@arlink28.com">support@arlink28.com</a>
                   </div>
                 </li>
                 <li>
@@ -206,16 +218,29 @@ export default async function ContactPage({ searchParams }: Search) {
 
       <section className="hm-sec hm-sec-white" data-tone="light" id="faq" aria-labelledby="ct-faq-title">
         <div className="hm-wrap">
-          <h2 className="hm-title" id="ct-faq-title">
-            Common questions
-          </h2>
-          <div className="hm-faq">
-            {FAQ.map((item) => (
-              <details key={item.q}>
-                <summary>{item.q}</summary>
-                <p>{item.a}</p>
-              </details>
-            ))}
+          <div className="hm-faq-wrap">
+            <div className="hm-faq-side">
+              <h2 className="hm-title hm-title-left" id="ct-faq-title">
+                <span className="hm-sticker" aria-hidden="true">
+                  FAQ
+                </span>
+                Common
+                <br />
+                <span className="hm-dim">questions.</span>
+              </h2>
+              <p>Cannot see your question? Send us a message and a person replies.</p>
+              <a className="hm-btn hm-btn-primary" href="#form">
+                Send a message
+              </a>
+            </div>
+            <div className="hm-faq">
+              {FAQ.map((item) => (
+                <details key={item.q}>
+                  <summary>{item.q}</summary>
+                  <p>{item.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </div>
       </section>
