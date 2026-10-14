@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "../../styles/home.css";
-import PageHero from "@/components/home/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/home/Reveal";
 import { loadEliteTiers } from "@/utils/server/elite";
 
@@ -33,12 +33,11 @@ export default async function EliteJetsPage() {
   return (
     <div className="hm">
       <Reveal />
-      <PageHero
+      <PageBanner
+        label="Elite Jets"
         id="el-h1"
         title="Private aviation, arranged around you."
-        text="Three ways to fly private with ARLink28, from the essentials done well to a journey designed entirely for you."
-        image="/images/home/jet-sunset-900.webp"
-        position="50% 60%"
+        intro="Three ways to fly private with ARLink28, from the essentials done well to a journey designed entirely for you."
       />
 
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="el-tiers">

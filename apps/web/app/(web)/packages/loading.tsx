@@ -1,15 +1,15 @@
 import "../styles/packages.css";
+import PageBanner from "@/components/PageBanner";
 
 /** The list's shape while it loads: the hero and search bar, then a grid of quiet placeholder cards. */
 export default function Loading() {
   return (
     <>
-      <section className="pkgs-hero">
-        <div className="pkgs-hero-inner">
-          <h1>Find your next safari</h1>
-          <p>Safari and lodge packages across Africa, with the price up front.</p>
-        </div>
-      </section>
+      <PageBanner
+        overlap
+        title="Find your next safari"
+        intro="Safari and lodge packages across Africa, with the price up front."
+      />
       <div className="pkgs-searchwrap" aria-hidden="true">
         <div className="pkgs-search pkgs-search-skeleton"></div>
       </div>

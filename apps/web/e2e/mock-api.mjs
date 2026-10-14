@@ -16,6 +16,7 @@ import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 
 const CATALOGUE = JSON.parse(readFileSync(new URL("./data/catalogue.json", import.meta.url), "utf8"));
+const DEST_DATA = JSON.parse(readFileSync(new URL("./data/destinations.json", import.meta.url), "utf8"));
 
 const PORT = Number(process.env.MOCK_API_PORT ?? 5399);
 const HOUR = 3600_000;
@@ -403,7 +404,7 @@ const readRaw = async (req) => {
 };
 
 /** The file parts of a multipart body: [{ name, filename, data }]. */
-function parseMultipart(buf, contentType) {
+function parseParts(buf, contentType) {
   const m = /boundary=(?:"([^"]+)"|([^;]+))/.exec(contentType ?? "");
   if (!m) return [];
   const delimiter = Buffer.from(`--${m[1] ?? m[2]}`);
@@ -422,8 +423,16 @@ function parseMultipart(buf, contentType) {
     });
     start = next;
   }
-  return parts.filter((p) => p.filename !== undefined);
+  return parts;
 }
+const parseMultipart = (buf, contentType) => parseParts(buf, contentType).filter((p) => p.filename !== undefined);
+/** The plain (non-file) fields of a multipart body, by name. */
+const multipartFields = (buf, contentType) =>
+  Object.fromEntries(
+    parseParts(buf, contentType)
+      .filter((p) => p.filename === undefined)
+      .map((p) => [p.name, p.data.toString()]),
+  );
 
 /** Identifies an image by its first bytes, like the API. */
 function sniff(b) {
@@ -442,6 +451,7 @@ function seed() {
   return {
     passwords: { ...PASSWORDS },
     packages,
+    destinations: initialDestinations(),
     files: new Map(),
     tokens: new Map(),
     users: [
@@ -688,6 +698,134 @@ function issue(user) {
   return { accessToken, role: user.role, username: user.username, expiresAt };
 }
 
+// ── Destination profiles (public): the catalogue's places plus the profiles in data/destinations.json.
+// Drafts are in the data on purpose, to prove they never leak. ──
+/** The destinations as the API holds them: the catalogue's places plus the profiles in data/destinations.json. */
+function initialDestinations() {
+  const at = new Date().toISOString();
+  const normal = (r) => ({
+    kind: "Place",
+    parentSlug: null,
+    published: true,
+    tagline: null,
+    summary: null,
+    description: null,
+    bestTimeToVisit: null,
+    heroPath: null,
+    heroAlt: null,
+    heroCredit: null,
+    latitude: null,
+    longitude: null,
+    sortOrder: 0,
+    attractions: [],
+    createdAt: at,
+    updatedAt: at,
+    ...r,
+    publishedAt: r.published === false ? null : at,
+  });
+  const base = CATALOGUE.destinations.map((d) => ({ published: true, ...d, ...(DEST_DATA.overrides[d.slug] ?? {}) }));
+  return [...base, ...DEST_DATA.profiles.filter((p) => !base.some((b) => b.slug === p.slug))].map(normal);
+}
+const destinationRecords = () => db.destinations;
+const destinationRow = (r, parentSlug = r.parentSlug) => ({
+  id: r.id,
+  slug: r.slug,
+  name: r.name,
+  country: r.country,
+  kind: r.kind ?? "Place",
+  parentSlug: parentSlug ?? null,
+  tagline: r.tagline ?? null,
+  summary: r.summary ?? null,
+  heroPath: r.heroPath ?? null,
+  heroAlt: r.heroAlt ?? null,
+  heroCredit: r.heroCredit ?? null,
+});
+function destinationList(params) {
+  let rows = destinationRecords().filter((r) => r.published);
+  if (params.get("country")) rows = rows.filter((r) => r.country === params.get("country").toUpperCase());
+  if (params.get("kind"))
+    rows = rows.filter((r) => (r.kind ?? "Place").toLowerCase() === params.get("kind").toLowerCase());
+  return rows.map((r) => destinationRow(r));
+}
+function destinationDetail(slug) {
+  const all = destinationRecords();
+  const r = all.find((x) => x.slug === slug && x.published);
+  if (!r) return null;
+  const parent = all.find((x) => x.slug === r.parentSlug && x.published);
+  const places = all.filter((x) => x.parentSlug === slug && x.published);
+  const slugs = [slug, ...places.map((x) => x.slug)];
+  return {
+    ...destinationRow(r),
+    description: r.description ?? null,
+    bestTimeToVisit: r.bestTimeToVisit ?? null,
+    latitude: null,
+    longitude: null,
+    parent: parent ? destinationRow(parent) : undefined,
+    places: places.map((x) => destinationRow(x)),
+    attractions: r.attractions ?? [],
+    packageCount: CATALOGUE.packages.filter((p) => slugs.includes(p.destination.slug)).length,
+  };
+}
+
+// ── Destinations (admin): the same rules as the API's AdminDestinationService. ──
+const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const destinationChildren = (slug) => db.destinations.filter((x) => x.parentSlug === slug);
+const destinationPackages = (slugs) => db.packages.filter((p) => slugs.includes(p.destination.slug));
+function destinationMissing(r) {
+  const missing = [];
+  if (!r.heroPath) missing.push("A hero photo");
+  if (!r.summary?.trim()) missing.push("A summary");
+  if (r.kind === "Place" && r.attractions.length === 0) missing.push("At least one attraction");
+  if (r.kind === "Country" && !destinationChildren(r.slug).some((x) => x.published))
+    missing.push("At least one published place");
+  return missing;
+}
+const destSummary = (r) => ({
+  id: r.id,
+  slug: r.slug,
+  name: r.name,
+  country: r.country,
+  kind: r.kind,
+  status: r.published ? "Published" : "Draft",
+  parentName: db.destinations.find((x) => x.slug === r.parentSlug)?.name ?? null,
+  heroPath: r.heroPath ?? null,
+  placeCount: destinationChildren(r.slug).length,
+  attractionCount: r.attractions.length,
+  updatedAt: r.updatedAt,
+});
+function destDetail(r) {
+  const parent = db.destinations.find((x) => x.slug === r.parentSlug);
+  const slugs = [r.slug, ...destinationChildren(r.slug).map((x) => x.slug)];
+  return {
+    id: r.id,
+    slug: r.slug,
+    name: r.name,
+    country: r.country,
+    kind: r.kind,
+    status: r.published ? "Published" : "Draft",
+    parentId: parent?.id ?? null,
+    parentName: parent?.name ?? null,
+    tagline: r.tagline,
+    summary: r.summary,
+    description: r.description,
+    bestTimeToVisit: r.bestTimeToVisit,
+    heroPath: r.heroPath,
+    heroAlt: r.heroAlt,
+    heroCredit: r.heroCredit,
+    latitude: r.latitude,
+    longitude: r.longitude,
+    sortOrder: r.sortOrder,
+    slugLocked: r.publishedAt !== null,
+    publishedAt: r.publishedAt,
+    updatedAt: r.updatedAt,
+    places: destinationChildren(r.slug).map(destSummary),
+    attractions: [...r.attractions].sort((a, b) => a.sortOrder - b.sortOrder),
+    packageCount: destinationPackages(slugs).length,
+    missing: destinationMissing(r),
+  };
+}
+const blank = (v) => (typeof v === "string" && v.trim() !== "" ? v.trim() : null);
+
 function send(res, status, body) {
   if (body === undefined) {
     res.writeHead(status);
@@ -798,7 +936,11 @@ const server = http.createServer(async (req, res) => {
     return res.end(file.data);
   }
 
-  const isUpload = method === "POST" && /^\/api\/v1\/admin\/packages\/[^/]+\/media$/.test(path);
+  const isUpload =
+    method === "POST" &&
+    /^\/api\/v1\/admin\/(packages\/[^/]+\/media|destinations\/[^/]+\/hero|destinations\/[^/]+\/attractions\/[^/]+\/photo)$/.test(
+      path,
+    );
   const raw = isUpload ? await readRaw(req) : null;
   const body = method === "GET" || isUpload ? {} : await readJson(req);
   if (body === null)
@@ -873,7 +1015,13 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Catalogue (public) ──
-  if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, CATALOGUE.destinations);
+  if (method === "GET" && path === "/api/v1/destinations") return send(res, 200, destinationList(url.searchParams));
+  if (method === "GET" && path.startsWith("/api/v1/destinations/")) {
+    const found = destinationDetail(decodeURIComponent(path.slice("/api/v1/destinations/".length)));
+    return found
+      ? send(res, 200, found)
+      : send(res, 404, { type: "about:blank", title: "Not Found", status: 404, code: "NOT_FOUND" });
+  }
   if (method === "GET" && path === "/api/v1/packages") {
     const q = Object.fromEntries([...url.searchParams].map(([k, v]) => [k.toLowerCase(), v]));
     // Holidays unless another kind, or "all", is asked for: the API's rule.
@@ -885,7 +1033,12 @@ const server = http.createServer(async (req, res) => {
         : kind === "HolidayPackage"
           ? CATALOGUE.packages
           : products.filter((c) => c.productType === kind);
-    if (q.destination) items = items.filter((p) => p.destination.slug === q.destination);
+    if (q.destination) {
+      const inside = destinationRecords()
+        .filter((d) => d.parentSlug === q.destination)
+        .map((d) => d.slug);
+      items = items.filter((p) => p.destination.slug === q.destination || inside.includes(p.destination.slug));
+    }
     if (q.category) items = items.filter((p) => p.category === q.category);
     if (q.partner)
       items = items.filter((p) => CATALOGUE.details[p.slug]?.stays.some((st) => st.propertySlug === q.partner));
@@ -966,6 +1119,239 @@ const server = http.createServer(async (req, res) => {
         target.updatedAt = new Date().toISOString();
       }
       return send(res, 200, target);
+    }
+  }
+
+  // ── Destinations (admin) ──
+  const destMatch = path.match(
+    /^\/api\/v1\/admin\/destinations(?:\/([^/]+))?(?:\/(attractions|hero|publish|unpublish)(?:\/([^/]+)\/photo)?)?$/,
+  );
+  if (destMatch) {
+    if (!requireUser()) return problem(res, 401);
+    const [, id, part, attractionId] = destMatch;
+    const validation = (errors) =>
+      problem(res, 400, undefined, {
+        title: "One or more validation errors occurred.",
+        code: "VALIDATION_FAILED",
+        errors,
+      });
+    const conflict = (detail) => problem(res, 409, detail, { code: "CONFLICT" });
+    const touch = (r) => (r.updatedAt = new Date().toISOString());
+    const uniqueSlug = (name) => {
+      const base = slugify(name) === "package" ? "destination" : slugify(name);
+      let slug = base;
+      for (let n = 2; db.destinations.some((x) => x.slug === slug); n++) slug = `${base}-${n}`;
+      return slug;
+    };
+    const storePhoto = (r, file) => {
+      const type = sniff(file.data);
+      const path = `/media/destinations/${r.id.replaceAll("-", "")}/${randomUUID().replaceAll("-", "")}.${type.split("/")[1].replace("jpeg", "jpg")}`;
+      db.files.set(path, { type, data: file.data });
+      return path;
+    };
+    const photoProblem = (file) => {
+      if (!file || file.data.length === 0) return "Choose a photo.";
+      if (file.data.length > MAX_PHOTO_BYTES) return `${file.filename} is larger than 10 MB.`;
+      if (!sniff(file.data)) return `${file.filename} isn't a JPEG, PNG or WebP photo.`;
+      return null;
+    };
+
+    if (!id) {
+      if (method === "GET") {
+        const q = url.searchParams;
+        const term = q.get("search")?.trim().toLowerCase();
+        const country = q.get("country")?.toUpperCase();
+        const kind = q.get("kind")?.toLowerCase();
+        const matching = db.destinations.filter(
+          (r) =>
+            (!term || r.name.toLowerCase().includes(term) || r.slug.includes(term)) &&
+            (!country || r.country === country) &&
+            (!kind || r.kind.toLowerCase() === kind),
+        );
+        const counts = {
+          all: matching.length,
+          draft: matching.filter((r) => !r.published).length,
+          published: matching.filter((r) => r.published).length,
+        };
+        const status = q.get("status")?.toLowerCase();
+        const filtered = status ? matching.filter((r) => (r.published ? "published" : "draft") === status) : matching;
+        const page = Math.max(1, Number(q.get("page") ?? 1));
+        const pageSize = Math.min(100, Math.max(1, Number(q.get("pageSize") ?? 25)));
+        const ordered = [...filtered].sort(
+          (a, b) =>
+            a.country.localeCompare(b.country) ||
+            a.kind.localeCompare(b.kind) ||
+            a.sortOrder - b.sortOrder ||
+            a.name.localeCompare(b.name),
+        );
+        return send(res, 200, {
+          items: ordered.slice((page - 1) * pageSize, page * pageSize).map(destSummary),
+          total: filtered.length,
+          page,
+          pageSize,
+          counts,
+        });
+      }
+      if (method === "POST") {
+        const name = blank(body.name);
+        if (!name) return validation({ Name: ["'Name' must not be empty."] });
+        let parent = null;
+        let country;
+        if (body.parentId) {
+          parent = db.destinations.find((x) => x.id === body.parentId);
+          if (!parent) return problem(res, 400, "That country doesn't exist.");
+          if (parent.kind !== "Country") return problem(res, 400, "A place can only be added inside a country.");
+          country = parent.country;
+        } else {
+          if (!blank(body.country)) return problem(res, 400, "Give the country code, such as BW.");
+          country = body.country.trim().toUpperCase();
+          if (!/^[A-Z]{2}$/.test(country))
+            return validation({ Country: ["Use a two-letter country code, such as BW."] });
+        }
+        let slug;
+        if (blank(body.slug)) {
+          slug = body.slug.trim();
+          if (!SLUG_RE.test(slug)) return validation({ Slug: ["Use lowercase letters, numbers and single hyphens."] });
+          if (db.destinations.some((x) => x.slug === slug))
+            return conflict(`The address '${slug}' is already used by another destination.`);
+        } else slug = uniqueSlug(name);
+        const at = new Date().toISOString();
+        const created = {
+          id: randomUUID(),
+          slug,
+          name,
+          country,
+          kind: parent ? "Place" : "Country",
+          parentSlug: parent?.slug ?? null,
+          published: false,
+          tagline: blank(body.tagline),
+          summary: blank(body.summary),
+          description: blank(body.description),
+          bestTimeToVisit: blank(body.bestTimeToVisit),
+          heroPath: null,
+          heroAlt: null,
+          heroCredit: null,
+          latitude: body.latitude ?? null,
+          longitude: body.longitude ?? null,
+          sortOrder: body.sortOrder ?? 0,
+          publishedAt: null,
+          createdAt: at,
+          updatedAt: at,
+          attractions: [],
+        };
+        db.destinations.push(created);
+        res.setHeader("Location", `/api/v1/admin/destinations/${created.id}`);
+        return send(res, 201, destDetail(created));
+      }
+    } else {
+      const r = db.destinations.find((x) => x.id === id);
+      if (!r) return problem(res, 404, "Destination not found.");
+
+      if (!part) {
+        if (method === "GET") return send(res, 200, destDetail(r));
+        if (method === "PATCH") {
+          if (body.name !== undefined && !blank(body.name)) return validation({ Name: ["'Name' must not be empty."] });
+          if (body.slug !== undefined && !SLUG_RE.test(String(body.slug).trim()))
+            return validation({ Slug: ["Use lowercase letters, numbers and single hyphens."] });
+          if (body.slug !== undefined && body.slug.trim() !== r.slug) {
+            const slug = body.slug.trim();
+            if (r.publishedAt)
+              return conflict(
+                "This destination has been published, so its address can't change. Shared links would break.",
+              );
+            if (db.destinations.some((x) => x.slug === slug))
+              return conflict(`The address '${slug}' is already used by another destination.`);
+            for (const child of destinationChildren(r.slug)) child.parentSlug = slug;
+            r.slug = slug;
+          }
+          if (body.name !== undefined) r.name = body.name.trim();
+          for (const f of ["tagline", "summary", "description", "bestTimeToVisit", "heroAlt", "heroCredit"])
+            if (body[f] !== undefined && body[f] !== null) r[f] = blank(body[f]);
+          for (const f of ["latitude", "longitude", "sortOrder"])
+            if (body[f] !== undefined && body[f] !== null) r[f] = body[f];
+          if (r.published && !r.summary?.trim())
+            return problem(res, 400, "A published destination needs a summary. Unpublish it first to clear it.");
+          touch(r);
+          return send(res, 200, destDetail(r));
+        }
+        if (method === "DELETE") {
+          const places = destinationChildren(r.slug).length;
+          if (places > 0)
+            return conflict(`${r.name} still has ${places} place(s) inside it. Remove or move those first.`);
+          if (destinationPackages([r.slug]).length > 0)
+            return conflict(`Packages still use ${r.name}. Unpublish it instead of deleting it.`);
+          for (const file of [r.heroPath, ...r.attractions.map((a) => a.photoPath)]) if (file) db.files.delete(file);
+          db.destinations = db.destinations.filter((x) => x.id !== id);
+          return send(res, 204);
+        }
+      } else if (part === "attractions" && !attractionId && method === "PUT") {
+        const list = Array.isArray(body) ? body : null;
+        if (!list) return validation({ "": ["The request body must be a list."] });
+        if (list.length > 50) return problem(res, 400, "A destination can list at most 50 attractions.");
+        if (list.some((a) => !blank(a.name))) return validation({ "[0].Name": ["'Name' must not be empty."] });
+        if (r.published && r.kind === "Place" && list.length === 0)
+          return problem(
+            res,
+            400,
+            "A published place needs at least one attraction. Unpublish it first to clear them.",
+          );
+        const keep = list.map((a) => a.id).filter(Boolean);
+        if (new Set(keep).size !== keep.length) return problem(res, 400, "The same attraction is listed twice.");
+        if (keep.some((k) => !r.attractions.some((a) => a.id === k)))
+          return problem(res, 400, "One of the attractions doesn't belong to this destination.");
+        for (const gone of r.attractions.filter((a) => !keep.includes(a.id)))
+          if (gone.photoPath) db.files.delete(gone.photoPath);
+        r.attractions = list.map((a, i) => {
+          const existing = a.id ? r.attractions.find((x) => x.id === a.id) : null;
+          return {
+            id: existing?.id ?? randomUUID(),
+            name: a.name.trim(),
+            summary: blank(a.summary),
+            photoPath: existing?.photoPath ?? null,
+            photoAlt: blank(a.photoAlt),
+            photoCredit: blank(a.photoCredit),
+            sortOrder: i,
+          };
+        });
+        touch(r);
+        return send(res, 200, destDetail(r));
+      } else if (part === "hero" && method === "POST") {
+        const file = parseMultipart(raw, req.headers["content-type"])[0];
+        const bad = photoProblem(file);
+        if (bad) return problem(res, 400, bad);
+        const fields = multipartFields(raw, req.headers["content-type"]);
+        if (r.heroPath) db.files.delete(r.heroPath);
+        r.heroPath = storePhoto(r, file);
+        r.heroAlt = blank(fields.alt) ?? r.name;
+        r.heroCredit = blank(fields.credit);
+        touch(r);
+        return send(res, 200, destDetail(r));
+      } else if (part === "attractions" && attractionId && method === "POST") {
+        const attraction = r.attractions.find((a) => a.id === attractionId);
+        if (!attraction) return problem(res, 404, "Destination not found.");
+        const file = parseMultipart(raw, req.headers["content-type"])[0];
+        const bad = photoProblem(file);
+        if (bad) return problem(res, 400, bad);
+        const fields = multipartFields(raw, req.headers["content-type"]);
+        if (attraction.photoPath) db.files.delete(attraction.photoPath);
+        attraction.photoPath = storePhoto(r, file);
+        attraction.photoAlt = blank(fields.alt) ?? attraction.name;
+        attraction.photoCredit = blank(fields.credit);
+        touch(r);
+        return send(res, 200, destDetail(r));
+      } else if (part === "publish" && method === "POST") {
+        const missing = destinationMissing(r);
+        if (missing.length > 0)
+          return problem(res, 422, "This destination is not ready to publish.", { code: "PUBLISH_BLOCKED", missing });
+        r.published = true;
+        r.publishedAt ??= new Date().toISOString();
+        touch(r);
+        return send(res, 200, destDetail(r));
+      } else if (part === "unpublish" && method === "POST") {
+        r.published = false;
+        touch(r);
+        return send(res, 200, destDetail(r));
+      }
     }
   }
 

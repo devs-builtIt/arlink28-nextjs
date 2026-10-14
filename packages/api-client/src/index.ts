@@ -31,6 +31,14 @@ export type MeResponse = Schemas["MeResponse"];
 export type UserResponse = Schemas["UserResponse"];
 
 export type DestinationResponse = Schemas["DestinationResponse"];
+export type DestinationDetail = Schemas["DestinationDetailResponse"];
+export type Attraction = Schemas["AttractionResponse"];
+export type AdminDestinationSummary = Schemas["AdminDestinationSummary"];
+export type AdminDestinationList = Schemas["AdminDestinationListResponse"];
+export type AdminDestinationDetail = Schemas["AdminDestinationDetail"];
+export type CreateDestinationRequest = Schemas["CreateDestinationRequest"];
+export type UpdateDestinationRequest = Schemas["UpdateDestinationRequest"];
+export type AttractionInput = Schemas["AttractionInput"];
 export type PackageCard = Schemas["PackageCardResponse"];
 export type PackageList = Schemas["PackageListResponse"];
 export type PackageDetail = Schemas["PackageDetailResponse"];

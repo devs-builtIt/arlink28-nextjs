@@ -5,6 +5,7 @@ import "../styles/people.css";
 import "../styles/content-shared.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "ARLinks - Engagement Details",
@@ -15,44 +16,22 @@ export const metadata: Metadata = {
 export default function EngagementDetailsPage() {
   return (
     <>
-      <section
-        className="about-hero"
-        style={{ minHeight: "unset", padding: "170px 8% 80px", alignItems: "center", textAlign: "center" }}
-      >
-        <div className="about-hero-content" style={{ maxWidth: "800px", margin: "0 auto" }}>
-          <Link
-            className="btn btn-secondary"
-            href="/engagement"
-            style={{ marginBottom: "24px", display: "inline-flex", alignItems: "center", gap: "8px" }}
-          >
-            <i className="fa-solid fa-arrow-left"></i>
-            Back to Engagement
+      <PageBanner
+        label="Engagement"
+        above={
+          <Link className="pb-back" href="/engagement">
+            <i className="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Back to engagement
           </Link>
-          <br />
-          <span className="about-hero-tag hero-tag-entrance" style={{ justifyContent: "center" }}>
-            <i
-              className="fa-solid fa-circle"
-              style={{ fontSize: "8px", color: "var(--primary-red)", marginRight: "8px" }}
-            ></i>
-            Industry & Community
-          </span>
-          <h1 className="hero-h1-entrance">
-            Our Engagement
-            <span className="highlight-red">Archive</span>
-          </h1>
-          <p className="hero-p-entrance" style={{ margin: "0 auto", maxWidth: "640px" }}>
-            Full write-ups of every summit, expo and airshow ARLink28 has taken part in as we build toward greater
-            African connectivity.
-          </p>
-        </div>
-      </section>
+        }
+        title="Our engagement archive"
+        intro="Full write-ups of every summit, expo and airshow ARLink28 has taken part in as we build toward greater African connectivity."
+      />
       <section className="about-section" id="engagement-details" style={{ padding: "80px 8%" }}>
         <div className="section-header reveal">
           <span className="section-tag">Engagement Details</span>
           <h2>
-            Full
-            <span className="highlight-red">Engagement</span>
-            Details
+            Full <span className="highlight-red">Engagement</span> Details
           </h2>
           <p>
             Our development is informed not only by internal planning, but by active participation in the industries,

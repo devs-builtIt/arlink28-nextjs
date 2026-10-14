@@ -73,10 +73,10 @@
 }
 
 .team-card {
-  background: rgba(18, 25, 38, 0.85);
+  background: #ffffff;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(11, 23, 38, 0.12);
   border-radius: 20px;
   overflow: hidden;
   transition:
@@ -91,7 +91,7 @@
 }
 .team-card:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 20px 40px rgba(11, 23, 38, 0.1);
   border-color: rgba(230, 30, 43, 0.5);
 }
 
@@ -101,7 +101,7 @@
   min-width: 300px;
   min-height: 340px;
   overflow: hidden;
-  background: #0b121c;
+  background: #eef1f5;
   flex-shrink: 0;
 }
 .team-card-img {
@@ -126,10 +126,10 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  background: rgba(11, 18, 28, 0.9);
+  background: rgba(11, 23, 38, 0.95);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border: 1px solid rgba(11, 23, 38, 0.2);
+  color: var(--text-main);
   z-index: 2;
 }
 .team-badge.badge-chairman {
@@ -137,15 +137,15 @@
   color: #ff4d5a;
 }
 .team-badge.badge-finance {
-  border-color: #2ecc71;
+  border-color: #0f8a4f;
   color: #2ecc71;
 }
 .team-badge.badge-tech {
-  border-color: #3498db;
+  border-color: #2563b8;
   color: #3498db;
 }
 .team-badge.badge-bd {
-  border-color: #f1c40f;
+  border-color: #9a7400;
   color: #f1c40f;
 }
 .team-badge.badge-hr {
@@ -153,31 +153,31 @@
   color: #9b59b6;
 }
 .team-badge.badge-growth {
-  border-color: #e67e22;
+  border-color: #c25a0f;
   color: #e67e22;
 }
 .team-badge.badge-ops {
-  border-color: #00b4d8;
+  border-color: #0086a3;
   color: #00b4d8;
 }
 .team-badge.badge-readiness {
-  border-color: #06d6a0;
+  border-color: #04856a;
   color: #06d6a0;
 }
 .team-badge.badge-cx {
-  border-color: #f39c12;
+  border-color: #b36a00;
   color: #f39c12;
 }
 .team-badge.badge-eng {
-  border-color: #a29bfe;
+  border-color: #5b4fd1;
   color: #a29bfe;
 }
 .team-badge.badge-sales {
-  border-color: #1dd1a1;
+  border-color: #108a69;
   color: #1dd1a1;
 }
 .team-badge.badge-design {
-  border-color: #fd79a8;
+  border-color: #c2406f;
   color: #fd79a8;
 }
 
@@ -187,7 +187,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #0b121c;
+  background: #ffffff;
 }
 .team-card-header {
   margin-bottom: 16px;
@@ -195,7 +195,7 @@
 .team-card-name {
   font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 6px;
 }
 .team-card-title {
@@ -208,7 +208,7 @@
 
 .team-card-bio {
   font-size: 14px;
-  color: #cbd5e1;
+  color: var(--text-muted);
   line-height: 1.7;
   flex: 1;
 }

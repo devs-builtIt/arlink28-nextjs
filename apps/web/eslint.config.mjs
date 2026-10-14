@@ -13,7 +13,7 @@ import { noDbImports } from "../../eslint.boundaries.mjs";
 
 export default tseslint.config(
   {
-    ignores: [".next/**", ".next-e2e/**", "out/**", "public/**", "node_modules/**", "next-env.d.ts"],
+    ignores: [".next/**", ".next-*/**", "out/**", "public/**", "node_modules/**", "next-env.d.ts"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

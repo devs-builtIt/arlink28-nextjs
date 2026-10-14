@@ -78,8 +78,8 @@
 
 /* Editorial Paragraph Layout */
 .editorial-content-box {
-  background: rgba(15, 22, 36, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(11, 23, 38, 0.08);
   border-radius: 20px;
   padding: 40px;
   display: flex;
@@ -89,7 +89,7 @@
   backdrop-filter: blur(12px);
 }
 .editorial-paragraph-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(11, 23, 38, 0.06);
   padding-bottom: 28px;
 }
 .editorial-paragraph-item:last-child {
@@ -117,12 +117,12 @@
 .editorial-item-header h3 {
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin: 0;
 }
 .editorial-paragraph-item p {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-muted);
   line-height: 1.8;
   margin: 0;
   padding-left: 56px;
@@ -136,8 +136,8 @@
   margin-top: 35px;
 }
 .editorial-pillar-row {
-  background: linear-gradient(135deg, rgba(15, 22, 36, 0.8), rgba(20, 30, 50, 0.7));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(11, 23, 38, 0.08);
   border-radius: 18px;
   padding: 30px 36px;
   display: flex;
@@ -152,7 +152,7 @@
   border-color: rgba(230, 30, 43, 0.4);
   transform: translateX(6px);
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(11, 23, 38, 0.1),
     0 0 15px rgba(230, 30, 43, 0.12);
 }
 .editorial-pillar-badge {
@@ -182,18 +182,18 @@
 .editorial-pillar-title h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin: 0;
 }
 .editorial-pillar-content p {
   font-size: 15.5px;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--text-muted);
   line-height: 1.8;
   margin: 0;
 }
 
 .philosophy-banner {
-  background: linear-gradient(135deg, rgba(230, 30, 43, 0.15), rgba(15, 22, 36, 0.95));
+  background: linear-gradient(135deg, #2a0d12 0%, #101826 70%);
   border: 1px solid rgba(230, 30, 43, 0.3);
   border-radius: 24px;
   padding: 48px 40px;
@@ -217,8 +217,8 @@
 }
 
 .why-exists-box {
-  background: linear-gradient(135deg, rgba(20, 30, 50, 0.9), rgba(12, 18, 30, 0.95));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(11, 23, 38, 0.08);
   border-radius: 24px;
   padding: 48px;
   margin-top: 60px;
@@ -233,8 +233,8 @@
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(11, 23, 38, 0.02);
+  border: 1px solid rgba(11, 23, 38, 0.05);
   padding: 20px 24px;
   border-radius: 16px;
 }
@@ -245,7 +245,7 @@
 }
 .why-exists-item p {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-muted);
   line-height: 1.7;
   margin: 0;
 }

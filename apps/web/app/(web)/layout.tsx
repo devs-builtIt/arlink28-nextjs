@@ -1,6 +1,8 @@
 import "./globals.css";
 import "../styles/tokens.css";
 import "../styles/chrome.css";
+import "../styles/page-banner.css";
+import "../styles/inner-light.css";
 import { siteMetadata } from "../site";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,20 +11,15 @@ import BackToTop from "@/components/BackToTop";
 
 export const metadata = siteMetadata;
 
-// The pages in this group are still dark-only, so their header and footer stay dark whatever the visitor's
-// theme is. display: contents keeps the wrapper out of the layout.
+// The header and footer follow the page: light on every inner page (see styles/inner-light.css).
 export default function WebLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div data-theme="dark" style={{ display: "contents" }}>
-        <Header />
-      </div>
+      <Header />
       <main id="main" style={{ flex: 1 }}>
         {children}
       </main>
-      <div data-theme="dark" style={{ display: "contents" }}>
-        <Footer />
-      </div>
+      <Footer />
       <ClientEffects />
       <BackToTop />
     </>

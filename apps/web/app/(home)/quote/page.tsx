@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../../styles/home.css";
 import QuoteForm from "@/components/home/QuoteForm";
-import PageHero from "@/components/home/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/home/Reveal";
 import { PHONES } from "@/content/home-proof";
 
@@ -33,11 +33,11 @@ export default function QuotePage() {
   return (
     <div className="hm">
       <Reveal />
-      <PageHero
+      <PageBanner
+        label="Get a quote"
         id="hm-qp-h"
         title="Tell us where, and we will price it."
-        text="Send us your route and dates, or just the idea. A person replies with options and a price, and nothing is charged until you agree."
-        image="/images/home/hero-zanzibar-1920.webp"
+        intro="Send us your route and dates, or just the idea. A person replies with options and a price, and nothing is charged until you agree."
       />
 
       <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Quote request">

@@ -307,24 +307,32 @@ html:has(.hm) {
   margin: 0;
 }
 .hm-quote-assure {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--p-line);
-  color: var(--p-mute);
-  font-size: 14px;
+  font-size: 13px;
 }
+/* Each reassurance is a pill: a small tick, then the words. */
 .hm-quote-assure li {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--p-line);
+  border-radius: 999px;
+  background: var(--p-field);
+  color: var(--p-ink);
+  font-weight: 500;
+  line-height: 1.2;
 }
 .hm-quote-assure li::before {
   content: "";
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 8.5 3.2 3.2L13 4.8'/></svg>")
     center / contain no-repeat;
@@ -2232,57 +2240,11 @@ html:has(.hm) {
 }
 
 /* A short full-width photo hero for inner pages: it runs up behind the header. */
-.hm-phero {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: flex-end;
-  min-height: clamp(340px, 46vh, 480px);
-  padding: calc(var(--header-h) + 48px) 0 clamp(36px, 5vw, 64px);
-  color: #fff;
-  overflow: hidden;
-}
-.hm-phero > img {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.hm-phero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(180deg, rgba(5, 9, 15, 0.7) 0%, rgba(5, 9, 15, 0.4) 45%, rgba(5, 9, 15, 0.7) 100%);
-}
-.hm-phero-in {
-  width: 100%;
-}
-.hm-phero h1 {
-  max-width: 12em;
-  font-size: clamp(40px, 6vw, 92px);
-  line-height: 0.98;
-  margin: 0;
-}
-.hm-phero p {
-  max-width: 54ch;
-  margin-top: 18px;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: clamp(16px, 1.5vw, 20px);
-  line-height: 1.5;
-}
 .hm-qsec {
   padding-top: clamp(32px, 4vw, 56px);
 }
 .hm-qsec .hm-qp {
   padding-block: 0;
-}
-@media (max-width: 640px) {
-  .hm-phero {
-    min-height: 300px;
-  }
 }
 
 /* ---- Card hover: a slow zoom, the card rising a little and its text following ----------------- */
@@ -2435,4 +2397,45 @@ html:has(.hm) {
   .el-tier:nth-child(even) .el-tier-photo {
     order: 0;
   }
+}
+
+/* Partner logos, a quiet strip of their own straight after the hero */
+.hm-logos-band {
+  padding: clamp(32px, 4vw, 56px) 0 0;
+}
+.hm-logos-band .hm-logos {
+  flex: none;
+  width: 100%;
+  /* fade to the page, not to grey */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+.hm-logos-band .hm-logos-track {
+  animation-direction: reverse;
+  animation-duration: 60s;
+}
+.hm-logos-band .hm-logos ul {
+  gap: 20px;
+  padding-right: 20px;
+}
+.hm-logos-band .hm-logos li {
+  width: 168px;
+  height: 64px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: #fff;
+}
+.hm-logos-band .hm-logos img {
+  height: 28px;
+  max-height: none;
+  width: auto;
+  max-width: 100%;
+}
+.hm-logos-band .hm-logos img[src*="ivisa"],
+.hm-logos-band .hm-logos img[src*="getyourguide"] {
+  height: 40px;
+  border-radius: 6px;
+}
+.hm-logos-band .hm-logos img[src*="viator"] {
+  height: 38px;
 }

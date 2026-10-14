@@ -1,6 +1,6 @@
 // The public catalogue, read on the server. Pages call these directly, so they arrive as
 // finished HTML (good for search engines and for link previews) and are cached briefly.
-import type { DestinationResponse, PackageDetail, PackageList } from "@arlink28/api-client";
+import type { DestinationDetail, DestinationResponse, PackageDetail, PackageList } from "@arlink28/api-client";
 import { unwrapLegacyEnvelope } from "@/utils/api/client";
 import { apiUrl } from "@/utils/server/api";
 
@@ -43,3 +43,6 @@ export const getPackage = (slug: string) => get<PackageDetail>(`/packages/${enco
 export async function listDestinations(): Promise<DestinationResponse[]> {
   return (await get<DestinationResponse[]>("/destinations", 300)) ?? [];
 }
+
+/** A published destination with its attractions and places, or null when it does not exist (or is still a draft). */
+export const getDestination = (slug: string) => get<DestinationDetail>(`/destinations/${encodeURIComponent(slug)}`, 60);

@@ -34,6 +34,6 @@ test.describe("getting to the portal from the public site", () => {
 
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Elite Jets" }).click();
     await expect(page).toHaveURL(/\/elite-jets$/);
-    await expect(page.getByRole("heading", { name: "Elite Jets", level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Private aviation/, level: 1 })).toBeVisible();
   });
 });

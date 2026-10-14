@@ -1,0 +1,74 @@
+/*
+ * Every inner page is light.
+ *
+ * The homepage can be light or dark (its header toggle, or the visitor's system setting). Every other page
+ * is light, always: a page counts as an inner page when it carries a banner (components/PageBanner.tsx) or the
+ * breadcrumb band of a package or destination. Keying on that, with :has(), means the right theme is in the
+ * first paint, with no flash of dark, and no page has to opt in.
+ *
+ * Three things live here: the site's design tokens, the older pages' own colour variables, and the few
+ * places those older pages hard-coded a dark colour.
+ */
+
+/* ---- The site's tokens, light ---------------------------------------------------------------- */
+:root:has(.pb, .pkgs-topband) {
+  --canvas: #ffffff;
+  --canvas-2: #f5f5f5;
+  --ink: #212121;
+  --ink-2: #555555;
+  --hairline: rgba(33, 33, 33, 0.1);
+  --fill-soft: rgba(33, 33, 33, 0.04);
+  --chip: rgba(218, 218, 218, 0.75);
+  --chip-ink: #212121;
+  --sticker-bg: #ffffff;
+  --sticker-ink: #212121;
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --footer-bg: #f5f5f5;
+  --btn2-bg: #ffffff;
+  --btn2-ink: #212121;
+  --btn2-line: rgba(33, 33, 33, 0.14);
+  --shadow-sticker: 0 10px 20px rgba(0, 0, 0, 0.16);
+  --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.14);
+  --logo: url("/images/logo-horizontal-black.png");
+  color-scheme: light;
+}
+/* An inverted band still takes the opposite surface to the page. */
+:root:has(.pb, .pkgs-topband) [data-tone="inverse"] {
+  --canvas: #0a0d12;
+  --canvas-2: #11151c;
+  --ink: #f5f7fa;
+  --ink-2: #a3adbd;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --fill-soft: rgba(255, 255, 255, 0.04);
+  --chip: rgba(255, 255, 255, 0.16);
+  --chip-ink: #ffffff;
+  --sticker-bg: #1b2029;
+  --sticker-ink: #f5f7fa;
+  --header-bg: rgba(10, 13, 18, 0.72);
+  --footer-bg: #06080c;
+  --btn2-bg: rgba(255, 255, 255, 0.08);
+  --btn2-ink: #f5f7fa;
+  --btn2-line: rgba(255, 255, 255, 0.16);
+  --shadow-sticker: 0 10px 20px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* ---- The older pages' own variables (app/(web)/globals.css), light ----------------------------- */
+:root:has(.pb, .pkgs-topband) {
+  --bg-primary: #f3f5f8;
+  --bg-secondary: #ffffff;
+  --bg-footer: #f5f5f5;
+  --text-main: #0b1726;
+  --text-muted: #5b6b82;
+  --text-dark: #7a889c;
+  --glass-bg: #ffffff;
+  --glass-border: #e3e8ee;
+  --glass-shadow: 0 8px 24px rgba(11, 23, 38, 0.08);
+  --card-glow: 0 10px 30px -12px rgba(11, 23, 38, 0.18);
+}
+
+/* The theme toggle has nothing to switch on these pages. */
+:root:has(.pb, .pkgs-topband) .sh-theme {
+  display: none;
+}

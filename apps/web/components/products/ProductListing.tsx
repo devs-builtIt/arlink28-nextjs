@@ -7,6 +7,7 @@ import ProductCard from "@/components/products/ProductCard";
 import ProductSearch from "@/components/products/ProductSearch";
 import { PAGE_SIZE, listDestinations, listPackages } from "@/utils/server/catalogue";
 import { PUBLIC, type PublicType } from "@/utils/publicProducts";
+import PageBanner from "@/components/PageBanner";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? "";
@@ -46,13 +47,7 @@ export default async function ProductListing({ type, searchParams }: { type: Pub
 
   return (
     <ListingProvider params={params}>
-      <section className="pkgs-hero">
-        <div className="pkgs-hero-inner">
-          <KindSwitcher active={copy.path} />
-          <h1>{copy.heroTitle}</h1>
-          <p>{copy.heroText}</p>
-        </div>
-      </section>
+      <PageBanner overlap above={<KindSwitcher active={copy.path} />} title={copy.heroTitle} intro={copy.heroText} />
 
       <div className="pkgs-searchwrap">
         <ProductSearch destinations={destinations} placeholder={copy.searchHint} label={copy.plural} />

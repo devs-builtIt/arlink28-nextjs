@@ -65,13 +65,13 @@
 .legal-sidebar-card {
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
-  background: #0b131fa6;
-  border: 1px solid #ffffff14;
+  background: #ffffff;
+  border: 1px solid #0b172614;
   border-radius: 14px;
   padding: 22px;
 }
 .legal-sidebar-card h5 {
-  color: #fff;
+  color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 1.2px;
   opacity: 0.7;
@@ -129,7 +129,7 @@
   font-size: 12.5px;
 }
 .legal-cross-nav a:hover {
-  color: #fff;
+  color: var(--text-main);
   background: #e61e2b14;
 }
 .legal-cross-nav a.active {
@@ -143,8 +143,8 @@
   padding: 50px 56px;
 }
 .legal-panel h2 {
-  color: #fff;
-  border-top: 1px solid #ffffff12;
+  color: var(--text-main);
+  border-top: 1px solid #0b172612;
   margin: 38px 0 14px;
   padding-top: 14px;
   scroll-margin-top: 110px;
@@ -169,7 +169,7 @@
   line-height: 1.8;
 }
 .legal-panel p strong {
-  color: #fff;
+  color: var(--text-main);
 }
 .legal-panel a {
   color: var(--primary-red);

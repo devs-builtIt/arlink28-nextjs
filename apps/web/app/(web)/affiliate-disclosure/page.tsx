@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/legal.css";
 
 import Link from "next/link";
+import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {
   title: "Affiliate Disclosure | ARLink28",
@@ -11,16 +12,7 @@ export const metadata: Metadata = {
 export default function AffiliateDisclosurePage() {
   return (
     <>
-      <section className="legal-hero">
-        <div className="legal-hero-inner">
-          <div className="legal-hero-icon">
-            <i className="fa-solid fa-handshake"></i>
-          </div>
-          <span className="legal-hero-tag">Legal</span>
-          <h1>Affiliate Disclosure</h1>
-          <p>Last updated: June 2026</p>
-        </div>
-      </section>
+      <PageBanner label="Legal" title={"Affiliate Disclosure"} intro="Last updated: June 2026" />
       <section className="legal-body">
         <div className="legal-layout">
           <aside className="legal-sidebar">

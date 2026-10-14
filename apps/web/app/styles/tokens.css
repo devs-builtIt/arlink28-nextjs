@@ -15,6 +15,7 @@
   --font: Satoshi, system-ui, -apple-system, "Segoe UI", sans-serif;
   --track: -0.03em;
 
+  --logo: url("/images/logo-horizontal-black.png");
   --red: #e61e2b;
   --red-hover: #c91621;
 
@@ -67,6 +68,7 @@
     --btn2-line: rgba(255, 255, 255, 0.16);
     --shadow-sticker: 0 10px 20px rgba(0, 0, 0, 0.5);
     --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.5);
+    --logo: url("/images/logo-horizontal-white.png");
     color-scheme: dark;
   }
 }
@@ -90,6 +92,7 @@
   --btn2-line: rgba(255, 255, 255, 0.16);
   --shadow-sticker: 0 10px 20px rgba(0, 0, 0, 0.5);
   --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.5);
+  --logo: url("/images/logo-horizontal-white.png");
   color-scheme: dark;
 }
 [data-theme="light"] {
@@ -110,6 +113,7 @@
   --btn2-line: rgba(33, 33, 33, 0.14);
   --shadow-sticker: 0 10px 20px rgba(0, 0, 0, 0.16);
   --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.14);
+  --logo: url("/images/logo-horizontal-black.png");
   color-scheme: light;
 }
 

@@ -1,5 +1,5 @@
 /**
- * The ARLink28 mark (cropped from /images/logo.png, whose lettering is too
+ * The ARLink28 mark (cropped from the horizontal logo, whose lettering is too
  * small to read at UI sizes) with the name set as real text.
  */
 export default function Brand({ caption, size = "m" }: { caption?: string; size?: "m" | "l" }) {
