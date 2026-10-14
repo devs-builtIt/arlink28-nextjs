@@ -1,361 +1,355 @@
 # ARLink28 VPS Deployment Handover
 
-**Last updated:** 12 October 2026\
-**Status:** VPS prepared; DNS and application deployment have not
-started.
+**Last updated:** 15 October 2026\
+**Status:** Production stack is deployed and healthy on the VPS, reachable
+only through an SSH tunnel. **DNS and HTTPS are the next step**; nothing is
+public yet and the old site still serves `arlink28.com`.
 
-## Purpose
+## Read this first
 
-This file is a handover for Claude Code to continue ARLink28 production
-deployment. Treat completed items as verified current state; do not
-assume planned work has happened.
+This file lets you (or Claude Code) resume the production deployment cold.
+Treat "Done and verified" as fact, "Not done" as work, and the **Resume here**
+section as the next concrete steps. Do not put credentials, keys, passwords or
+connection strings in this file or in Git.
 
-## Target architecture
+| Question | Answer |
+| --- | --- |
+| What is left before the site is public? | DNS records, Caddy up (HTTPS), seed content, mail login, cutover of `arlink28.com` |
+| What is the next action? | Add the DNS records in **Resume here, step 1** |
+| Is anything public today? | No. Only SSH (22) listens on the VPS. The old site on another server still serves `arlink28.com` |
+| Where do I test the new stack? | Through an SSH tunnel (see **Testing without DNS**) |
 
--   Next.js frontend: `https://arlink28.com`
--   ASP.NET Core / C# API: `https://api.arlink28.com`
--   PostgreSQL: private Docker networking only; no public port
--   Caddy: reverse proxy on public ports 80 and 443, automatic TLS
--   Docker Compose for service orchestration
+## Environments and branches
 
-## VPS details
+| | Staging | Production |
+| --- | --- | --- |
+| Branch | `develop` | `main` |
+| Web | Vercel | Docker on the VPS |
+| API | Render | Docker on the VPS |
+| Database | Supabase | PostgreSQL 17 in Docker, private network |
+| Media (photos) | Supabase Storage (`ArlinkBucket`) | VPS Docker volume `arlink28-media` |
 
-  Item              Value
-  ----------------- ----------------------------
-  Provider          Hostinger
-  Public IPv4       `69.62.107.166`
-  Hostname          `srv2048608`
-  OS                Ubuntu 26.04.1 LTS, x86_64
-  RAM               Approximately 15 GiB
-  Disk              Approximately 193 GB
-  Docker Engine     `29.9.0`
-  Docker Compose    `v5.6.0`
-  Deployment user   `deploy`
-  Deployment root   `/opt/arlink28`
+Flow: `feature/*` → PR → `develop` → PR → `main`. The server deploys `main` of
+both repos. GitHub repos (owner `devs-builtIt`): `arlink28-nextjs` (web, monorepo)
+and `arlink28-api`. `shifttechgs` has push access but not admin, so only the owner
+can change repo settings (deploy keys, branch protection). Merges are done by the
+owner on GitHub.
 
-Do not put credentials, private keys, passwords, or production
-connection strings in this document or source control.
+Vercel's production site currently builds `main` too. Once the VPS is live, point
+Vercel's production branch at `develop` so staging stays staging.
 
-## Completed work
+## Architecture
 
-### SSH and account
-
--   Created non-root account `deploy`.
-
--   Added SSH authorized key and verified key-based login from Windows
-    PowerShell:
-
-    ``` powershell
-    ssh deploy@69.62.107.166
-    ```
-
--   Verified `sudo whoami` returns `root`.
-
--   Verified effective SSH configuration:
-
-    ``` bash
-    sudo sshd -T | grep -E '^(permitrootlogin|passwordauthentication|pubkeyauthentication|kbdinteractiveauthentication)'
-    ```
-
-    Output:
-
-    ``` text
-    permitrootlogin no
-    pubkeyauthentication yes
-    passwordauthentication no
-    kbdinteractiveauthentication no
-    ```
-
-Keep key-based access working. Do not re-enable root SSH login or
-password-based SSH authentication. Before changing SSH configuration,
-run `sudo sshd -t` and keep an existing session open until a new
-connection is verified.
-
-### Firewall
-
-UFW is active. Inbound rules allow OpenSSH (22), HTTP (80), and HTTPS
-(443), for IPv4 and IPv6. Default incoming policy is deny.
-
-Check with:
-
-``` bash
-sudo ufw status verbose
+```text
+Internet ─▶ Caddy (80/443, automatic HTTPS) ─▶ web (Next.js :3000)   ┐ network arlink28-network
+                                              └▶ api (ASP.NET :8080)  ┘
+                                                      │
+                                    network arlink28-db (internal, no internet)
+                                                      ▼
+                                              postgres (17, no host port)
 ```
 
-Do not expose PostgreSQL port `5432` or application ports publicly.
+- The browser only talks to the web app. `apps/web` proxies `/api/v1/*` to
+  `http://api:8080` server-side and rewrites `/media/*` to the API, so there is no
+  CORS. `api.arlink28.com` is public for tools and tests.
+- Postgres is on the internal `arlink28-db` network only. Only Caddy will publish
+  ports.
+- API never migrates on boot; `deploy.sh` runs `migrate` as a separate step after a
+  database dump.
+- Files: `deploy/` in the web repo (`web.Dockerfile`, `compose.yaml`, `Caddyfile`,
+  `deploy.sh`, `init-secrets.sh`, `README.md`). The API Dockerfile is in the API repo.
 
-### Docker and directories
+## VPS
 
-Docker Engine and Docker Compose are installed. The `deploy` account
-currently runs Docker commands with `sudo`, for example
-`sudo docker ps`.
+| Item | Value |
+| --- | --- |
+| Provider | Hostinger |
+| Public IPv4 | `69.62.107.166` (no IPv6 records) |
+| Hostname | `srv2048608` |
+| OS | Ubuntu 26.04.1 LTS, x86_64 |
+| Resources | about 15 GiB RAM, 193 GB disk (about 7 GB used) |
+| Docker / Compose | `29.9.0` / `v5.6.0` |
+| Account | `deploy` (key-only SSH, root login and passwords disabled) |
 
-**Security note:** Do not add `deploy` to the `docker` group casually;
-Docker group access can effectively grant root-level control. Continue
-using `sudo docker ...` unless this is deliberately reviewed.
+Layout under `/opt/arlink28/`:
 
-Created directory structure:
+| Path | What |
+| --- | --- |
+| `src/web`, `src/api` | git clones of the two repos (read-only deploy keys, detached at `origin/main`) |
+| `app/` | `compose.yaml`, `Caddyfile`, `.env` (`ACME_EMAIL`, `RELEASE_TAG`), `test-ports.yaml` (temporary) |
+| `secrets/` | `postgres.env`, `api.env` (mode 600, folder 700). **Never print or commit** |
+| `backups/` | pre-deploy database dumps, last 10 kept |
+| `releases.log`, `deploy.log` | release history and the last deploy's output |
 
-``` text
-/opt/arlink28/
-├── app/
-├── backups/
-├── caddy/
-└── secrets/
+Docker objects: network `arlink28-network` and volume `arlink28-postgres-data`
+(both pre-existing, declared `external` so Compose can never delete them),
+network `arlink28-db`, volumes `arlink28-media`, `arlink28-logs`,
+`arlink28-caddy-data`, `arlink28-caddy-config`.
+
+## How to get in (Claude Code or a person)
+
+1. SSH key: `~/.ssh/id_ed25519` on the owner's Windows PC. It has a passphrase,
+   so load it into the Windows agent once per login session (elevated PowerShell:
+   `Start-Service ssh-agent`, then `ssh-add $env:USERPROFILE\.ssh\id_ed25519`).
+2. Use the **Windows** `ssh.exe` (it sees that agent). From Git Bash call
+   `/c/Windows/System32/OpenSSH/ssh.exe`; Git Bash's own `ssh` does not.
+3. `sudo` asks for a password except for Docker: `/etc/sudoers.d/arlink28-deploy`
+   allows `deploy` to run only the Docker binary without one (`sudo -n docker …`).
+   Everything else needs the owner at a terminal.
+4. Run multi-line work as a script piped over SSH (`ssh … 'bash -s' < script.sh`),
+   not as a quoted one-liner, and add `< /dev/null` to `docker compose exec` inside
+   such scripts or it swallows the rest of the script from stdin.
+5. Do not use root SSH or password login. Do not add `deploy` to the `docker` group.
+
+## Done and verified
+
+- [x] VPS, `deploy` user, key-only SSH, UFW (22/80/443), Docker + Compose
+- [x] EF Core migrations (`InitialCreate`) in the API; fresh database builds from them; CI checks this
+- [x] Production Dockerfiles (web and API, both run as non-root); CI builds both
+- [x] `compose.yaml`, `Caddyfile`, `deploy.sh`, `init-secrets.sh`
+- [x] Deploy keys created on the server and added (read-only) to both repos
+- [x] Secrets created on the server via `init-secrets.sh` (first admin `developers@arlink28.com`)
+- [x] Two deploys done (`releases.log`): `ba4ce6ee4-c2bd18191`, then `8f31d76bc-3d7cb01ce`
+- [x] postgres, api, web healthy; 19 tables; admin `developers` seeded on first boot
+- [x] API `/health` 200; web `/`, `/packages`, `/admin/login`, `/api/v1/packages` 200 from inside the server
+- [x] Enquiry emails routed: see below (code merged, addresses live in the API container)
+- [x] Staging cutover plan written (below)
+
+### Enquiry email routing (live in the container)
+
+Every enquiry is saved to the database first; the email is sent afterwards.
+
+| Enquiry | Emailed to |
+| --- | --- |
+| Package, flight, hotel, visa, charter, quote (types `Package`, `Booking`) | `developers@`, `reservations@arlink28.com` |
+| General contact form (`General`, `Partnership`, `Career`, `Investor`) | `developers@`, `info@arlink28.com` |
+
+Set in `compose.yaml` as `EnquirySettings__NotifyTo`, `__ReservationsTo`,
+`__ContactTo`. Test sends via Gmail SMTP worked from a laptop with a Google app
+password (both routes delivered without error).
+
+## Not done
+
+- [ ] **DNS records** for `api` and `new` (then `@`/`www` at cutover)
+- [ ] **Caddy not started** (so no HTTPS yet)
+- [ ] **Mail login on the server**: `EmailSettings__SmtpHost/User/Pass` in `api.env` are empty, so no enquiry email is sent from production yet
+- [ ] Production content not seeded (the package list is empty)
+- [ ] Nightly backups to an off-server location, and a tested restore
+- [ ] Hostinger panel firewall: confirm ports 80/443 are open to the internet
+- [ ] Supabase baseline SQL run on the staging database (see Open items)
+- [ ] Point Vercel production at `develop` after cutover
+
+## DNS situation (checked 14 Oct 2026)
+
+| | |
+| --- | --- |
+| Nameservers | `ns-cloud-e1…e4.googledomains.com` (Google Domains / Squarespace Domains or Google Cloud DNS). **Not Hostinger**, so the Hostinger plugin cannot edit DNS. The owner edits records in that provider's panel |
+| `arlink28.com` A | `65.21.29.43` (Hetzner, LiteSpeed). A **live site** "ARLinks - Premium African Aviation" |
+| Mail | Google Workspace: MX `smtp.google.com`, SPF `v=spf1 include:_spf.google.com ~all`. No DMARC or DKIM found at the names checked |
+| `www`, `api`, `new` | no records |
+
+**Never edit or delete the MX, SPF, DKIM or DMARC records.** Do not point
+`arlink28.com` at the VPS until content is seeded and reviewed: the production
+database starts empty.
+
+## Resume here: DNS and HTTPS (staged cutover)
+
+Check state first:
+
+```bash
+# on your PC
+nslookup -type=A api.arlink28.com 1.1.1.1
+nslookup -type=A new.arlink28.com 1.1.1.1
 ```
 
-`/opt/arlink28` is owned by `deploy:deploy` with mode `750`.
-`/opt/arlink28/secrets` is owned by `deploy:deploy` with mode `700`.
+### Step 1: add two records (no effect on the live site)
 
-Created Docker resources:
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `api` | `69.62.107.166` |
+| A | `new` | `69.62.107.166` |
 
--   Network: `arlink28-network`
--   Volume: `arlink28-postgres-data`
+Wait until both resolve to `69.62.107.166`. Do not start Caddy before they do:
+it requests certificates for every site in the Caddyfile at startup, and repeated
+failures hit Let's Encrypt's failed-validation limit.
 
-Verify with:
+### Step 2: start Caddy (certificates for `api` and `new`)
 
-``` bash
-ls -la /opt/arlink28
-sudo docker network ls
-sudo docker volume ls
-sudo docker ps
-```
+Caddy is the only service that publishes ports. The Caddyfile on `main` serves just
+`api.arlink28.com` and `new.arlink28.com` (the main-domain sites are commented out).
 
-At last check, there were no application containers running. PostgreSQL
-has not been deployed yet.
+While `test-ports.yaml` exists, every compose command must include it (see **Testing
+without DNS**), so define a shortcut once per session:
 
-## DNS status
-
-DNS has **not** been configured, and the DNS provider/registrar has not
-yet been confirmed.
-
-Desired hostnames:
-
--   `arlink28.com` --- frontend
--   `api.arlink28.com` --- API
--   Optional `www.arlink28.com` alias/redirect
-
-After confirming the provider and reviewing existing records, configure:
-
-  Type    Name    Value
-  ------- ------- -----------------
-  A       `@`     `69.62.107.166`
-  A       `api`   `69.62.107.166`
-  CNAME   `www`   `arlink28.com`
-
-Do not delete or overwrite existing email records (MX, SPF, DKIM, DMARC)
-or unrelated records. Check for conflicting A/AAAA/CNAME records. If an
-AAAA record exists but IPv6 web traffic is not configured on the VPS,
-investigate it before proceeding.
-
-Verify DNS from PowerShell:
-
-``` powershell
-Resolve-DnsName arlink28.com
-Resolve-DnsName api.arlink28.com
-Resolve-DnsName www.arlink28.com
-```
-
-Wait until DNS points correctly before expecting Caddy to obtain public
-TLS certificates.
-
-## Required architecture and security
-
-Use Docker Compose. Intended services:
-
--   `caddy`: the only service publishing host ports 80 and 443
--   `web`: Next.js; internal Docker networking only
--   `api`: ASP.NET Core; internal Docker networking only
--   `postgres`: PostgreSQL; internal/private networking only
-
-Route `arlink28.com` (and optionally `www.arlink28.com`) to the Next.js
-service and `api.arlink28.com` to the API service. Caddy should proxy to
-Docker service names and internal container ports, not `localhost` on
-the VPS.
-
-Use the existing network and volume safely. Be careful about Compose
-project naming so the deployment does not accidentally create duplicate
-networks or volumes. Explicitly declare/reference existing resources
-where appropriate. Prefer a separate internal database network: attach
-the API to both the proxy-facing network and database network; Caddy
-does not need database access.
-
-Use the existing named volume `arlink28-postgres-data` for PostgreSQL
-persistence. Do not run `docker compose down -v`, remove volumes, or
-perform destructive database operations without explicit approval and a
-verified backup.
-
-Keep production `.env` files and secrets under `/opt/arlink28/secrets/`
-or another protected location outside Git. Restrict permissions, use a
-strong unique database password, and never commit secrets or bake them
-into image layers/build arguments. Check `.gitignore`.
-
-## Next steps for Claude Code
-
-### Phase 1 --- Inspect application repositories
-
-1.  Identify the frontend and API repositories and inspect their README
-    files, package/project files, lockfiles, existing Dockerfiles,
-    environment examples, and health endpoints.
-2.  Confirm Next.js version, package manager, build/start commands,
-    required environment variables, and which variables are safe for
-    browser exposure.
-3.  Confirm .NET target framework, API listening port, configuration
-    keys, health endpoints, PostgreSQL provider, and migration approach.
-4.  Establish whether the API already supports PostgreSQL. Do not assume
-    or invent configuration keys or migration commands.
-5.  Report findings and gaps before changing application architecture.
-
-### Phase 2 --- Prepare production deployment files
-
-1.  Create or refine production Dockerfiles for Next.js and ASP.NET
-    Core. Use multi-stage builds where appropriate, keep images lean,
-    and run containers as non-root where supported.
-
-2.  Prepare a production Compose file under `/opt/arlink28/app/` (or
-    document another chosen path).
-
-3.  Prepare Caddy configuration and persistent storage for its
-    configuration/certificates.
-
-4.  Add sensible restart policies and meaningful health checks. Do not
-    assume `depends_on` alone means a service is ready.
-
-5.  Publish only Caddy ports 80 and 443. Do not publish PostgreSQL,
-    frontend, or API ports directly.
-
-6.  Reuse existing Docker network/volume safely.
-
-7.  Keep secrets outside source control and image layers.
-
-8.  Validate the Compose file before starting services:
-
-    ``` bash
-    cd /opt/arlink28/app
-    sudo docker compose config
-    ```
-
-    Avoid printing interpolated secrets to shared logs or terminals.
-
-### Phase 3 --- Configure DNS and HTTPS
-
-1.  Ask which provider manages `arlink28.com`; this is not yet known.
-2.  Review existing DNS records before editing them.
-3.  Configure the root and API A records, and `www` if desired.
-4.  Verify DNS publicly resolves to `69.62.107.166`.
-5.  Validate Caddy configuration, then start/reload Caddy when service
-    names and ports are correct.
-6.  Verify certificates, HTTP-to-HTTPS redirects, frontend routing, and
-    API routing from outside the VPS.
-7.  Do not claim HTTPS is working until it has been tested.
-
-### Phase 4 --- Deploy and verify
-
-1.  Deploy PostgreSQL with persistent storage and no host-published
-    database port.
-2.  Configure the API connection string to use the PostgreSQL Compose
-    service name, not a public IP or `localhost`.
-3.  Apply migrations using the repository's established, reviewed
-    process.
-4.  Verify API-to-database connectivity and health checks.
-5.  Verify the frontend calls `https://api.arlink28.com`; check CORS,
-    auth callbacks, cookies, and environment-specific URLs.
-6.  Test important user flows and review container logs.
-7.  Check that credentials are not exposed in browser bundles,
-    responses, logs, or Git.
-
-### Phase 5 --- Operations
-
-1.  Create and test a PostgreSQL backup and restore process. Prefer a
-    secure off-server copy; a Docker volume is not a backup.
-2.  Document safe deployment and rollback steps for app releases and
-    database migrations.
-3.  Use pinned image versions or a documented image-tagging approach;
-    avoid uncontrolled production upgrades.
-4.  Monitor disk, memory, container health, and TLS renewal.
-5.  Review security updates and provider-level firewall controls.
-6.  Update this handover with actual paths, DNS records,
-    environment-variable names (never values), commands, decisions, and
-    verification results.
-
-## Useful diagnostic commands
-
-``` bash
-hostnamectl
-sudo ufw status verbose
-sudo docker ps
-sudo docker network ls
-sudo docker volume ls
-sudo docker compose version
-df -h
-free -h
-```
-
-When deployment files exist:
-
-``` bash
+```bash
+ssh deploy@69.62.107.166
 cd /opt/arlink28/app
-sudo docker compose config
-sudo docker compose ps
-sudo docker compose logs --tail=100
+DC="sudo docker compose -f compose.yaml -f test-ports.yaml"
+$DC up -d --wait caddy
+$DC logs --tail=50 caddy      # look for "certificate obtained"
 ```
 
-Specify `-f` if the Compose file has another name. Avoid printing
-environment files or secrets. Do not use
-`docker system prune --volumes`, `docker volume prune`, or
-`docker compose down -v` as routine cleanup.
+Verify from outside the server (your PC):
 
-## Current checklist
+```powershell
+curl.exe -I https://api.arlink28.com/health      # 200
+curl.exe -I https://new.arlink28.com/            # 200, header X-Robots-Tag: noindex
+curl.exe -I http://new.arlink28.com/             # 308 redirect to https
+curl.exe -I https://api.arlink28.com/swagger     # 404 (blocked on purpose)
+```
 
--   [x] VPS provisioned and accessible
--   [x] Non-root `deploy` account and SSH key login verified
--   [x] SSH root/password login disabled and effective settings verified
--   [x] `sudo` access verified
--   [x] UFW active with SSH/HTTP/HTTPS allowed
--   [x] Docker Engine and Compose installed
--   [x] Deployment directories created
--   [x] `arlink28-network` created
--   [x] `arlink28-postgres-data` created
--   [ ] DNS provider confirmed
--   [ ] DNS records configured and verified
--   [ ] Repositories inspected
--   [ ] Production Dockerfiles and Compose file prepared
--   [ ] Caddy configured
--   [ ] PostgreSQL deployed and secured
--   [ ] API deployed and connected to database
--   [ ] Frontend deployed
--   [ ] HTTPS and routing verified externally
--   [ ] Backup/restore tested
--   [ ] Rollback procedure documented
+If ports 80/443 do not answer, check the Hostinger VPS panel firewall (hPanel →
+VPS → Firewall) and `sudo ufw status` (needs the sudo password).
+
+### Step 3: finish the mail login
+
+On the VPS, in `/opt/arlink28/secrets/api.env` (edit with `nano`, never print):
+
+```text
+EmailSettings__SmtpHost=smtp.gmail.com
+EmailSettings__SmtpPort=587
+EmailSettings__SmtpUser=developers@arlink28.com
+EmailSettings__SmtpPass=<Google app password, no spaces>
+```
+
+Then `$DC up -d api` (recreates the API with the new env). Create the
+app password in the Google account (Security → 2-Step Verification → App passwords).
+Gmail may rewrite the sender to the login address unless `noreply@arlink28.com` is a
+"send as" alias.
+
+### Step 4: seed the production content (asks for confirmation first)
+
+This writes real data to the production database. The seed commands refuse to run
+in Production without `--allow-production`.
+
+```bash
+cd /opt/arlink28/app
+DC="sudo docker compose -f compose.yaml -f test-ports.yaml"
+$DC run --rm -T migrate seed-catalogue --allow-production
+$DC run --rm -T migrate seed-destinations --allow-production
+```
+
+(`migrate` is the one-off service that runs the API image; arguments replace its
+`migrate` command. These two invocations have **not been run yet**; run `--dry-run`
+variants first where supported: `seed-products`, `seed-photos`, `seed-destinations`
+accept `--dry-run`.) Destination hero photos need `--photos=<folder>` on the
+server; copy the folder in first or add photos later in the admin. Everything
+seeded is a Draft: review and publish in the admin.
+
+### Step 5: review at `https://new.arlink28.com`
+
+- Sign in at `/admin/login` as `developers@arlink28.com` (password was typed at the
+  server prompt; if lost, reset it in the admin or re-seed, do not edit the DB by hand).
+- Upload a photo to a package, open it on the site (proves `/media` on the VPS volume).
+- Send a test enquiry from each form; check the database row and the three inboxes.
+- Note: links in emails use `https://arlink28.com`, which is still the old site until cutover.
+
+### Step 6: prepare, then cut over
+
+1. A day before: lower the TTL of the `@` record to 300 seconds.
+2. In `deploy/Caddyfile` (web repo): uncomment the `arlink28.com` and `www` sites,
+   delete the `new` site. PR into `main` (and `develop`), owner merges.
+3. At the DNS provider: point `@` to `69.62.107.166` (A) and `www` to `arlink28.com`
+   (CNAME) or `69.62.107.166` (A). Leave all mail records alone. Wait until both
+   resolve to the VPS (`nslookup … 1.1.1.1`).
+4. **Only then** on the VPS: `bash /opt/arlink28/src/web/deploy/deploy.sh`. It copies
+   the new Caddyfile in place and reloads Caddy, which then requests certificates for the
+   main names. If you deploy before DNS points here, Caddy fails those certificates
+   and can hit Let's Encrypt's failed-validation limit.
+5. Verify `https://arlink28.com`, `https://www.arlink28.com` (redirects to apex), the
+   admin, an enquiry, a photo.
+6. Set `AdminBootstrap__Enabled=false` in `api.env`, `up -d api`.
+7. Point Vercel's production branch at `develop`.
+8. **Rollback:** change the `@` A record back to `65.21.29.43`. Keep the old server
+   running until you are sure.
+
+## Testing without DNS (SSH tunnel)
+
+`test-ports.yaml` (kept on the server, not in Git) binds web and API to the
+server's loopback only:
+
+```text
+web  127.0.0.1:13000      api  127.0.0.1:18080
+```
+
+From a PowerShell window on your PC (leave it open):
+
+```powershell
+ssh -N -L 23000:127.0.0.1:13000 -L 28080:127.0.0.1:18080 deploy@69.62.107.166
+```
+
+Then browse `http://localhost:23000` (site), `/admin/login`, and
+`http://localhost:28080/health`. Use ports like 23000, not 3000: your local dev
+server probably already uses 3000. While `test-ports.yaml` is in use, pass
+`-f compose.yaml -f test-ports.yaml` to every compose command, or the ports vanish
+on the next recreate. To remove the ports: `sudo docker compose up -d`
+(without the override) and delete the file.
+
+## Open items and decisions
+
+| Item | Notes |
+| --- | --- |
+| Supabase baseline | `docs/migrations/baseline-existing-database.sql` (API repo) must be run once on the staging Supabase database before anything runs `migrate` against it. Not run yet |
+| Render staging | Had an open incident (builds/deploys not starting, 14 Oct) and `hibernate-wake-error`. Redeploy from the Render dashboard once the incident clears; check `/health` |
+| PR #13 (web) | Same cutover change into `develop`; merge any time |
+| API data-protection keys | Warning "keys not persisted" in API logs. Add a volume for `/home/app/.aspnet/DataProtection-Keys` (needs a Dockerfile `mkdir`+`chown`) if any feature depends on it. Harmless today |
+| `libgssapi_krb5` message | Npgsql probing for Kerberos; harmless |
+| Backups | `deploy.sh` dumps before each deploy only. Add a nightly `pg_dump` plus a `arlink28-media` archive, copied off the server, and rehearse a restore |
+| DMARC | None published. Consider adding a DMARC record for `arlink28.com` once mail is stable (edit with care) |
+| Media | Production photos live only in the `arlink28-media` volume: include it in backups |
+| Postgres version | Running 17 (matches CI/Supabase); ADR 0005 said 18 |
+| Compose commands | Always run from `/opt/arlink28/app`. Never `down -v`, `volume prune` or `system prune --volumes` |
+| `deploy.sh` and the test ports | `deploy.sh` uses `compose.yaml` only, so a deploy removes the loopback test ports. Re-add by recreating with `-f test-ports.yaml`, or finish testing before the cutover |
+| Caddyfile changes | `deploy.sh` now writes the file in place and runs `caddy reload`. (Fixed in this branch; an older `deploy.sh` replaced the file and Caddy kept the stale one) |
+
+## Lessons learned (so you do not repeat them)
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `dotnet ef` hit the dev database | The design-time factory prefers `DirectConnection` from user secrets, and secrets beat env vars | Use `MIGRATION_CONNECTION` (now supported) or `--connection` |
+| API repo "had no migrations" | `.gitignore` excluded `Migrations/` | Rule removed |
+| `git checkout` on the server refused | `chmod +x` changed file modes | `core.fileMode false` set in both clones; run scripts with `bash script.sh` |
+| `sudo docker compose` ignored `RELEASE_TAG` | `sudo` resets the environment | Tag is written to `app/.env` |
+| `docker compose exec` ate the script | It reads stdin | Add `< /dev/null` |
+| Background deploy never ran | `cmd1 && cmd2 &` backgrounds the whole chain | Upload first, then start with `(setsid nohup … &)` |
+| Caddy and DNS | Caddy requests certificates for all sites at start | Keep un-pointed names commented out |
+| Vercel site stale | Production builds `main`, work was only on `develop` | PR `develop` → `main` |
+| Render 503 `hibernate-wake-error` | Free instance would not wake (Render incident) | Wait, then Manual Deploy |
+
+## Security notes
+
+- Secrets live only in `/opt/arlink28/secrets/` (mode 600) and the owner's own
+  tools. They are not in Git, images or this file.
+- Several secrets were pasted into the chat during setup: a proposed admin password,
+  the Google account password, a Google app password and an unused Hostinger API
+  token. **Treat them all as exposed:** make sure the admin password on the server
+  is a different, fresh one (change it after first login), change the Google account
+  password, revoke and recreate the Google app password, and revoke the Hostinger token.
+- The `deploy` sudo rule covers only the Docker binary. Docker is root-equivalent,
+  so protect the SSH key and its passphrase.
+- Do not expose port 5432 or any app port. Only Caddy publishes 80/443.
+
+## Useful commands
+
+```bash
+cd /opt/arlink28/app
+sudo docker compose -f compose.yaml -f test-ports.yaml ps
+sudo docker compose logs --tail=100 api        # also: web, caddy, postgres
+tail /opt/arlink28/releases.log
+bash /opt/arlink28/src/web/deploy/deploy.sh                       # origin/main of both
+bash /opt/arlink28/src/web/deploy/deploy.sh <web-sha> <api-sha>   # roll back / pin
+df -h /; free -h
+```
 
 ## Instructions to Claude Code
 
-Treat this document as the verified current state, not proof that future
-work is complete.
+Treat this document as the verified current state, not proof that future work is
+complete. Before changing anything, inspect the relevant repository and server
+configuration. Prefer small, reversible changes. Explain changes that affect SSH,
+firewall rules, persistent data, DNS or production services before applying them.
+Never expose secrets or perform destructive production operations without explicit
+approval. After each step, report what changed, what was verified, what remains,
+and the next concrete action. Update this file with verified facts only.
 
-Before changing anything, inspect the relevant repository and server
-configuration. Prefer small, reversible changes. Explain changes that
-affect SSH, firewall rules, persistent data, or production services
-before applying them. Never expose secrets or perform destructive
-production operations without explicit approval. After each phase,
-report what changed, what was verified, what remains, and the next
-concrete action.
-
-**Immediate next action:** Confirm the DNS provider for `arlink28.com`,
-then inspect the frontend and API repositories and prepare the
-production Docker/Caddy configuration. DNS is not configured and no
-application containers are deployed.
-
-
-//prompt
-Read `docs/DEPLOYMENT-HANDOVER.md` completely before making any changes.
-
-You are taking over the ARLink28 VPS deployment. Use the document as the source of truth for the verified server state, architecture, security requirements, and outstanding work.
-
-Start by inspecting the existing frontend and ASP.NET Core API repositories. Identify the current project structure, frameworks, environment variables, database configuration, Docker files, and health endpoints.
-
-Do not assume DNS is configured or that any application containers are running. Do not repeat completed infrastructure setup unnecessarily.
-
-Report your findings and propose the next concrete step before making potentially disruptive production changes. Preserve existing work, never expose secrets, and never delete persistent database data without my explicit approval.
-
-As deployment progresses, update `docs/DEPLOYMENT-HANDOVER.md` with verified changes and remaining tasks.
+**Immediate next action:** confirm the owner has added the `api` and `new` A
+records (Resume here, step 1), then start Caddy (step 2).
