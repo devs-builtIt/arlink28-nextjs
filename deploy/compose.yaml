@@ -1,0 +1,132 @@
+# Production stack for the VPS. Copied to /opt/arlink28/app/ by deploy.sh and run from there.
+#
+#   caddy   the only service with published ports (80, 443); terminates TLS
+#   web     Next.js customer site + admin UI
+#   api     ASP.NET Core API
+#   postgres  PostgreSQL, reachable only on the private `db` network
+#   migrate   one-off: applies EF Core migrations (profile "tools", never started by `up`)
+#
+# Secrets are never in this file: they live in /opt/arlink28/secrets/*.env (see init-secrets.sh).
+name: arlink28
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [edge]
+    depends_on:
+      web: { condition: service_healthy }
+      api: { condition: service_healthy }
+
+  web:
+    build:
+      context: ../src/web
+      dockerfile: deploy/web.Dockerfile
+      args:
+        API_URL: http://api:8080
+        NEXT_PUBLIC_SITE_URL: https://arlink28.com
+    image: arlink28/web:${RELEASE_TAG:-local}
+    restart: unless-stopped
+    environment:
+      API_URL: http://api:8080
+      NEXT_PUBLIC_SITE_URL: https://arlink28.com
+    networks: [edge]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/favicon.ico"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build:
+      context: ../src/api
+    image: arlink28/api:${RELEASE_TAG:-local}
+    restart: unless-stopped
+    env_file: ${SECRETS_DIR:-/opt/arlink28/secrets}/api.env
+    environment: &api-env
+      ASPNETCORE_ENVIRONMENT: Production
+      AppSettings__ValidIssuer: https://api.arlink28.com
+      AppSettings__ValidAudience: https://api.arlink28.com
+      AppSettings__WebUrl: https://api.arlink28.com
+      AppSettings__FrontendBaseUrl: https://arlink28.com
+      # Photos live on the VPS in the arlink28-media volume.
+      MediaStorage__Provider: LocalDisk
+      MediaStorage__RootPath: /data/media
+    volumes:
+      - media:/data/media
+      - logs:/logs
+    networks: [edge, db]
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      # The runtime image has no curl or wget; bash's /dev/tcp is enough to read the status line.
+      test:
+        - CMD
+        - bash
+        - -c
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /health HTTP/1.0\r\nHost: localhost\r\n\r\n' >&3
+          && head -n1 <&3 | grep -q ' 200 '
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  migrate:
+    image: arlink28/api:${RELEASE_TAG:-local}
+    profiles: [tools]
+    restart: "no"
+    env_file: ${SECRETS_DIR:-/opt/arlink28/secrets}/api.env
+    environment: *api-env
+    command: ["migrate"]
+    networks: [db]
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file: ${SECRETS_DIR:-/opt/arlink28/secrets}/postgres.env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks: [db]
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+networks:
+  # Created on the VPS before this project (see the handover); never created or removed by compose.
+  edge:
+    external: true
+    name: arlink28-network
+  # Private: no route to the internet and no published ports. Only postgres, api and migrate join it.
+  db:
+    name: arlink28-db
+    internal: true
+
+volumes:
+  # Created on the VPS before this project. `external` means compose can never delete it.
+  postgres-data:
+    external: true
+    name: arlink28-postgres-data
+  media:
+    name: arlink28-media
+  logs:
+    name: arlink28-logs
+  caddy-data:
+    name: arlink28-caddy-data
+  caddy-config:
+    name: arlink28-caddy-config
