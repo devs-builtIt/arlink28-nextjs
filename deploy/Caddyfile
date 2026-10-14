@@ -13,15 +13,6 @@
 	}
 }
 
-arlink28.com {
-	import common
-	reverse_proxy web:3000
-}
-
-www.arlink28.com {
-	redir https://arlink28.com{uri} permanent
-}
-
 api.arlink28.com {
 	import common
 	# The API docs are for developers on a laptop, not the public internet.
@@ -29,3 +20,25 @@ api.arlink28.com {
 	respond @docs 404
 	reverse_proxy api:8080
 }
+
+# STAGED CUTOVER. While arlink28.com still points at the old server, the new site is reachable only
+# here. Caddy asks for a certificate for every site below as soon as it starts, and that fails for
+# a name whose DNS points elsewhere, so the main-domain sites stay commented out until the cutover.
+new.arlink28.com {
+	import common
+	# A preview of the production site: keep it out of search results.
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy web:3000
+}
+
+# CUTOVER: once arlink28.com and www point at this server, uncomment these, delete the `new` site
+# above, and redeploy.
+#
+# arlink28.com {
+# 	import common
+# 	reverse_proxy web:3000
+# }
+#
+# www.arlink28.com {
+# 	redir https://arlink28.com{uri} permanent
+# }
