@@ -32,13 +32,17 @@ function useView(): ["list" | "cards", (v: "list" | "cards") => void] {
   useEffect(() => {
     try {
       if (localStorage.getItem("arlink-packages-view") === "list") setView("list");
-    } catch {}
+    } catch {
+      // storage is unavailable (private window); the view is just not remembered
+    }
   }, []);
   const choose = (v: "list" | "cards") => {
     setView(v);
     try {
       localStorage.setItem("arlink-packages-view", v);
-    } catch {}
+    } catch {
+      // storage is unavailable (private window); the view is just not remembered
+    }
   };
   return [view, choose];
 }

@@ -1,0 +1,56 @@
+# The production image (deploy/web.Dockerfile) must build and start. Production runs this image on
+# the VPS, so a broken Dockerfile should fail here, not during a deploy.
+name: Docker image
+
+on:
+  push:
+    branches: [develop, main]
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "deploy/web.Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker.yml"
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "deploy/web.Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker.yml"
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  web-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build
+        run: >
+          docker build -f deploy/web.Dockerfile
+          --build-arg API_URL=http://api:8080
+          --build-arg NEXT_PUBLIC_SITE_URL=https://arlink28.com
+          -t arlink28-web:ci .
+      - name: Starts, serves a static file, and is not root
+        run: |
+          test "$(docker run --rm --entrypoint id arlink28-web:ci -u)" != "0"
+          docker run -d --name web -p 3000:3000 arlink28-web:ci
+          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/favicon.ico && ok=1 && break; sleep 2; done
+          docker logs web
+          test "$ok" = 1

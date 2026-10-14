@@ -1,0 +1,17 @@
+**/node_modules
+**/.next
+**/.next-*
+**/.turbo
+**/dist
+**/*.tsbuildinfo
+.git
+.github
+.idea
+.claude
+.tmp
+docs
+**/.env
+**/.env*.local
+**/e2e
+**/test-results
+**/playwright-report

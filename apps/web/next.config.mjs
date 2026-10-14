@@ -1,6 +1,17 @@
-/* global process */
+/* global process, URL */
+import { fileURLToPath } from "node:url";
+
+// The VPS image (deploy/web.Dockerfile) sets NEXT_OUTPUT=standalone to get a self-contained server.
+// It is off everywhere else, so Vercel and local builds are unchanged. The tracing root is the
+// monorepo root so the workspace packages are included in the standalone output.
+const standalone = process.env.NEXT_OUTPUT === "standalone";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(standalone && {
+    output: "standalone",
+    experimental: { outputFileTracingRoot: fileURLToPath(new URL("../..", import.meta.url)) },
+  }),
   // The e2e suite builds into its own folder (see playwright.config.ts), so running it never
   // overwrites what a `next dev` server has compiled in .next.
   distDir: process.env.NEXT_DIST_DIR || ".next",
