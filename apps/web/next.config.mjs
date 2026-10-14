@@ -1,4 +1,4 @@
-/* global process */
+/* global process, URL */
 import { fileURLToPath } from "node:url";
 
 // The VPS image (deploy/web.Dockerfile) sets NEXT_OUTPUT=standalone to get a self-contained server.
