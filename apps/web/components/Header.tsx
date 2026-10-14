@@ -199,7 +199,7 @@ export default function Header({ themable = false }: { themable?: boolean }) {
             >
               Essentials
               <svg viewBox="0 0 12 12" aria-hidden="true">
-                <path d="m2.5 4.5 3.5 3.5 3.5-3.5" />
+                <path d="m2.5 4.25 3.5 3.5 3.5-3.5" />
               </svg>
             </button>
             {essentialsOpen && (

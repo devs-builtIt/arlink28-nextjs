@@ -1,14 +1,8 @@
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
-        {/* Applies a saved theme choice before first paint, so there is no flash. Without one, the site is dark. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{var t=localStorage.getItem('arlink-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}",
-          }}
-        />
+        {/* The site is light. The header theme toggle is switched off (Header themable), so no saved choice is read. */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body>{children}</body>
