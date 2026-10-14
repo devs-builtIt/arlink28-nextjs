@@ -59,9 +59,11 @@ services:
       AppSettings__ValidAudience: https://api.arlink28.com
       AppSettings__WebUrl: https://api.arlink28.com
       AppSettings__FrontendBaseUrl: https://arlink28.com
-      # Enquiries are always saved to the database; these are who is also emailed. Booking enquiries
-      # (packages, flights, hotels, visas, charters, quotes) and the general contact form go to
-      # different inboxes. EnquirySettings__NotifyTo in api.env (if set) is added to both.
+      # Enquiries are always saved to the database; these are who is also emailed. Developers are
+      # copied on every enquiry; booking enquiries (packages, flights, hotels, visas, charters, quotes)
+      # also go to reservations, and the general contact form also goes to info. A value here wins over
+      # the same key in api.env.
+      EnquirySettings__NotifyTo: developers@arlink28.com
       EnquirySettings__ReservationsTo: reservations@arlink28.com
       EnquirySettings__ContactTo: info@arlink28.com
       # Photos live on the VPS in the arlink28-media volume.
