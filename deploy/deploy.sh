@@ -62,6 +62,15 @@ dc run --rm -T migrate
 dc up -d --wait api web caddy
 # A running Caddy keeps the old config until told to reload; recreating it is not needed for that.
 dc exec -T caddy caddy reload --config /etc/caddy/Caddyfile < /dev/null
+# A single-file bind mount follows the inode it was created with. If the container still sees an older
+# Caddyfile than the one on disk (a past `install` replaced the file), the reload above did nothing, so
+# recreate Caddy. Certificates live in a volume and survive.
+HOST_SUM=$(sha256sum "$APP/Caddyfile" | cut -d' ' -f1)
+SEEN_SUM=$(dc exec -T caddy sha256sum /etc/caddy/Caddyfile < /dev/null | cut -d' ' -f1)
+if [ "$HOST_SUM" != "$SEEN_SUM" ]; then
+  echo "Caddy sees a stale Caddyfile; recreating the container"
+  dc up -d --force-recreate --no-deps --wait caddy
+fi
 dc ps
 
 echo "$(date -u +%FT%TZ) $RELEASE_TAG web=$WEB_REF api=$API_REF" >> "$ROOT/releases.log"
