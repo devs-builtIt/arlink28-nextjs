@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
 import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
 import Reveal from "@/components/home/Reveal";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 import TeamGrid from "@/components/home/TeamGrid";
 import { TEAM } from "@/content/team";
 
@@ -17,6 +19,7 @@ export default function TeamPage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        photo="namibia"
         label="Our team"
         title={
           <>
@@ -28,7 +31,8 @@ export default function TeamPage() {
         intro="Our advisory chairman and ten coordinators, from aviation and finance to technology, partnerships and customer experience."
       />
       <TeamGrid people={TEAM} />
-      <ClosingCta />
+      <FaqSection items={SERVICE_FAQS.team} />
+      <ClosingCta bleed />
     </div>
   );
 }
