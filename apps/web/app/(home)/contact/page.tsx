@@ -96,6 +96,7 @@ export default async function ContactPage({ searchParams }: Search) {
   return (
     <div className="hm hm-ct">
       <PageBanner
+        photo="namibia"
         label="Contact"
         id="hm-qp-h"
         title="Contact us"
