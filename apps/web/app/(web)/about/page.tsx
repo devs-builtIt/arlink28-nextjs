@@ -3,8 +3,10 @@ import Link from "next/link";
 import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
 import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
 import PartnerLogos from "@/components/home/PartnerLogos";
 import Reveal from "@/components/home/Reveal";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 
 export const metadata: Metadata = {
   title: "About ARLink28 | Travel across Africa",
@@ -43,6 +45,7 @@ export default function AboutPage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        photo="namibia"
         label="About us"
         title={
           <>
@@ -216,7 +219,8 @@ export default function AboutPage() {
         <PartnerLogos />
       </div>
 
-      <ClosingCta />
+      <FaqSection items={SERVICE_FAQS.about} />
+      <ClosingCta bleed />
     </div>
   );
 }

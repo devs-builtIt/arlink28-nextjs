@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import "../../styles/home.css";
+import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
 import QuoteForm from "@/components/home/QuoteForm";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/home/Reveal";
 import { PHONES } from "@/content/home-proof";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 
 export const metadata: Metadata = {
   title: "Get a quote | ARLink28",
@@ -34,6 +37,7 @@ export default function QuotePage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        photo="namibia"
         label="Get a quote"
         id="hm-qp-h"
         title={
@@ -81,6 +85,14 @@ export default function QuotePage() {
           </div>
         </div>
       </section>
+
+      <FaqSection items={SERVICE_FAQS.quote} />
+      <ClosingCta
+        bleed
+        text="Prefer to talk it through? Call us or write from the contact page and a person replies. Nothing is charged until you agree."
+        cta="Contact us"
+        href="/contact"
+      />
     </div>
   );
 }

@@ -3,7 +3,9 @@ import Link from "next/link";
 import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
 import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
 import Reveal from "@/components/home/Reveal";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 import { BLOG_TEASERS } from "@/content/blog-teasers";
 
 export const metadata: Metadata = {
@@ -18,6 +20,7 @@ export default function BlogsPage() {
     <div className="hm">
       <Reveal />
       <PageBanner
+        photo="namibia"
         label="Blogs"
         title="Blogs"
         intro="Travel stories and guides for the routes our travellers ask about are on their way."
@@ -72,7 +75,8 @@ export default function BlogsPage() {
         </div>
       </section>
 
-      <ClosingCta />
+      <FaqSection items={SERVICE_FAQS.blogs} />
+      <ClosingCta bleed />
     </div>
   );
 }
