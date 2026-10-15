@@ -17,8 +17,8 @@ import {
   PARTNERS,
   RATING,
   REVIEWS,
+  REVIEW_BYLINE,
   REVIEW_SUMMARY,
-  SAMPLE,
   WHY,
 } from "@/content/home-proof";
 import { BLOG_TEASERS } from "@/content/blog-teasers";
@@ -112,15 +112,6 @@ const jsonLd = {
 };
 
 /** A section title with its tilted sticker label. */
-const initials = (name: string) =>
-  name
-    .replace(/[[\]]/g, "")
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
 function Title({ sticker, children, id }: { sticker: string; children: React.ReactNode; id: string }) {
   return (
     <h2 className="hm-title" id={id} data-rv>
@@ -393,9 +384,9 @@ export default async function HomePage() {
                 height={933}
               />
               <figcaption>
-                <blockquote className={SAMPLE ? "hm-placeholder" : undefined}>{REVIEWS[0].text}</blockquote>
+                <blockquote>{REVIEWS[0].text}</blockquote>
                 <cite>
-                  {REVIEWS[0].name}, {REVIEWS[0].route}
+                  {REVIEWS[0].title}, {REVIEW_BYLINE}
                 </cite>
               </figcaption>
             </figure>
@@ -408,14 +399,11 @@ export default async function HomePage() {
                         <span className="hm-stars" aria-hidden="true">
                           {"★★★★★"}
                         </span>
-                        <blockquote className={SAMPLE ? "hm-placeholder" : undefined}>{r.text}</blockquote>
+                        <blockquote>{r.text}</blockquote>
                         <footer>
-                          <span className="hm-rv-av" aria-hidden="true">
-                            {initials(r.name)}
-                          </span>
                           <span>
-                            <strong>{r.name}</strong>
-                            <small>{r.route}</small>
+                            <strong>{r.title}</strong>
+                            <small>{REVIEW_BYLINE}</small>
                           </span>
                         </footer>
                       </li>
