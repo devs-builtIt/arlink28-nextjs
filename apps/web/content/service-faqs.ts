@@ -13,7 +13,7 @@ const NOTHING_CHARGED: Faq = {
  * supplier's own rules). Review the wording against the real terms before launch.
  */
 export const SERVICE_FAQS: Record<
-  "flights" | "hotels" | "visas" | "packages" | "services" | "travel" | "elite" | "about" | "team" | "blogs",
+  "flights" | "hotels" | "visas" | "packages" | "services" | "travel" | "elite" | "about" | "team" | "blogs" | "quote",
   Faq[]
 > = {
   flights: [
@@ -154,6 +154,25 @@ export const SERVICE_FAQS: Record<
     {
       q: "Can I join the team or become a partner?",
       a: "Take a look at the opportunities page, then write to us from the contact page with a short note about yourself.",
+    },
+  ],
+  quote: [
+    {
+      q: "What happens after I send a request?",
+      a: "A member of the team reads it and replies with options and a price. You can ask questions or change the plan before you agree to anything.",
+    },
+    NOTHING_CHARGED,
+    {
+      q: "How long does a reply take?",
+      a: "Replies depend on our staffed hours, which are shown on the contact page. If it is urgent, call us.",
+    },
+    {
+      q: "What should I put in the request?",
+      a: "Your route and dates, how many are travelling, and anything that matters to you. If you only have an idea, send that and we help shape it.",
+    },
+    {
+      q: "Can I change my mind after I get a quote?",
+      a: "Yes. A quote is not a booking. Nothing is arranged until you agree to it.",
     },
   ],
   blogs: [
