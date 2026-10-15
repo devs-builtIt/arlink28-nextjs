@@ -65,45 +65,36 @@ export const PARTNER_LOGOS = [
 /** Partners the business has written permission to name. Empty until confirmed. */
 export const PARTNERS: string[] = [];
 
-/** Review cards. Placeholder until real, permitted customer words replace them. */
-export const REVIEWS: { name: string; route: string; text: string; source: string }[] = [
+/** Review cards, as supplied by the owner. They are unattributed, so each shows its headline and a generic byline. */
+export const REVIEWS: { title: string; text: string }[] = [
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission. Two or three sentences about what we arranged and how it went.]",
-    source: "[Source]",
+    title: "Excellent Customer Service",
+    text: "ARLink28 made the whole travel planning process so much easier. The team was helpful, responsive, and always willing to answer our questions. A great experience from start to finish.",
   },
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission.]",
-    source: "[Source]",
+    title: "Smooth Booking Experience",
+    text: "Finding and arranging our travel plans was straightforward with ARLink28. Everything was clearly communicated, and the support we received made the experience stress-free. Would definitely recommend them.",
   },
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission. A line or two about the booking and the support.]",
-    source: "[Source]",
+    title: "Reliable Travel Support",
+    text: "What stood out most was the communication and attention to detail. ARLink28 made sure we understood our options and helped us plan with confidence. Looking forward to travelling with them again.",
   },
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission. Two or three sentences about what we arranged.]",
-    source: "[Source]",
+    title: "Professional and Helpful",
+    text: "Professional service and a team that genuinely cares about its customers. They took the time to understand our travel needs and helped us find suitable options without making the process complicated.",
   },
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission.]",
-    source: "[Source]",
+    title: "Great Travel Planning Experience",
+    text: "Planning a trip can be overwhelming, but ARLink28 made it feel manageable. The guidance and support were appreciated, and the overall experience was positive. I would happily consider them for future trips.",
   },
   {
-    name: "[Customer name]",
-    route: "[Route or service]",
-    text: "[A real customer's words, with their permission. A line or two about how it went.]",
-    source: "[Source]",
+    title: "A Brand Worth Considering",
+    text: "ARLink28 offers a refreshing approach to travel planning, with a focus on making things easier for travellers. The experience was professional, and the communication was helpful throughout.",
   },
 ];
+
+/** The byline under every review. */
+export const REVIEW_BYLINE = "ARLink28 customer";
 
 /** Where "Read all reviews on Google" goes. Replace with the business's own Google reviews link when it is to hand. */
 export const GOOGLE_REVIEWS_URL = "https://www.google.com/search?q=ARLink28+reviews";
