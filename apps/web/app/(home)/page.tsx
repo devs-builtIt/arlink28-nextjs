@@ -44,7 +44,14 @@ export const metadata: Metadata = {
     url: SITE,
     siteName: "ARLink28",
     type: "website",
-    images: [{ url: "/images/home/hero-zanzibar-1920.webp", width: 1920, height: 1080 }],
+    images: [
+      {
+        url: "/images/home/og-home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Lantern-lit safari camp under an acacia tree at dusk",
+      },
+    ],
   },
 };
 
