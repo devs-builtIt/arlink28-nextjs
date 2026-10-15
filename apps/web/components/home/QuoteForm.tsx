@@ -6,7 +6,7 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import Dropdown, { PARTY_SIZES } from "./Dropdown";
-import { QuoteAlert, QuoteDone } from "./QuoteResult";
+import { EnquiryAlert, EnquiryDone } from "./EnquiryResult";
 
 const SERVICES = ["Flight", "Hotel reservation", "Visa support", "Holiday package", "Private charter"] as const;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -112,7 +112,7 @@ export default function QuoteForm() {
   }
 
   if (reference) {
-    return <QuoteDone ref={done} reference={reference} email={email.trim()} onAgain={sendAnother} />;
+    return <EnquiryDone ref={done} reference={reference} email={email.trim()} onAgain={sendAnother} />;
   }
 
   return (
@@ -233,7 +233,7 @@ export default function QuoteForm() {
         </label>
       </div>
       {errors.consent && <p className="qf-error">{errors.consent}</p>}
-      {failure && <QuoteAlert message={failure} />}
+      {failure && <EnquiryAlert message={failure} />}
       <button type="submit" className="hm-btn hm-btn-primary" disabled={sending}>
         {sending ? "Sending..." : "Send my request"}
       </button>

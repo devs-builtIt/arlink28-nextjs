@@ -2952,6 +2952,10 @@ body:has(.hm-hero) .hm-title .hm-sticker {
 .hm-qp-card:has(.qf-done) {
   display: flex;
 }
+.hm-qp-card:has(.qf-done) > .hm-qp-title,
+.hm-qp-card:has(.qf-done) > .hm-qp-sub {
+  display: none;
+}
 .qf-done {
   flex: 1;
   display: flex;
@@ -3233,8 +3237,21 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   color: var(--ink);
 }
 .hm-ct .ct-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   color: var(--ink-2);
   font-size: 14px;
+  line-height: 1.5;
+}
+.hm-ct .ct-consent input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  padding: 0;
+  margin-top: 2px;
+  accent-color: var(--ink);
 }
 .hm-ct .ct-consent a {
   color: var(--ink);
