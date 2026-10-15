@@ -16,7 +16,7 @@ test.describe("getting to the portal from the public site", () => {
     await expect(page).toHaveURL(/\/admin\/dashboard$/);
   });
 
-  test("Essentials opens the company links, and Elite Jets has its own page", async ({ page }) => {
+  test("Essentials opens the company links, and ARLink28 Elite has its own page", async ({ page }) => {
     await page.goto("/");
     const main = page.getByRole("navigation", { name: "Main" });
     await main.getByRole("button", { name: "Essentials" }).click();
@@ -32,7 +32,7 @@ test.describe("getting to the portal from the public site", () => {
     await expect(page).toHaveURL(/\/blogs$/);
     await expect(page.getByRole("heading", { name: "Blogs", level: 1 })).toBeVisible();
 
-    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Elite Jets" }).click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "ARLink28 Elite" }).click();
     await expect(page).toHaveURL(/\/elite-jets$/);
     await expect(page.getByRole("heading", { name: /Private aircraft charter/, level: 1 })).toBeVisible();
   });
