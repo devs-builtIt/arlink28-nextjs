@@ -8,6 +8,7 @@ import ProductSearch from "@/components/products/ProductSearch";
 import { PAGE_SIZE, listDestinations, listPackages } from "@/utils/server/catalogue";
 import { PUBLIC, type PublicType } from "@/utils/publicProducts";
 import PageBanner from "@/components/PageBanner";
+import ServiceFooter from "@/components/home/ServiceFooter";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? "";
@@ -17,6 +18,8 @@ const PHOTO: Record<PublicType, "flights" | "hotels" | "visas"> = {
   HotelReservation: "hotels",
   VisaSupport: "visas",
 };
+
+const FOOTER = { Flight: "flights", HotelReservation: "hotels", VisaSupport: "visas" } as const;
 
 const SORTS: [string, string][] = [
   ["", "Featured first"],
@@ -52,56 +55,65 @@ export default async function ProductListing({ type, searchParams }: { type: Pub
   };
 
   return (
-    <ListingProvider params={params}>
-      <PageBanner
-        overlap
-        photo={PHOTO[type]}
-        above={<KindSwitcher active={copy.path} />}
-        title={copy.heroTitle}
-        intro={copy.heroText}
-      />
-
-      <div className="pkgs-searchwrap">
-        <ProductSearch destinations={destinations} placeholder={copy.searchHint} label={copy.plural} />
-      </div>
-
-      <div className="pkgs-page">
-        <ResultsBar
-          total={list?.total ?? null}
-          destinations={destinations}
-          noun={[copy.noun, copy.plural]}
-          sorts={SORTS}
+    <>
+      <ListingProvider params={params}>
+        <PageBanner
+          overlap
+          photo={PHOTO[type]}
+          above={<KindSwitcher active={copy.path} />}
+          title={copy.heroTitle}
+          intro={copy.heroText}
         />
-        <ResultsFrame>
-          {list === null ? (
-            <div className="pkgs-empty">
-              <h2>{copy.title} can&apos;t be shown right now</h2>
-              <p>Something went wrong on our side. Reload the page in a moment.</p>
-            </div>
-          ) : list.items.length === 0 ? (
-            <div className="pkgs-empty">
-              <h2>{filtered ? `No ${copy.plural} found` : `No ${copy.plural} listed yet`}</h2>
-              <p>
-                {filtered
-                  ? "Nothing matches these filters. Try removing one, or search for something broader."
-                  : "We add new ones often. In the meantime, tell us what you need and we will find it."}
-              </p>
-              <Link className="pkgs-button" href={filtered ? copy.path : "/contact?type=Booking"}>
-                {filtered ? "Clear all filters" : "Contact us"}
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className="pkgs-grid">
-                {list.items.map((pkg, i) => (
-                  <ProductCard key={pkg.id} pkg={pkg} type={type} priority={i < 4} />
-                ))}
+
+        <div className="pkgs-searchwrap">
+          <ProductSearch destinations={destinations} placeholder={copy.searchHint} label={copy.plural} />
+        </div>
+
+        <div className="pkgs-page">
+          <ResultsBar
+            total={list?.total ?? null}
+            destinations={destinations}
+            noun={[copy.noun, copy.plural]}
+            sorts={SORTS}
+          />
+          <ResultsFrame>
+            {list === null ? (
+              <div className="pkgs-empty">
+                <h2>{copy.title} can&apos;t be shown right now</h2>
+                <p>Something went wrong on our side. Reload the page in a moment.</p>
               </div>
-              <Pagination page={page} pageSize={PAGE_SIZE} total={list.total ?? list.items.length} hrefFor={hrefFor} />
-            </>
-          )}
-        </ResultsFrame>
-      </div>
-    </ListingProvider>
+            ) : list.items.length === 0 ? (
+              <div className="pkgs-empty">
+                <h2>{filtered ? `No ${copy.plural} found` : `No ${copy.plural} listed yet`}</h2>
+                <p>
+                  {filtered
+                    ? "Nothing matches these filters. Try removing one, or search for something broader."
+                    : "We add new ones often. In the meantime, tell us what you need and we will find it."}
+                </p>
+                <Link className="pkgs-button" href={filtered ? copy.path : "/contact?type=Booking"}>
+                  {filtered ? "Clear all filters" : "Contact us"}
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="pkgs-grid">
+                  {list.items.map((pkg, i) => (
+                    <ProductCard key={pkg.id} pkg={pkg} type={type} priority={i < 4} />
+                  ))}
+                </div>
+                <Pagination
+                  page={page}
+                  pageSize={PAGE_SIZE}
+                  total={list.total ?? list.items.length}
+                  hrefFor={hrefFor}
+                  noun={copy.plural}
+                />
+              </>
+            )}
+          </ResultsFrame>
+        </div>
+      </ListingProvider>
+      <ServiceFooter service={FOOTER[type]} />
+    </>
   );
 }

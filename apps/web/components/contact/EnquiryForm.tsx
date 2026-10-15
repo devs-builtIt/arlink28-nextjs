@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
+import Dropdown from "@/components/home/Dropdown";
 import type { CreateEnquiryRequest, Quote } from "@arlink28/api-client";
 import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
@@ -245,26 +246,31 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
             {pkg.kind === "HotelReservation" && (
               <div className="ct-field">
                 <label htmlFor="ct-nights">Nights</label>
-                <select id="ct-nights" value={nights} onChange={(e) => setNights(Number(e.target.value))}>
-                  {Array.from({ length: 21 }, (_, i) => i + 1).map((n) => (
-                    <option key={n} value={n}>
-                      {nightsLabel(n)}
-                    </option>
-                  ))}
-                </select>
+                <Dropdown
+                  id="ct-nights"
+                  name="nights"
+                  value={String(nights)}
+                  onChange={(v) => setNights(Number(v))}
+                  options={Array.from({ length: 21 }, (_, i) => i + 1).map((n) => ({
+                    value: String(n),
+                    label: nightsLabel(n),
+                  }))}
+                />
               </div>
             )}
             {holiday && pkg.extraNightsSold && (
               <div className="ct-field">
                 <label htmlFor="ct-nights">Nights</label>
-                <select id="ct-nights" value={nights} onChange={(e) => setNights(Number(e.target.value))}>
-                  {Array.from({ length: 8 }, (_, i) => pkg.nights + i).map((n) => (
-                    <option key={n} value={n}>
-                      {nightsLabel(n)}
-                      {n === pkg.nights ? " (as packaged)" : ""}
-                    </option>
-                  ))}
-                </select>
+                <Dropdown
+                  id="ct-nights"
+                  name="nights"
+                  value={String(nights)}
+                  onChange={(v) => setNights(Number(v))}
+                  options={Array.from({ length: 8 }, (_, i) => pkg.nights + i).map((n) => ({
+                    value: String(n),
+                    label: `${nightsLabel(n)}${n === pkg.nights ? " (as packaged)" : ""}`,
+                  }))}
+                />
               </div>
             )}
           </div>
@@ -300,13 +306,13 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
       {!pkg && (
         <div className="ct-field">
           <label htmlFor="ct-type">What is this about?</label>
-          <select id="ct-type" value={type} onChange={(e) => setType(e.target.value as GeneralType)}>
-            {GENERAL_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
+          <Dropdown
+            id="ct-type"
+            name="type"
+            value={type}
+            onChange={(v) => setType(v as GeneralType)}
+            options={GENERAL_TYPES.map((t) => ({ value: t.value, label: t.label }))}
+          />
         </div>
       )}
 

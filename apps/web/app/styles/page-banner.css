@@ -27,7 +27,7 @@
   min-height: 480px;
   margin: 0 auto;
   padding: clamp(24px, 3.6vw, 52px);
-  border-radius: var(--radius, 12px);
+  border-radius: var(--radius-card);
   background: #0b121c;
   color: #fff;
   overflow: hidden;

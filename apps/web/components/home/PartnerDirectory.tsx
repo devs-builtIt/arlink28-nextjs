@@ -2,18 +2,24 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
+import ClientPager from "@/components/home/ClientPager";
 import type { PartnerKind, TravelPartner } from "@/content/travel-partners";
 
 const ALL = "All partners";
 const KINDS: PartnerKind[] = ["Flights", "Visas", "Experiences"];
+const PAGE_SIZE = 6;
 
 /** The travel partners with tabs that show only the kind you choose. */
 export default function PartnerDirectory({ partners }: { partners: TravelPartner[] }) {
   const [active, setActive] = useState<string>(ALL);
+  const [page, setPage] = useState(1);
   const tabs = useRef<HTMLDivElement>(null);
   const order = [ALL, ...KINDS];
 
-  const choose = (k: string) => setActive(k);
+  const choose = (k: string) => {
+    setActive(k);
+    setPage(1);
+  };
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
@@ -23,7 +29,8 @@ export default function PartnerDirectory({ partners }: { partners: TravelPartner
     tabs.current?.querySelector<HTMLButtonElement>(`[data-tab="${next}"]`)?.focus();
   };
 
-  const shown = active === ALL ? partners : partners.filter((x) => x.kind === active);
+  const matching = active === ALL ? partners : partners.filter((x) => x.kind === active);
+  const shown = matching.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <>
@@ -69,6 +76,7 @@ export default function PartnerDirectory({ partners }: { partners: TravelPartner
             </li>
           ))}
         </ul>
+        <ClientPager page={page} pageSize={PAGE_SIZE} total={matching.length} noun="partners" onPage={setPage} />
       </div>
     </>
   );

@@ -98,8 +98,8 @@ export default function AirportField({ label, value, onChange, placeholder, erro
               }}
             >
               <span className="hm-code">{a.code}</span>
-              <span>
-                {a.city}
+              <span className="hm-air">
+                <b>{a.city}</b>
                 <small>
                   {a.airport ? `${a.airport}, ` : ""}
                   {a.country}

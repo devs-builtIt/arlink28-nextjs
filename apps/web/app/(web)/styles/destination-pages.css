@@ -107,7 +107,7 @@
   min-height: 0;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background: #dfe5ed;
 }
 .dst-tile-media img {
@@ -270,7 +270,7 @@
   aspect-ratio: 16 / 7;
   max-height: 560px;
   object-fit: cover;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   background: #dfe5ed;
 }
 .dst-hero-figure figcaption,
@@ -325,7 +325,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
 }

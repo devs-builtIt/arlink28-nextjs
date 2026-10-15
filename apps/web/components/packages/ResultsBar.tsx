@@ -19,7 +19,7 @@ type Props = {
   noun?: [string, string];
   /** The orderings offered. Everything but shortest-stay by default. */
   sorts?: [string, string][];
-  destinations: DestinationResponse[];
+  destinations: Pick<DestinationResponse, "slug" | "name">[];
   /** The partner behind the ?partner= filter, when there is one. */
   partnerName?: string;
 };
@@ -103,11 +103,13 @@ export default function ResultsBar({
 }
 
 /** The results, dimmed with a progress line while new ones load. The cards themselves are drawn on the server. */
-export function ResultsFrame({ children }: { children: ReactNode }) {
+export function ResultsFrame({ children, label = "Packages" }: { children: ReactNode; label?: string }) {
   const { pending } = useListing();
   return (
-    <section className="pkgs-results" aria-busy={pending} data-pending={pending || undefined} aria-label="Packages">
-      {pending && <span className="pkgs-progress" role="progressbar" aria-label="Loading packages"></span>}
+    <section className="pkgs-results" aria-busy={pending} data-pending={pending || undefined} aria-label={label}>
+      {pending && (
+        <span className="pkgs-progress" role="progressbar" aria-label={`Loading ${label.toLowerCase()}`}></span>
+      )}
       {children}
     </section>
   );

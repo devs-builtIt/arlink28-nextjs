@@ -10,11 +10,16 @@ export default function ProductSearch({
   destinations,
   placeholder,
   label,
+  filterLabel = "Destination",
+  allLabel = "All destinations",
 }: {
-  destinations: DestinationResponse[];
+  destinations: Pick<DestinationResponse, "slug" | "name">[];
   placeholder: string;
   /** What is being searched, for the screen-reader label: "flights". */
   label: string;
+  /** The second field's name and its empty choice, when it is not a destination (the Elite page filters by tier). */
+  filterLabel?: string;
+  allLabel?: string;
 }) {
   const { params, go, pending } = useListing();
   const [draft, setDraft] = useState(params);
@@ -44,17 +49,14 @@ export default function ProductSearch({
       </label>
 
       <div className="pkgs-seg">
-        <span className="pkgs-seg-label">Destination</span>
+        <span className="pkgs-seg-label">{filterLabel}</span>
         <Dropdown
           id="prod-destination"
           name="destination"
-          ariaLabel="Destination"
+          ariaLabel={filterLabel}
           value={draft.destination}
           onChange={(v) => setDraft({ ...draft, destination: v })}
-          options={[
-            { value: "", label: "All destinations" },
-            ...destinations.map((d) => ({ value: d.slug, label: d.name })),
-          ]}
+          options={[{ value: "", label: allLabel }, ...destinations.map((d) => ({ value: d.slug, label: d.name }))]}
         />
       </div>
 

@@ -8,7 +8,7 @@ const quote = (page: Page) => page.locator("#quote");
 test.describe("the homepage quote request", () => {
   test("a flight quote takes two steps and ends with a reference", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("people who know the routes");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Discover the best of Africa");
 
     await quote(page).getByLabel("From").fill("Lagos");
     await quote(page).getByRole("option", { name: /Lagos/ }).first().click();

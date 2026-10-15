@@ -17,6 +17,8 @@ type Props = {
   text?: string;
   cta?: string;
   href?: string;
+  /** Run the dark band edge to edge instead of as a card inside the page width. */
+  bleed?: boolean;
 };
 
 export default function ClosingCta({
@@ -25,9 +27,14 @@ export default function ClosingCta({
   text = "Tell us where you want to go. We take care of the flights, hotel and visa, so all you do is arrive and enjoy it. Nothing is charged until you agree.",
   cta = "Book now",
   href = "/quote",
+  bleed = false,
 }: Props) {
   return (
-    <section className="hm-sec hm-sec-white hm-sec-flush" data-tone="light" aria-labelledby="hm-deals">
+    <section
+      className={bleed ? "hm-sec hm-deals-bleed" : "hm-sec hm-sec-white hm-sec-flush"}
+      data-tone={bleed ? "dark" : "light"}
+      aria-labelledby="hm-deals"
+    >
       <div className="hm-wrap">
         <div className="hm-deals" data-theme="dark">
           <div className="hm-deals-copy">

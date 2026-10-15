@@ -5,11 +5,14 @@ import "../styles/home.css";
 import ClosingCta from "@/components/home/ClosingCta";
 import ContactBar from "@/components/home/ContactBar";
 import PartnerLogos from "@/components/home/PartnerLogos";
-import HeroRipple from "@/components/home/HeroRipple";
+import HeroSlides from "@/components/home/HeroSlides";
 import Icon from "@/components/home/Icon";
 import QuoteWidget from "@/components/home/QuoteWidget";
 import Reveal from "@/components/home/Reveal";
 import RouteCards from "@/components/home/RouteCards";
+import FaqSection from "@/components/home/FaqSection";
+import HoverList from "@/components/home/HoverList";
+import StepsOnPhoto from "@/components/home/StepsOnPhoto";
 import {
   FAQ,
   GOOGLE_REVIEWS_URL,
@@ -22,6 +25,7 @@ import {
   WHY,
 } from "@/content/home-proof";
 import { BLOG_TEASERS } from "@/content/blog-teasers";
+import { HERO_SLIDES } from "@/content/hero-slides";
 import { priceLabel } from "@/utils/packages";
 import { listPackages } from "@/utils/server/catalogue";
 import { loadEliteTiers } from "@/utils/server/elite";
@@ -134,20 +138,12 @@ export default async function HomePage() {
       {/* 1. Hero: a photo card with the quote panel docked in it */}
       <section className="hm-hero" aria-labelledby="hm-h1">
         <div className="hm-hero-card">
-          <img
-            className="hm-hero-img"
-            src="/images/home/hero-zanzibar-1920.webp"
-            srcSet="/images/home/hero-zanzibar-900.webp 900w, /images/home/hero-zanzibar-1920.webp 1920w, /images/home/hero-zanzibar-2400.webp 2400w"
-            sizes="100vw"
-            width={1920}
-            height={1080}
-            alt=""
-            fetchPriority="high"
-          />
-          <HeroRipple src="/images/home/hero-zanzibar-1920.webp" smallSrc="/images/home/hero-zanzibar-900.webp" />
           <div className="hm-hero-body">
             <div className="hm-hero-copy">
-              <h1 id="hm-h1">Travel across Africa with people who know the routes.</h1>
+              <h1 id="hm-h1">Discover the best of Africa.</h1>
+              <p className="hm-hero-sub">
+                Flights, hotels, visas and holidays, arranged by people who know the routes.
+              </p>
               <p className="hm-rating">
                 <b className="hm-rating-score">
                   {RATING.value} <span aria-hidden="true">{"★"}</span>
@@ -157,6 +153,7 @@ export default async function HomePage() {
             </div>
             <QuoteWidget />
           </div>
+          <HeroSlides slides={HERO_SLIDES} />
         </div>
       </section>
 
@@ -206,59 +203,30 @@ export default async function HomePage() {
             <br />
             flight, hotel and visa.
           </Title>
-          <div className="hm-how">
-            <div className="hm-how-photo" data-rv>
-              <img
-                src="/images/home/team-support.webp"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                width={800}
-                height={1000}
-              />
-              <a className="hm-ring" href="/quote" aria-label="Book now">
-                <svg viewBox="0 0 120 120" aria-hidden="true">
-                  <defs>
-                    <path id="hm-ring-path" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
-                  </defs>
-                  <text>
-                    <textPath href="#hm-ring-path" textLength="270" lengthAdjust="spacing">
-                      TRAVEL ACROSS AFRICA · BOOK NOW ·{" "}
-                    </textPath>
-                  </text>
-                </svg>
-                <i aria-hidden="true">&rarr;</i>
-              </a>
-            </div>
-            <div className="hm-why-side">
-              <ul className="hm-steps">
-                {[WHY[0], WHY[1], WHY[4]].map((w, i) => (
-                  <li key={w.title} data-rv style={{ ["--i" as string]: i }}>
-                    <Icon name={w.icon} />
-                    <div>
-                      <h3>{w.title}</h3>
-                      <p>{w.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="hm-proof" data-rv>
-                <div className="hm-proof-card">
-                  <p className="hm-proof-rating">
-                    <span className="hm-stars" aria-hidden="true">
-                      {"★★★★★"}
-                    </span>
-                    <b>{REVIEW_SUMMARY.score}</b>
-                    <span>on Google</span>
-                  </p>
-                  <p className="hm-proof-small">{RATING.count}</p>
-                  <p className="hm-proof-count">
-                    <b>{HAPPY.value}</b> {HAPPY.label}
-                  </p>
-                </div>
+          <HoverList
+            items={[
+              { ...WHY[0], src: "/images/home/slide-serengeti-1280.webp", pos: "50% 72%" },
+              { ...WHY[1], src: "/images/home/slide-namibia-1280.webp", pos: "50% 60%" },
+              { ...WHY[4], src: "/images/home/slide-knysna-1280.webp", pos: "50% 45%" },
+            ]}
+            cta={{ href: "/quote", label: "Get a quote" }}
+          >
+            <div className="hm-proof" data-rv>
+              <div className="hm-proof-card">
+                <p className="hm-proof-rating">
+                  <span className="hm-stars" aria-hidden="true">
+                    {"★★★★★"}
+                  </span>
+                  <b>{REVIEW_SUMMARY.score}</b>
+                  <span>on Google</span>
+                </p>
+                <p className="hm-proof-small">{RATING.count}</p>
+                <p className="hm-proof-count">
+                  <b>{HAPPY.value}</b> {HAPPY.label}
+                </p>
               </div>
             </div>
-          </div>
+          </HoverList>
         </div>
       </section>
 
@@ -271,9 +239,9 @@ export default async function HomePage() {
                 <span className="hm-sticker" aria-hidden="true">
                   Holidays
                 </span>
-                Packages with
+                Featured
                 <br />
-                the price shown.
+                Packages
               </h2>
               <Link className="hm-btn hm-btn-quiet" href="/packages">
                 See all packages
@@ -376,12 +344,14 @@ export default async function HomePage() {
             </div>
             <figure className="hm-rv-feature" data-rv style={{ ["--i" as string]: 1 }}>
               <img
-                src="/images/home/review-couple-1400.webp"
-                alt="A couple laughing and holding hands in long grass beside a safari vehicle"
+                src="/images/home/review-pool-1600.webp"
+                srcSet="/images/home/review-pool-1000.webp 1000w, /images/home/review-pool-1600.webp 1600w, /images/home/review-pool-2160.webp 2160w"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                alt="A woman in a sun hat resting at the edge of an infinity pool above a wide bush valley"
                 loading="lazy"
                 decoding="async"
-                width={1400}
-                height={933}
+                width={2160}
+                height={1440}
               />
               <figcaption>
                 <blockquote>{REVIEWS[0].text}</blockquote>
@@ -422,7 +392,7 @@ export default async function HomePage() {
           <div className="hm-row-head">
             <h2 className="hm-title hm-title-left" id="hm-jets" data-rv>
               <span className="hm-sticker" aria-hidden="true">
-                Elite Jets
+                ARLink28 Elite
               </span>
               Private jet charter,
               <br />
@@ -456,66 +426,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 8a. How it works: three hairline step cards, after the Elite Jets teaser, before the closing call to action */}
-      <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-how">
-        <div className="hm-wrap">
-          <Title id="hm-how" sticker="How it works">
+      {/* 8a. How it works: a full-bleed photo with the three step cards over it, before the FAQ */}
+      <StepsOnPhoto
+        id="hm-how"
+        heading={
+          <>
             Three steps from
             <br />
             request to booking.
-          </Title>
-          <ol className="hm-process">
-            {STEPS.map((st, i) => (
-              <li key={st.title} data-rv style={{ ["--i" as string]: i }}>
-                <span className="hm-process-step">Step 0{i + 1}</span>
-                <p>{st.text}</p>
-                <div className="hm-process-foot">
-                  <h3>{st.title}</h3>
-                  <Icon name={st.icon} />
-                </div>
-              </li>
-            ))}
-          </ol>
-          {PARTNERS.length > 0 && <p className="hm-partners">Working with: {PARTNERS.join(", ")}.</p>}
-        </div>
-      </section>
+          </>
+        }
+        steps={STEPS}
+        photo="/images/home/slide-serengeti-1920.webp"
+        focus="50% 72%"
+        cta={{ href: "/quote", label: "Get a quote" }}
+      >
+        {PARTNERS.length > 0 && <p className="hm-partners">Working with: {PARTNERS.join(", ")}.</p>}
+      </StepsOnPhoto>
 
-      {/* 8b. Closing call to action, straight after how it works: a white band with a dark card */}
-      <ClosingCta />
+      {/* 8b. FAQ, after how it works */}
+      <FaqSection items={FAQ} schema={false} />
 
-      {/* 8c. FAQ, after the closing call to action */}
-      <section className="hm-sec" id="faq" aria-labelledby="hm-faq">
-        <div className="hm-wrap">
-          <div className="hm-faq-wrap">
-            <div className="hm-faq-side">
-              <h2 className="hm-title hm-title-left" id="hm-faq" data-rv>
-                <span className="hm-sticker" aria-hidden="true">
-                  FAQ
-                </span>
-                Questions
-                <br />
-                <span className="hm-dim">before you book.</span>
-              </h2>
-              <p data-rv style={{ ["--i" as string]: 1 }}>
-                Cannot see your question? Ask the team and a person replies.
-              </p>
-              <Link className="hm-btn hm-btn-primary" href="/contact" data-rv style={{ ["--i" as string]: 2 }}>
-                Contact us
-              </Link>
-            </div>
-            <div className="hm-faq">
-              {FAQ.map((f, i) => (
-                <details key={f.q} open={i === 0} data-rv style={{ ["--i" as string]: i }}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8d. Blog teaser, last before the footer: three photo cards with the title laid over them, as on the reference site */}
+      {/* 8d. Blog teaser, after the FAQ: three photo cards with the title laid over them, as on the reference site */}
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-blog">
         <div className="hm-wrap">
           <div className="hm-row-head">
@@ -551,6 +483,9 @@ export default async function HomePage() {
           </ul>
         </div>
       </section>
+
+      {/* 8e. Closing call to action, last before the contact bar: a white band with a dark card */}
+      <ClosingCta bleed />
 
       <ContactBar />
     </div>

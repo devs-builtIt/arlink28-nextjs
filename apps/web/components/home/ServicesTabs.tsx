@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ClientPager from "@/components/home/ClientPager";
 import type { Service } from "@/content/services";
 
 const ALL = "all";
+const PAGE_SIZE = 4;
 
 /**
  * The services as tabs. "All" lists every service as a stack of cards that slide over one another as the page
@@ -13,12 +15,14 @@ const ALL = "all";
  */
 export default function ServicesTabs({ services }: { services: Service[] }) {
   const [active, setActive] = useState<string>(ALL);
+  const [page, setPage] = useState(1);
   const tabsRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   const fromHash = useCallback(() => {
     const id = window.location.hash.replace("#", "");
     setActive(services.some((s) => s.id === id) ? id : ALL);
+    setPage(1);
   }, [services]);
 
   useEffect(() => {
@@ -29,6 +33,7 @@ export default function ServicesTabs({ services }: { services: Service[] }) {
 
   const choose = (id: string) => {
     setActive(id);
+    setPage(1);
     window.history.replaceState(null, "", id === ALL ? window.location.pathname : `#${id}`);
     // Bring the cards up under the tabs, so the change is seen.
     const top = (listRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 150;
@@ -50,8 +55,15 @@ export default function ServicesTabs({ services }: { services: Service[] }) {
     tabsRef.current?.querySelector<HTMLButtonElement>(`[data-tab="${next}"]`)?.focus();
   };
 
-  const shown = active === ALL ? services : services.filter((s) => s.id === active);
+  const matching = active === ALL ? services : services.filter((s) => s.id === active);
+  const shown = matching.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const stacked = active === ALL;
+
+  const goToPage = (n: number) => {
+    setPage(n);
+    const top = (listRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 150;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -107,6 +119,7 @@ export default function ServicesTabs({ services }: { services: Service[] }) {
             </li>
           ))}
         </ul>
+        <ClientPager page={page} pageSize={PAGE_SIZE} total={matching.length} noun="services" onPage={goToPage} />
       </div>
     </>
   );

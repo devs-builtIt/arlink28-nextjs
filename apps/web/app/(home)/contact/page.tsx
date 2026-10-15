@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageBanner from "@/components/PageBanner";
+import FaqList from "@/components/home/FaqList";
 import EnquiryForm from "@/components/contact/EnquiryForm";
 import { GENERAL_TYPES, type EnquiryPackage, type GeneralType } from "@/components/contact/types";
 import { headline, publicPath } from "@/utils/publicProducts";
@@ -25,6 +26,20 @@ function photoFor(d: NonNullable<Awaited<ReturnType<typeof getPackage>>>): strin
   }
   return hero;
 }
+
+const OFFICES = [
+  {
+    city: "Lagos",
+    address: "2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233",
+  },
+  { city: "London", address: "71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom" },
+];
+
+const DEPARTMENTS = [
+  { label: "Partnerships", email: "partners@arlink28.com" },
+  { label: "Investors", email: "investors@arlink28.com" },
+  { label: "Careers", email: "careers@arlink28.com" },
+];
 
 const FAQ = [
   {
@@ -92,48 +107,7 @@ export default async function ContactPage({ searchParams }: Search) {
       />
 
       <section className="hm-sec hm-sec-white hm-qsec" data-tone="light" aria-label="Send a message">
-        <div className="hm-qp hm-wrap">
-          <div className="hm-qp-side">
-            <img src="/images/contact/victoria-falls.webp" alt="" width={1600} height={2400} />
-            <div className="hm-qp-copy">
-              <h2>Prefer to talk?</h2>
-              <p>Call us, write to us, or visit one of our offices. The team answers every request personally.</p>
-            </div>
-            <aside aria-label="Other ways to reach us">
-              <ul className="hm-qp-contacts">
-                <li>
-                  <span className="hm-qp-icon" aria-hidden="true">
-                    <i className="fa-solid fa-phone"></i>
-                  </span>
-                  <div>
-                    <span>Phone number</span>
-                    <a href="tel:+2347047009128">+234 704 700 9128</a>
-                    <a href="tel:+447539071257">+44 753 907 1257</a>
-                  </div>
-                </li>
-                <li>
-                  <span className="hm-qp-icon" aria-hidden="true">
-                    <i className="fa-solid fa-envelope"></i>
-                  </span>
-                  <div>
-                    <span>Bookings and support</span>
-                    <a href="mailto:support@arlink28.com">support@arlink28.com</a>
-                  </div>
-                </li>
-                <li>
-                  <span className="hm-qp-icon" aria-hidden="true">
-                    <i className="fa-solid fa-location-dot"></i>
-                  </span>
-                  <div>
-                    <span>Offices</span>
-                    <strong>Ikoyi, Lagos</strong>
-                    <strong>Covent Garden, London</strong>
-                  </div>
-                </li>
-              </ul>
-            </aside>
-          </div>
-
+        <div className="hm-wrap hm-ct-top">
           <section className="hm-qp-card" id="form" aria-labelledby="ct-form-title">
             <h2 id="ct-form-title" className="hm-qp-title">
               {pkg ? "Send an enquiry" : "Send a message"}
@@ -151,13 +125,32 @@ export default async function ContactPage({ searchParams }: Search) {
               initialType={initialType}
             />
           </section>
-        </div>
-      </section>
 
-      <section className="hm-sec hm-sec-tight" aria-labelledby="ct-more-title">
-        <div className="hm-wrap hm-ct-more">
-          <div>
-            <h2 id="ct-more-title">Support hours</h2>
+          <aside className="hm-ct-panel" aria-label="Other ways to reach us">
+            <h2>Prefer to talk?</h2>
+            <p>Call or write. The team answers every request personally.</p>
+            <ul className="hm-ct-ways">
+              <li>
+                <span className="hm-ct-icon" aria-hidden="true">
+                  <i className="fa-solid fa-phone"></i>
+                </span>
+                <div>
+                  <span>Phone</span>
+                  <a href="tel:+2347047009128">+234 704 700 9128</a>
+                  <a href="tel:+447539071257">+44 753 907 1257</a>
+                </div>
+              </li>
+              <li>
+                <span className="hm-ct-icon" aria-hidden="true">
+                  <i className="fa-solid fa-envelope"></i>
+                </span>
+                <div>
+                  <span>Bookings and support</span>
+                  <a href="mailto:support@arlink28.com">support@arlink28.com</a>
+                </div>
+              </li>
+            </ul>
+            <h3>Support hours</h3>
             <dl className="hm-ct-hours">
               <div>
                 <dt>Monday to Friday</dt>
@@ -171,48 +164,39 @@ export default async function ContactPage({ searchParams }: Search) {
                 <dt>Sunday</dt>
                 <dd>Urgent support only</dd>
               </div>
-              <div>
-                <dt>Emergency line</dt>
-                <dd>24 hours</dd>
-              </div>
             </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section className="hm-sec hm-sec-tight" aria-labelledby="ct-offices-title">
+        <div className="hm-wrap">
+          <h2 id="ct-offices-title" className="hm-ct-heading">
+            Our offices
+          </h2>
+          <div className="hm-ct-offices">
+            {OFFICES.map((o) => (
+              <article key={o.city}>
+                <h3>{o.city}</h3>
+                <address>{o.address}</address>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Get directions
+                </a>
+              </article>
+            ))}
           </div>
-          <div>
-            <h2>Other contacts</h2>
-            <dl className="hm-ct-hours">
-              <div>
-                <dt>Partnerships</dt>
-                <dd>
-                  <a href="mailto:partners@arlink28.com">partners@arlink28.com</a>
-                </dd>
-              </div>
-              <div>
-                <dt>Investors</dt>
-                <dd>
-                  <a href="mailto:investors@arlink28.com">investors@arlink28.com</a>
-                </dd>
-              </div>
-              <div>
-                <dt>Careers</dt>
-                <dd>
-                  <a href="mailto:careers@arlink28.com">careers@arlink28.com</a>
-                </dd>
-              </div>
-            </dl>
-          </div>
-          <div>
-            <h2>Offices</h2>
-            <dl className="hm-ct-hours">
-              <div>
-                <dt>Lagos</dt>
-                <dd>2nd Floor, Office 316B, Mulliner Towers, 39 Alfred Rewane Road, Ikoyi, Lagos, Nigeria 101233</dd>
-              </div>
-              <div>
-                <dt>London</dt>
-                <dd>71–75 Shelton Street, Covent Garden, London WC2H 9JQ, United Kingdom</dd>
-              </div>
-            </dl>
-          </div>
+          <ul className="hm-ct-depts" aria-label="Department emails">
+            {DEPARTMENTS.map((d) => (
+              <li key={d.email}>
+                <span>{d.label}</span>
+                <a href={`mailto:${d.email}`}>{d.email}</a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -233,14 +217,7 @@ export default async function ContactPage({ searchParams }: Search) {
                 Send a message
               </a>
             </div>
-            <div className="hm-faq">
-              {FAQ.map((item) => (
-                <details key={item.q}>
-                  <summary>{item.q}</summary>
-                  <p>{item.a}</p>
-                </details>
-              ))}
-            </div>
+            <FaqList items={FAQ} />
           </div>
         </div>
       </section>

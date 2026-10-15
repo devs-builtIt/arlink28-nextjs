@@ -139,7 +139,7 @@ button,
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   box-shadow: var(--glass-shadow);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
 }
 nav {
   align-items: center;
@@ -385,7 +385,7 @@ nav a.active {
   transition: var(--transition-smooth);
   background: #0b131f73;
   border: 1.5px solid #ffffff14;
-  border-radius: 10px;
+  border-radius: var(--radius-card);
   flex: 1;
   align-items: center;
   gap: 14px;
@@ -482,7 +482,7 @@ nav a.active {
   transition: var(--transition-smooth);
   background: linear-gradient(135deg, #ffffff0d 0%, #ffffff03 100%);
   border: 1px solid #ffffff12;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 35px 30px;
   position: relative;
   overflow: hidden;
@@ -575,7 +575,7 @@ nav a.active {
   cursor: pointer;
   height: 300px;
   box-shadow: var(--card-glow);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   position: relative;
   overflow: hidden;
 }
@@ -671,7 +671,7 @@ nav a.active {
   text-align: center;
   background: #ffffff05;
   border: 1px solid #ffffff12;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   flex-direction: column;
   align-items: center;
   padding: 40px 30px;
@@ -763,7 +763,7 @@ nav a.active {
   transition: var(--transition-smooth);
   background: #0b131f80;
   border: 1px solid #ffffff12;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   flex-direction: column;
   display: flex;
   position: relative;
@@ -933,7 +933,7 @@ nav a.active {
 }
 .testimonial-card {
   transition: var(--transition-smooth);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 50px 30px 30px;
   position: relative;
 }
