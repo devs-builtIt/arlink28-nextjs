@@ -2947,15 +2947,200 @@ body:has(.hm-hero) .hm-title .hm-sticker {
 .qf > .hm-btn {
   margin-top: 4px;
 }
-.qf-done h2 {
-  font-size: 28px;
-  margin-bottom: 12px;
+/* After the request is sent: the card fills the space beside the contact panel, so the result sits in it
+   instead of leaving it empty. */
+.hm-qp-card:has(.qf-done) {
+  display: flex;
 }
-.qf-done p {
+.qf-done {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  outline: none;
+}
+.qf-done-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--canvas-2);
+}
+.qf-done-mark svg {
+  width: 24px;
+  height: 24px;
+}
+.qf-done h2 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 3.4vw, 40px);
+}
+.qf-done .qf-done-lead {
   max-width: 46ch;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
   color: var(--ink-2);
+  font-size: 17px;
   line-height: 1.5;
+}
+.qf-done .qf-done-lead strong {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.qf-ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  width: 100%;
+  max-width: 460px;
+  padding: 12px 14px 12px 18px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--canvas);
+}
+.qf-ref span {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.qf-ref strong {
+  flex: 1;
+  color: var(--ink);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.qf-ref button {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--canvas-2);
+  color: var(--ink);
+  font: 600 14px var(--font);
+  cursor: pointer;
+}
+.qf-ref button:hover {
+  background: var(--hairline);
+}
+.qf-steps {
+  list-style: none;
+  counter-reset: qfstep;
+  width: 100%;
+  max-width: 460px;
+  margin: 28px 0 0;
+  padding: 0;
+}
+.qf-steps li {
+  counter-increment: qfstep;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--hairline);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.4;
+}
+.qf-steps li:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+.qf-steps li::before {
+  content: counter(qfstep, decimal-leading-zero);
+  color: var(--ink-2);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.qf-done .qf-done-urgent {
+  max-width: 46ch;
+  margin: 20px 0 0;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.qf-done-urgent a {
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.qf-done-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 28px;
+}
+.qf-again {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 600 15px var(--font);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+@media (max-width: 640px) {
+  .qf-ref {
+    border-radius: 20px;
+  }
+  .qf-ref span {
+    flex-basis: 100%;
+  }
+  .qf-ref strong {
+    white-space: nowrap;
+  }
+}
+
+/* The request could not be sent. */
+.qf-alert {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin: 8px 0 4px;
+  padding: 16px 18px;
+  border: 1px solid rgba(196, 22, 31, 0.35);
+  border-radius: var(--radius-card);
+  background: rgba(196, 22, 31, 0.07);
+  color: var(--ink);
+}
+.qf-alert svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  color: #c4161f;
+}
+.qf-alert strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 16px;
+}
+.qf-alert p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.qf-alert a {
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-theme="dark"] .qf-alert,
+:root:not([data-theme="light"]) .qf-alert {
+  border-color: rgba(255, 155, 161, 0.4);
+  background: rgba(255, 155, 161, 0.1);
+}
+:root[data-theme="dark"] .qf-alert svg,
+:root:not([data-theme="light"]) .qf-alert svg {
+  color: #ff9ba1;
 }
 @media (max-width: 1024px) {
   .hm-qp {

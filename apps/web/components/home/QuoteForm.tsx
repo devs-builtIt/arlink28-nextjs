@@ -6,6 +6,7 @@ import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
 import Dropdown, { PARTY_SIZES } from "./Dropdown";
+import { QuoteAlert, QuoteDone } from "./QuoteResult";
 
 const SERVICES = ["Flight", "Hotel reservation", "Visa support", "Holiday package", "Private charter"] as const;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,6 +36,26 @@ export default function QuoteForm() {
   useEffect(() => {
     if (reference) done.current?.focus();
   }, [reference]);
+
+  // A failed send puts the message where the visitor is looking, next to the button they pressed.
+  useEffect(() => {
+    if (failure) form.current?.querySelector(".qf-alert")?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [failure]);
+
+  const sendAnother = () => {
+    setName("");
+    setPhone("");
+    setEmail("");
+    setService("");
+    setDestination("");
+    setTravellers(PARTY_SIZES[0].value);
+    setMessage("");
+    setConsent(false);
+    setErrors({});
+    setFailure(null);
+    setReference(null);
+    started.current = false;
+  };
 
   const begin = () => {
     if (started.current) return;
@@ -91,15 +112,7 @@ export default function QuoteForm() {
   }
 
   if (reference) {
-    return (
-      <div className="qf qf-done" ref={done} tabIndex={-1} role="status">
-        <h2>Reference {reference}</h2>
-        <p>
-          We will reply to <strong>{email.trim()}</strong> with options and a price. For anything urgent, call us and
-          quote the reference.
-        </p>
-      </div>
-    );
+    return <QuoteDone ref={done} reference={reference} email={email.trim()} onAgain={sendAnother} />;
   }
 
   return (
@@ -220,11 +233,7 @@ export default function QuoteForm() {
         </label>
       </div>
       {errors.consent && <p className="qf-error">{errors.consent}</p>}
-      {failure && (
-        <p className="qf-error" role="alert">
-          {failure}
-        </p>
-      )}
+      {failure && <QuoteAlert message={failure} />}
       <button type="submit" className="hm-btn hm-btn-primary" disabled={sending}>
         {sending ? "Sending..." : "Send my request"}
       </button>
