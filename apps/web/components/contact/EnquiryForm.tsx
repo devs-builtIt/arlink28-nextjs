@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Dropdown from "@/components/home/Dropdown";
+import { EnquiryAlert, EnquiryDone } from "@/components/home/EnquiryResult";
 import type { CreateEnquiryRequest, Quote } from "@arlink28/api-client";
 import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
@@ -105,7 +106,27 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
     if (reference) done.current?.focus();
   }, [reference]);
 
+  // A failed send puts the message next to the button they pressed.
+  useEffect(() => {
+    if (failure) form.current?.querySelector(".qf-alert")?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [failure]);
+
   const isPackage = pkg !== null;
+
+  function sendAnother() {
+    setType(initialType);
+    setCheckIn(initialCheckIn);
+    setNights(initialNights ?? (pkg?.nights || 1));
+    setName("");
+    setEmail("");
+    setPhone("");
+    setSubject(aboutTitle ? `Enquiry about ${aboutTitle}` : "");
+    setMessage("");
+    setConsent(false);
+    setErrors({});
+    setFailure(null);
+    setReference(null);
+  }
 
   function validate(): Errors {
     const found: Errors = {};
@@ -173,20 +194,27 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
 
   if (reference) {
     return (
-      <div className="ct-done" ref={done} tabIndex={-1} role="status">
-        <h2>We have your enquiry</h2>
-        <p>Your reference is</p>
-        <span className="ct-reference">{reference}</span>
-        <p>
-          Our team will contact you at <strong>{email.trim()}</strong>. If it is urgent, call us and quote the
-          reference.
-        </p>
-        <div className="ct-actions">
-          <Link className="ct-button ct-button-plain" href={more.path}>
-            Browse more {more.plural}
-          </Link>
-        </div>
-      </div>
+      <EnquiryDone
+        ref={done}
+        reference={reference}
+        email={email.trim()}
+        onAgain={sendAnother}
+        title={isPackage ? "Enquiry received" : "Message received"}
+        lead={
+          <>
+            Our team will reply to <strong>{email.trim()}</strong>.
+          </>
+        }
+        steps={[
+          `A member of the team reads your ${isPackage ? "enquiry" : "message"}.`,
+          "A person replies to you by email.",
+          `Nothing is charged for sending ${isPackage ? "an enquiry" : "a message"}.`,
+        ]}
+        primary={
+          isPackage ? { href: more.path, label: `Browse more ${more.plural}` } : { href: "/", label: "Back to home" }
+        }
+        againLabel={isPackage ? "Send another enquiry" : "Send another message"}
+      />
     );
   }
 
@@ -454,9 +482,10 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
       </div>
 
       {failure && (
-        <p className="ct-alert" role="alert">
-          {failure} You can also call us.
-        </p>
+        <EnquiryAlert
+          message={failure}
+          title={isPackage ? "Your enquiry has not been sent" : "Your message has not been sent"}
+        />
       )}
 
       <div className="ct-actions">
