@@ -13,8 +13,8 @@ type Props = {
   above?: ReactNode;
   /** The page docks a search bar into the card's bottom edge: leaves room for it. */
   overlap?: boolean;
-  /** Which photo: the safari by default; holidays, flights, hotels, visas and Elite Jets each have their own. */
-  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas" | "elite";
+  /** Which photo: the safari by default; holidays, flights, hotels, visas, Elite Jets and the Namibia desert each have their own. */
+  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas" | "elite" | "namibia";
   id?: string;
 };
 
@@ -38,7 +38,11 @@ export default function PageBanner({
         <img
           className="pb-img"
           src={`/images/banner/${photo}-1920.webp`}
-          srcSet={`/images/banner/${photo}-1280.webp 1280w, /images/banner/${photo}-1920.webp 1920w, /images/banner/${photo}-2560.webp 2560w`}
+          srcSet={
+            `/images/banner/${photo}-1280.webp 1280w, /images/banner/${photo}-1920.webp 1920w` +
+            // The Namibia photo's source is 1920 wide, so there is no 2560 version.
+            (photo === "namibia" ? "" : `, /images/banner/${photo}-2560.webp 2560w`)
+          }
           sizes="100vw"
           alt=""
           width={2560}

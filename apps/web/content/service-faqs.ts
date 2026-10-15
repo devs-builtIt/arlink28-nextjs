@@ -13,7 +13,7 @@ const NOTHING_CHARGED: Faq = {
  * supplier's own rules). Review the wording against the real terms before launch.
  */
 export const SERVICE_FAQS: Record<
-  "flights" | "hotels" | "visas" | "packages" | "services" | "travel" | "elite",
+  "flights" | "hotels" | "visas" | "packages" | "services" | "travel" | "elite" | "about" | "team" | "blogs",
   Faq[]
 > = {
   flights: [
@@ -121,4 +121,55 @@ export const SERVICE_FAQS: Record<
     },
   ],
   travel: [FAQ[0], FAQ[1], FAQ[2], FAQ[3], FAQ[4]],
+  about: [
+    FAQ[0],
+    {
+      q: "Where is ARLink28 based?",
+      a: "We have offices in Lagos and London. The addresses and opening hours are on the contact page.",
+    },
+    {
+      q: "What does ARLink28 arrange?",
+      a: "Flights, hotels, visa support, holidays, private jets, group travel, transfers and travel insurance, arranged by people you can speak to.",
+    },
+    FAQ[5],
+    {
+      q: "Can I work or partner with ARLink28?",
+      a: "Yes. The opportunities page explains how to get involved, and you can write to us from the contact page.",
+    },
+  ],
+  team: [
+    {
+      q: "Who will I deal with when I send a request?",
+      a: "A member of the team replies with options and a price, and stays with you until the trip is arranged.",
+    },
+    {
+      q: "Can I speak to someone directly?",
+      a: "Yes. Call or email us and the right person picks it up. Replies depend on our staffed hours, which are shown on the contact page.",
+    },
+    {
+      q: "Where is the team based?",
+      a: "We work from Lagos and London, and the coordinators on this page cover aviation, finance, technology, partnerships and customer experience.",
+    },
+    NOTHING_CHARGED,
+    {
+      q: "Can I join the team or become a partner?",
+      a: "Take a look at the opportunities page, then write to us from the contact page with a short note about yourself.",
+    },
+  ],
+  blogs: [
+    {
+      q: "When will the guides be published?",
+      a: "We have not published any posts yet. The first three are in the works, and they will appear on this page when they are ready.",
+    },
+    {
+      q: "What will the guides cover?",
+      a: "Travel stories and practical guides for the routes and destinations our travellers ask about most.",
+    },
+    {
+      q: "Can I ask for a guide on a specific trip?",
+      a: "Yes. Tell us the route you are planning from the contact page and we will take it into account.",
+    },
+    FAQ[1],
+    NOTHING_CHARGED,
+  ],
 };

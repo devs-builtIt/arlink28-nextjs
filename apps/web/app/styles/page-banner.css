@@ -60,6 +60,9 @@
 .pb[data-photo="visas"] .pb-img {
   object-position: 70% 55%;
 }
+.pb[data-photo="namibia"] .pb-img {
+  object-position: 60% 50%;
+}
 .pb-card::after {
   content: "";
   position: absolute;
