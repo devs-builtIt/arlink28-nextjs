@@ -100,7 +100,7 @@ test.describe("the banner at the top of the inner pages", () => {
     });
   });
 
-  test("gives holidays, flights, hotels, visas and Elite Jets a photo of their own and everything else the safari", async ({
+  test("gives holidays, flights, hotels, visas and ARLink28 Elite a photo of their own and everything else the safari", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });

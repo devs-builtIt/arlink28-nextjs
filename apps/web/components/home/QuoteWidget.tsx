@@ -5,6 +5,7 @@ import type { CreateEnquiryRequest } from "@arlink28/api-client";
 import { ApiError } from "@/utils/api/client";
 import { enquiriesApi } from "@/utils/api/enquiries";
 import { track } from "@/utils/track";
+import DatePicker, { type DatePickerHandle } from "./DatePicker";
 import Dropdown, { PARTY_SIZES, PARTY_SIZES_SHORT } from "./Dropdown";
 import AirportField, { airportLabel, findAirport } from "./AirportField";
 
@@ -52,7 +53,8 @@ export default function QuoteWidget() {
   const started = useRef(false);
   const root = useRef<HTMLDivElement>(null);
   const done = useRef<HTMLDivElement>(null);
-  const departInput = useRef<HTMLInputElement>(null);
+  const departInput = useRef<DatePickerHandle>(null);
+  const backInput = useRef<DatePickerHandle>(null);
 
   // A route chosen further down the page fills in the form and brings it into view.
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function QuoteWidget() {
       if (origin) setFrom(airportLabel(origin));
       if (dest) setTo(airportLabel(dest));
       root.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      window.setTimeout(() => departInput.current?.focus({ preventScroll: true }), 450);
+      window.setTimeout(() => departInput.current?.focus(), 450);
     };
     window.addEventListener(ROUTE_EVENT, onRoute);
     return () => window.removeEventListener(ROUTE_EVENT, onRoute);
@@ -90,6 +92,8 @@ export default function QuoteWidget() {
   };
 
   const today = isoToday();
+  // The days between leaving and coming back are shaded in both calendars.
+  const tripRange: [string, string] | null = kind === "Flight" && !oneWay && depart && back ? [depart, back] : null;
 
   function validateStep1(): Errors {
     const found: Errors = {};
@@ -302,28 +306,39 @@ export default function QuoteWidget() {
                       ? "Check in"
                       : "From"}
               </label>
-              <input
+              <DatePicker
                 id="hm-depart"
                 name="depart"
-                type="date"
+                ref={departInput}
+                ariaLabel={kind === "Flight" ? "Choose a departure date" : "Choose a date"}
                 min={today}
                 value={depart}
-                ref={departInput}
-                onChange={(e) => setDepart(e.target.value)}
-                aria-invalid={errors.depart ? true : undefined}
+                range={tripRange}
+                invalid={!!errors.depart}
+                onChange={(v) => {
+                  setDepart(v);
+                  // A return date that now falls before the departure no longer makes sense.
+                  const needsBack = !back || (v !== "" && back < v);
+                  if (v && back && back < v) setBack("");
+                  // For a return flight, carry straight on to choosing the way back.
+                  if (v && kind === "Flight" && !oneWay && needsBack)
+                    window.setTimeout(() => backInput.current?.open(), 0);
+                }}
               />
               {errors.depart && <p className="hm-error">{errors.depart}</p>}
             </div>
             {kind === "Flight" && !oneWay && (
               <div className="hm-field">
                 <label htmlFor="hm-back">Return</label>
-                <input
+                <DatePicker
                   id="hm-back"
                   name="back"
-                  type="date"
+                  ref={backInput}
+                  ariaLabel="Choose a return date"
                   min={depart || today}
                   value={back}
-                  onChange={(e) => setBack(e.target.value)}
+                  range={tripRange}
+                  onChange={setBack}
                 />
               </div>
             )}

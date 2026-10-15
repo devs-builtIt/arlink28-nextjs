@@ -34,7 +34,7 @@ export default async function EliteJetsPage() {
     <div className="hm">
       <Reveal />
       <PageBanner
-        label="Elite Jets"
+        label="ARLink28 Elite"
         photo="elite"
         id="el-h1"
         title={

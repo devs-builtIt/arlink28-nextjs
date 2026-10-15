@@ -10,9 +10,20 @@
   font-style: normal;
   font-display: swap;
 }
+/* Geist (SIL Open Font License, public/fonts/OFL-Geist.txt): a light, even grotesque used for the hero heading as a
+   free stand-in for Basis Grotesque, which needs a paid web licence. */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --font: Satoshi, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* The hero heading. To use Basis Grotesque, add its files under public/fonts, declare the family above and put it first. */
+  --font-hero: Geist, Satoshi, system-ui, -apple-system, "Segoe UI", sans-serif;
   --track: -0.03em;
 
   --logo: url("/images/logo-horizontal-black.png");
@@ -22,6 +33,7 @@
   --btn-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12 12 4M5.5 4H12v6.5'/></svg>");
 
   --radius: 12px;
+  --radius-card: 1px;
   --radius-sticker: 20px;
   --gutter: 30px;
   --container: 1300px;

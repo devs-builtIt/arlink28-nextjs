@@ -770,8 +770,10 @@
 }
 
 /* Pages that open with a photo hero: until the visitor scrolls, the header sits on the photo, so it
-   uses the dark theme's colours whatever theme the page is in. */
-body:has(.hm-phero) .sh:not(.is-scrolled) {
+   uses the dark theme's colours whatever theme the page is in. On the homepage it is a flat, transparent
+   bar with the white logo; scrolling turns it into the floating pill. */
+body:has(.hm-phero) .sh:not(.is-scrolled),
+body:has(.hm-hero) .sh:not(.is-scrolled) {
   --ink: #f5f7fa;
   --canvas: #0a0d12;
   --header-bg: rgba(10, 13, 18, 0.72);
@@ -781,6 +783,9 @@ body:has(.hm-phero) .sh:not(.is-scrolled) {
   --btn2-ink: #f5f7fa;
   --btn2-line: rgba(255, 255, 255, 0.16);
   color-scheme: dark;
+}
+body:has(.hm-hero) .sh:not(.is-scrolled) {
+  --logo: url("/images/logo-horizontal-white.png");
 }
 
 /* ---- Footer watermark ------------------------------------------------------------------------ */

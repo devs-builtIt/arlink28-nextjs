@@ -7,7 +7,7 @@ const TRAVEL = [
   { href: "/hotels", label: "Hotel reservations" },
   { href: "/visas", label: "Visa support" },
   { href: "/packages", label: "Holiday packages" },
-  { href: "/elite-jets", label: "Elite Jets" },
+  { href: "/elite-jets", label: "ARLink28 Elite" },
   { href: "/destinations", label: "Destinations" },
   { href: "/services", label: "All services" },
 ];

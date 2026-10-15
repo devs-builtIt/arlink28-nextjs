@@ -65,7 +65,7 @@
 .ct-card {
   padding: 32px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--surface);
 }
 .ct-card h2 {
@@ -104,7 +104,7 @@
   flex: none;
   width: 80px;
   height: 80px;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   object-fit: cover;
   background: var(--chip);
 }

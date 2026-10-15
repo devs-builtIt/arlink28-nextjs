@@ -430,7 +430,7 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
   transition: box-shadow 0.2s;
@@ -973,7 +973,7 @@
 .pkgs-highlight-box {
   margin-top: 26px;
   padding: 22px 24px;
-  border-radius: 10px;
+  border-radius: var(--radius-card);
   background: var(--canvas);
 }
 .pkgs-highlight-box h3,
@@ -1207,7 +1207,7 @@
 }
 .pkgs-reviews li {
   padding: 18px;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--canvas);
 }
 .pkgs-review-top {

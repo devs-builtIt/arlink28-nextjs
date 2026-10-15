@@ -8,7 +8,7 @@
   --dd-line: var(--hairline);
 }
 .hm-quote .dd {
-  --dd-bg: #1b212b;
+  --dd-bg: #161b24;
   --dd-ink: #fff;
   --dd-mute: rgba(255, 255, 255, 0.6);
   --dd-hover: rgba(255, 255, 255, 0.1);
@@ -96,6 +96,22 @@
   color: var(--dd-ink);
   font-size: 16px;
   cursor: pointer;
+}
+/* On the quote panel the list is a little tighter and sits on the same solid surface as the other lists. */
+.hm-quote .dd-list {
+  max-height: 260px;
+  padding: 6px;
+  border-radius: 14px;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 28px 60px -14px rgba(0, 0, 0, 0.75);
+}
+.hm-quote .dd-list li {
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.hm-quote .dd-list li[aria-selected="true"] {
+  font-weight: 500;
 }
 .dd-list li.is-active {
   background: var(--dd-hover);

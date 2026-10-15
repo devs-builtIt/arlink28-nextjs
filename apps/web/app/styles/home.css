@@ -232,39 +232,272 @@ html:has(.hm) {
 
 /* ---- Hero ----------------------------------------------------------------------------------- */
 .hm-hero {
-  padding: var(--header-h) var(--gutter) 16px;
+  padding: 0;
 }
+/* Full bleed: the photo runs edge to edge and top to bottom of the screen, and the fixed header floats over it. */
 .hm-hero-card {
   position: relative;
   isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  max-width: 1800px;
-  /* Header + card fill exactly one screen at any size, so the whole hero is always in view. It only grows
-     past the screen when the content needs more room (short windows, phones). */
-  min-height: max(560px, calc(100svh - var(--header-h) - 16px));
-  margin: 0 auto;
-  padding: clamp(24px, 4.2vw, 60px);
-  border-radius: var(--radius);
+  /* One screen, no scrolling: the card is exactly as tall as the window. The copy and the quote panel share the top
+     row, the slider strip runs full width under them, and the spacing and thumbnails shrink on short windows. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(400px, 23vw, 540px);
+  grid-template-rows: 1fr auto;
+  column-gap: clamp(24px, 2.4vw, 40px);
+  row-gap: clamp(14px, 2vh, 28px);
+  height: 100svh;
+  min-height: 540px;
+  padding: calc(var(--header-h) + clamp(10px, 1.6vh, 24px)) clamp(24px, 3.4vw, 60px) clamp(28px, 4.4vh, 60px);
   overflow: hidden;
   color: #fff;
+  background: #0b1018;
 }
-.hm-hero-img {
+.hm-slides {
   position: absolute;
   inset: 0;
   z-index: -2;
+  overflow: hidden;
+}
+/* Every photo is stacked full size. The current one is on top, the one before it sits underneath until the
+   blinds have finished opening, and the rest stay hidden. */
+.hm-slide {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+.hm-slide.is-prev {
+  visibility: visible;
+  z-index: 1;
+}
+.hm-slide.is-on {
+  visibility: visible;
+  z-index: 2;
+}
+.hm-slide-zoom,
+.hm-slide img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+.hm-slide img {
   object-fit: cover;
   object-position: 50% 55%;
 }
-.hm-hero-ripple {
+/* The slow drift: a photo grows by about 8% while it is shown. It stays where it ended when it is covered, so the
+   change of photo never jumps. The photos are exported at their full width, so the zoom stays sharp. */
+.hm-slide.is-on .hm-slide-zoom,
+.hm-slide.is-prev .hm-slide-zoom {
+  animation: hm-drift var(--slide-ms, 8s) linear forwards;
+}
+@keyframes hm-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+.hm-slides.is-paused .hm-slide-zoom {
+  animation-play-state: paused;
+}
+/* Reduced motion: no blinds and no drift, just a quick crossfade. */
+.hm-slides.is-reduced .hm-slide {
+  visibility: visible;
+  opacity: 0;
+  transition: opacity 0.25s linear;
+}
+.hm-slides.is-reduced .hm-slide.is-on {
+  opacity: 1;
+}
+.hm-slides.is-reduced .hm-slide-zoom {
+  animation: none;
+}
+
+/* The strip along the bottom: place and count on the left, one thumbnail per slide on the right. */
+.hm-slider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: end;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.34);
+}
+.hm-slider-line {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.hm-slider-line i {
+  font-style: normal;
+  opacity: 0.6;
+  padding: 0 2px;
+}
+.hm-slider-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+.hm-slider-blurb {
+  max-width: 30ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+.hm-slider-nav {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+.hm-slider-thumbs {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hm-slider-thumbs button {
+  display: block;
+  width: clamp(84px, 6.6vw, 112px);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 0.25s ease;
+}
+.hm-slider-thumbs button:hover,
+.hm-slider-thumbs button.is-on {
+  opacity: 1;
+}
+.hm-slider-thumbs button:focus-visible,
+.hm-slider-pause:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.hm-slider-num {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.hm-slider-frame {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.hm-slider-thumbs img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.24, 0.43, 0.15, 0.97);
+}
+.hm-slider-thumbs button:hover img {
+  transform: scale(1.08);
+}
+/* The current thumbnail drifts closer in step with the progress bar under it. */
+.hm-slider-thumbs button.is-on img {
+  animation: hm-thumb-drift var(--slide-ms, 7s) linear forwards;
+}
+.hm-slider.is-paused .hm-slider-thumbs button.is-on img {
+  animation-play-state: paused;
+}
+@keyframes hm-thumb-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-slider-thumbs img,
+  .hm-slider-thumbs button.is-on img {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Rolling text: every line of a set sits in the same spot behind a mask. The new one rolls up into view a moment after
+   the old one starts rolling up and out; any other line waits below, out of sight. */
+.hm-roll {
+  display: grid;
+  overflow: hidden;
+  padding: 0.12em 0;
+  margin: -0.12em 0;
+}
+.hm-roll > span {
+  grid-area: 1 / 1;
+  transform: translateY(115%);
+}
+.hm-roll > span.is-on {
+  transform: none;
+  transition: transform 1.25s cubic-bezier(0.16, 1, 0.3, 1) 0.28s;
+}
+.hm-roll > span.is-prev {
+  transform: translateY(-115%);
+  transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-roll > span.is-on,
+  .hm-roll > span.is-prev {
+    transition: none;
+  }
+}
+.hm-slider-bar {
+  position: relative;
+  display: block;
+  height: 2px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.28);
+}
+.hm-slider-bar span {
   position: absolute;
   inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  background: #fff;
+  transform-origin: left;
+}
+.hm-slider-bar span.is-running {
+  animation: hm-slide-progress linear forwards;
+}
+@keyframes hm-slide-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.hm-slider-pause {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: -6px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+}
+.hm-slider-pause svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
 }
 .hm-hero-card::after {
   content: "";
@@ -276,8 +509,8 @@ html:has(.hm) {
       180deg,
       rgba(5, 9, 15, 0.35) 0%,
       rgba(5, 9, 15, 0) 30%,
-      rgba(5, 9, 15, 0.1) 60%,
-      rgba(5, 9, 15, 0.7) 100%
+      rgba(5, 9, 15, 0.12) 55%,
+      rgba(5, 9, 15, 0.78) 100%
     ),
     linear-gradient(90deg, rgba(5, 9, 15, 0.5) 0%, rgba(5, 9, 15, 0) 60%);
 }
@@ -291,24 +524,62 @@ html:has(.hm) {
   font-weight: 700;
 }
 
+/* The wrapper only groups the copy and the panel; both are placed on the card's own grid. */
 .hm-hero-body {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(420px, 24vw, 560px);
-  gap: 40px;
-  align-items: end;
+  display: contents;
 }
-/* The rating line sits directly above the heading, bottom left; the panel sits bottom right. */
+.hm-hero-card .hm-hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+}
+.hm-hero-card .hm-quote {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+.hm-hero-card .hm-slider {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+/* Reading order is the heading, the line under it, then the rating; the rating is drawn first, above the heading.
+   The panel sits bottom right. */
 .hm-hero-copy {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 14px;
 }
+.hm-hero-copy .hm-rating {
+  order: -1;
+}
+.hm-hero-sub {
+  max-width: 36em;
+  margin: 4px 0 0;
+  font-size: clamp(15px, 1.25vw, 21px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
 .hm-hero h1 {
+  font-family: var(--font-hero);
+  font-weight: 300;
   font-size: clamp(36px, 4.45vw, 104px);
   line-height: 1;
   max-width: 11.5em;
   margin: 0;
+}
+/* Desktop: the heading is as big as the column beside the quote panel allows while still setting in two lines. The size
+   follows the column's width (cqw), so it never runs under the panel. Below 1025px the hero stacks and the heading
+   keeps its smaller, wrapping size. */
+@media (min-width: 1025px) {
+  .hm-hero .hm-hero-copy {
+    container-type: inline-size;
+  }
+  .hm-hero h1 {
+    font-size: clamp(40px, 11cqw, 176px);
+    letter-spacing: -0.04em;
+    max-width: none;
+    text-wrap: balance;
+  }
 }
 .hm-quote-assure {
   display: flex;
@@ -344,6 +615,24 @@ html:has(.hm) {
     center / contain no-repeat;
 }
 
+@media (min-width: 1025px) and (max-height: 780px) {
+  .hm-hero-card .hm-quote-assure {
+    display: none;
+  }
+  .hm-slider-blurb {
+    display: none;
+  }
+}
+@media (min-width: 1025px) and (max-height: 700px) {
+  .hm-slider-thumbs button {
+    width: 76px;
+  }
+  .hm-slider-num {
+    margin-bottom: 3px;
+    font-size: 12px;
+  }
+}
+
 /* ---- Quote panel (on the photo) ------------------------------------------------------------- */
 .hm-quote {
   --p-ink: #ffffff;
@@ -359,7 +648,7 @@ html:has(.hm) {
   -webkit-backdrop-filter: blur(28px) saturate(170%);
   backdrop-filter: blur(28px) saturate(170%);
   border: 1px solid var(--p-line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -571,42 +860,73 @@ html:has(.hm) {
   position: absolute;
   z-index: 30;
   left: 0;
-  right: 0;
   top: calc(100% + 6px);
-  max-height: 280px;
+  /* Wider than its half-width field, so a name and its airport read on one line each. A list that would run off the
+     panel on a narrow screen settles for the width of the field. */
+  min-width: min(21rem, calc(100vw - 7rem));
+  max-height: 300px;
   overflow: auto;
   padding: 6px;
-  border-radius: var(--radius);
-  background: rgba(20, 25, 34, 0.96);
-  -webkit-backdrop-filter: blur(30px) saturate(170%);
-  backdrop-filter: blur(30px) saturate(170%);
-  border: 1px solid var(--p-line);
-  box-shadow: 0 24px 50px -16px rgba(0, 0, 0, 0.8);
+  list-style: none;
+  border-radius: 14px;
+  /* Solid, so the labels of the fields behind it never show through. */
+  background: #161b24;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 28px 60px -14px rgba(0, 0, 0, 0.75);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+/* The second of a pair of fields opens to the left, so the list stays inside the panel. */
+.hm-row .hm-combo:nth-child(2) .hm-listbox {
+  left: auto;
+  right: 0;
 }
 .hm-listbox li {
   display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 10px;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 9px 10px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
   color: #fff;
 }
 .hm-listbox li.is-active,
 .hm-listbox li:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+}
+.hm-air {
+  min-width: 0;
+}
+.hm-air b {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.25;
 }
 .hm-listbox small {
   display: block;
-  color: var(--p-mute);
-  font-size: 14px;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.3;
+}
+.hm-air b,
+.hm-listbox small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .hm-code {
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--p-mute);
+  display: grid;
+  place-items: center;
+  padding: 6px 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 /* ---- Sections and titles -------------------------------------------------------------------- */
@@ -641,6 +961,17 @@ html:has(.hm) {
 .hm-title-left {
   text-align: left;
   margin: 0;
+}
+/* On the homepage the section headings use the same light grotesque as the hero heading. The small label above each
+   keeps the body font, and inner pages that share these classes are not touched. */
+body:has(.hm-hero) .hm-title,
+body:has(.hm-hero) #hm-deals {
+  font-family: var(--font-hero);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+body:has(.hm-hero) .hm-title .hm-sticker {
+  font-family: var(--font);
 }
 /* The section label: a flat, level, borderless tinted pill on its own line above the heading. */
 .hm-sticker {
@@ -684,7 +1015,7 @@ html:has(.hm) {
   top: 14px;
   left: 14px;
   padding: 7px 11px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--chip);
   color: var(--chip-ink);
   -webkit-backdrop-filter: blur(10px);
@@ -719,7 +1050,7 @@ html:has(.hm) {
   height: auto;
   aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow-float);
 }
 .hm-collage li:nth-child(2) img {
@@ -735,7 +1066,7 @@ html:has(.hm) {
 /* Six reasons */
 .hm-cells-frame {
   border: 1px solid var(--hairline);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
 }
 .hm-cells {
@@ -783,7 +1114,7 @@ html:has(.hm) {
 }
 .hm-routes li {
   position: relative;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--canvas-2);
 }
@@ -836,9 +1167,10 @@ html:has(.hm) {
 }
 .hm-routes-text strong,
 .hm-pkg-text strong {
+  font-family: var(--font-hero);
   font-size: clamp(22px, 2.4vw, 32px);
-  font-weight: 700;
-  letter-spacing: var(--track);
+  font-weight: 300;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 .hm-routes-text span,
@@ -912,9 +1244,10 @@ html:has(.hm) {
   padding-right: 100px;
 }
 .hm-marquee li {
+  font-family: var(--font-hero);
   font-size: clamp(64px, 11vw, 120px);
-  font-weight: 700;
-  letter-spacing: var(--track);
+  font-weight: 300;
+  letter-spacing: -0.04em;
   line-height: 1.05;
   white-space: nowrap;
   color: var(--ink);
@@ -942,15 +1275,121 @@ html:has(.hm) {
   width: min(100%, 520px);
   justify-self: start;
 }
+.hm-how-photo {
+  aspect-ratio: 4 / 5;
+}
+/* The photos stack and cross-fade: the one for the hovered row is the only one shown. */
 .hm-how-photo img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   object-fit: cover;
   object-position: 50% 0;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
+  opacity: 0;
+  transform: scale(1.04);
+  will-change: opacity;
+  transition:
+    opacity 0.6s var(--ease),
+    transform 1s var(--ease);
+}
+.hm-how-photo img.is-on {
+  opacity: 1;
+  transform: none;
+}
+.hm-why-list {
+  position: relative;
+  border-top: 1px solid var(--hairline);
+}
+/* The one highlight: it slides to the hovered row and fades out when the pointer leaves the list. */
+.hm-why-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.5s var(--ease),
+    height 0.5s var(--ease),
+    opacity 0.3s var(--ease);
+}
+.hm-why-list.is-engaged .hm-why-bar {
+  opacity: 1;
+}
+.hm-why-list li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 20px;
+  align-items: start;
+  gap: 8px;
+  padding: 22px 14px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: default;
+  outline: none;
+  transition: color 0.4s var(--ease);
+}
+.hm-why-list li.is-on {
+  color: var(--canvas);
+}
+.hm-why-num {
+  padding-top: 8px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.5s var(--ease);
+}
+.hm-why-list li.is-on .hm-why-num {
+  transform: translateX(10px);
+}
+.hm-why-body h3 {
+  font-family: var(--font-hero);
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.hm-why-body p {
+  max-width: 46ch;
+  margin-top: 8px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  transition: color 0.4s var(--ease);
+}
+.hm-why-list li.is-on .hm-why-body p {
+  color: inherit;
+  opacity: 0.8;
+}
+.hm-why-cta {
+  align-self: flex-start;
+  margin-top: 28px;
+}
+.hm-why-arrow {
+  width: 18px;
+  height: 18px;
+  margin-top: 8px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.5s var(--ease);
+}
+.hm-why-list li.is-on .hm-why-arrow {
+  transform: translate(3px, -3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-how-photo img,
+  .hm-why-list li,
+  .hm-why-num,
+  .hm-why-arrow,
+  .hm-why-bar,
+  .hm-why-body p {
+    transition: none;
+  }
 }
 .hm-badge {
   position: absolute;
@@ -1014,7 +1453,7 @@ html:has(.hm) {
 .hm-pkgs li {
   position: relative;
   aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--canvas);
 }
@@ -1036,7 +1475,7 @@ html:has(.hm) {
   height: clamp(440px, 40vw, 540px);
   margin-bottom: 24px;
   padding: 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .hm-stack li:last-child {
@@ -1051,8 +1490,9 @@ html:has(.hm) {
 }
 .hm-stack-info h3 {
   max-width: 12ch;
+  font-family: var(--font-hero);
   font-size: clamp(28px, 3.2vw, 44px);
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.08;
   letter-spacing: -0.04em;
 }
@@ -1067,7 +1507,7 @@ html:has(.hm) {
 }
 .hm-stack-photo {
   overflow: hidden;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius-card);
   background: var(--chip);
 }
 .hm-stack-photo img {
@@ -1143,10 +1583,21 @@ html:has(.hm) {
   gap: 32px;
   align-items: stretch;
   padding: clamp(32px, 5vw, 64px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: #0d1420;
   color: var(--ink);
   overflow: hidden;
+}
+/* The closing call to action run edge to edge: the section carries the dark colour and the card inside drops its own. */
+.hm-deals-bleed {
+  background: #0d1420;
+  padding: var(--section-y-lg) 0;
+}
+.hm-deals-bleed .hm-deals {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
 }
 .hm-deals-copy {
   display: flex;
@@ -1193,7 +1644,7 @@ html:has(.hm) {
   gap: 8px;
   padding: 6px;
   border: 1px solid var(--hairline);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas);
 }
 .hm-deals-row input {
@@ -1238,7 +1689,7 @@ html:has(.hm) {
 .hm-deals-photos li {
   position: relative;
   overflow: hidden;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius-card);
   background: var(--chip);
 }
 .hm-deals-photos li:first-child {
@@ -1368,7 +1819,7 @@ html:has(.hm) {
   gap: 10px;
 }
 .hm-faq details {
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   padding: 0 24px;
   interpolate-size: allow-keywords;
@@ -1464,7 +1915,7 @@ html:has(.hm) {
   align-items: center;
   min-height: 460px;
   padding: clamp(32px, 6vw, 80px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
   color: #fff;
 }
@@ -1503,16 +1954,26 @@ html:has(.hm) {
 
 /* ---- Responsive ----------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .hm-hero-body {
+  .hm-hero-card {
     grid-template-columns: 1fr;
-    align-items: start;
-    gap: 28px;
+    grid-template-rows: auto;
+    row-gap: 28px;
+    height: auto;
+    min-height: 100svh;
   }
-  .hm-hero-copy {
+  .hm-hero-card .hm-hero-copy,
+  .hm-hero-card .hm-quote,
+  .hm-hero-card .hm-slider {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .hm-hero-card .hm-hero-copy {
     padding-top: 24px;
+    align-self: start;
   }
   .hm-hero h1 {
     max-width: 16ch;
+    font-size: clamp(40px, 9vw, 96px);
   }
   .hm-routes {
     grid-template-columns: repeat(2, 1fr);
@@ -1537,7 +1998,17 @@ html:has(.hm) {
 @media (max-width: 640px) {
   .hm-hero-card {
     min-height: 0;
-    padding-top: 20px;
+    padding-top: calc(var(--header-h) + 20px);
+  }
+  .hm-slider {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .hm-slider-thumbs button {
+    width: 88px;
+  }
+  .hm-slider-line {
+    gap: 18px;
   }
 
   .hm-row-3 {
@@ -1682,7 +2153,7 @@ html:has(.hm) {
   width: 150px;
   height: 68px;
   padding: 12px 16px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   /* the logos are drawn for white backgrounds, so they sit on a light tile in both themes */
   background: #ffffff;
 }
@@ -1728,57 +2199,7 @@ html:has(.hm) {
   }
 }
 
-/* Why choose us: the circular badge on the photo's edge, and the rating row */
-.hm-ring {
-  position: absolute;
-  right: -56px;
-  top: 50%;
-  display: grid;
-  place-items: center;
-  width: 128px;
-  height: 128px;
-  margin-top: -64px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #212121;
-  box-shadow: var(--shadow-float);
-}
-.hm-ring svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  animation: hm-spin 24s linear infinite;
-}
-.hm-ring text {
-  font: 700 9.5px var(--font);
-  letter-spacing: 1.5px;
-  fill: currentColor;
-}
-.hm-ring i {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--red);
-  color: #fff;
-  font-style: normal;
-  font-size: 20px;
-  transition: transform 0.3s var(--ease);
-}
-.hm-ring:hover i {
-  transform: scale(1.1);
-}
-@keyframes hm-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.hm-ring:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
-}
+/* Why choose us: the rating row */
 .hm-why-side {
   display: flex;
   flex-direction: column;
@@ -1818,7 +2239,7 @@ html:has(.hm) {
   gap: 16px;
   min-height: 290px;
   padding: 24px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .hm-process-step {
@@ -1840,6 +2261,9 @@ html:has(.hm) {
   padding-top: 40px;
 }
 .hm-process-foot h3 {
+  font-family: var(--font-hero);
+  font-weight: 300;
+  letter-spacing: -0.04em;
   font-size: 22px;
   line-height: 1.15;
   max-width: 12ch;
@@ -1848,14 +2272,6 @@ html:has(.hm) {
   margin: 0;
 }
 @media (max-width: 1024px) {
-  .hm-ring {
-    right: 16px;
-    top: auto;
-    bottom: 16px;
-    margin-top: 0;
-    width: 104px;
-    height: 104px;
-  }
   .hm-process {
     grid-template-columns: 1fr;
   }
@@ -1863,10 +2279,118 @@ html:has(.hm) {
     min-height: 0;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .hm-ring svg {
-    animation: none;
+
+/* How it works: a full-bleed photo under a dark wash, the step cards sitting on it. The cards are light in both
+   themes, so their colours are set here instead of following the page. */
+.hm-how-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fff;
+  padding: var(--section-y-lg) 0;
+}
+.hm-how-bg-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 72%;
+}
+.hm-how-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(10, 13, 18, 0.55) 0%, rgba(10, 13, 18, 0.45) 45%, rgba(10, 13, 18, 0.72) 100%);
+}
+.hm-how-bg .hm-title {
+  color: #fff;
+}
+/* The steps: frosted glass over the photo. A large numeral, then the title, then one short paragraph; on desktop a
+   thin line with a chevron runs from each card to the next so they read as a sequence. */
+.hm-steps-glass {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+}
+.hm-steps-glass li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 40px;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  color: #fff;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hm-steps-glass li {
+    background: rgba(16, 20, 28, 0.7);
   }
+}
+.hm-step-num {
+  display: block;
+  margin-bottom: 40px;
+  font-family: var(--font-hero);
+  font-size: clamp(52px, 5vw, 72px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+.hm-steps-glass h3 {
+  margin-bottom: 14px;
+  font-family: var(--font-hero);
+  font-size: clamp(24px, 2.3vw, 32px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.hm-steps-glass p {
+  max-width: 34ch;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
+  line-height: 1.6;
+}
+@media (min-width: 1025px) {
+  .hm-steps-glass li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: calc(36px + clamp(52px, 5vw, 72px) / 2);
+    left: 100%;
+    width: 48px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+  .hm-steps-glass li:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: calc(36px + clamp(52px, 5vw, 72px) / 2 - 3px);
+    left: calc(100% + 42px);
+    width: 7px;
+    height: 7px;
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-right: 1px solid rgba(255, 255, 255, 0.7);
+    transform: rotate(45deg);
+  }
+}
+@media (max-width: 1024px) {
+  .hm-steps-glass {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+.hm-how-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+.hm-how-bg .hm-partners {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Reviews on a white section: the flat card, the partner logos sliding into it, then the review cards */
@@ -1893,7 +2417,7 @@ html:has(.hm) {
   gap: 4px;
   min-width: 270px;
   padding: 20px 24px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   box-shadow: 12px 0 24px -6px rgba(0, 0, 0, 0.1);
 }
@@ -1952,8 +2476,42 @@ html:has(.hm) {
   }
 }
 
-.hm-why-side .hm-proof {
-  margin: 40px 0 0;
+/* The Google rating sits on its own line under the list and photo, centred as one row. */
+.hm-why-proof {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(40px, 5vw, 72px);
+}
+.hm-why-proof .hm-proof {
+  margin: 0;
+}
+.hm-why-proof .hm-proof-rating b {
+  font-size: 44px;
+}
+.hm-why-proof .hm-proof-card {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 40px;
+  min-width: 0;
+  padding: 40px 48px;
+  box-shadow: none;
+}
+.hm-why-proof .hm-proof-count {
+  margin: 0;
+  padding: 0 0 0 40px;
+  border-top: 0;
+  border-left: 1px solid var(--hairline);
+}
+@media (max-width: 640px) {
+  .hm-why-proof .hm-proof-count {
+    padding: 10px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--hairline);
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* Reviews: a split heading, then a rating card, a photo with one quote, and one column of cards scrolling up */
@@ -1974,7 +2532,7 @@ html:has(.hm) {
   flex-direction: column;
   gap: 28px;
   padding: 32px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .hm-rv-rating {
@@ -2062,7 +2620,7 @@ html:has(.hm) {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   isolation: isolate;
 }
@@ -2072,7 +2630,8 @@ html:has(.hm) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 55% 50%;
+  /* The woman sits at the right of the photo, so the crop leans right to keep her in frame. */
+  object-position: 88% 50%;
 }
 .hm-rv-feature::after {
   content: "";
@@ -2126,7 +2685,7 @@ html:has(.hm) {
 }
 .hm-rv-card {
   padding: 24px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .hm-rv-card .hm-stars {
@@ -2241,7 +2800,7 @@ html:has(.hm) {
   gap: 48px;
   min-height: 640px;
   padding: clamp(24px, 3vw, 36px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
   color: #fff;
 }
@@ -2292,7 +2851,7 @@ html:has(.hm) {
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: rgba(255, 255, 255, 0.14);
 }
 .hm-qp-icon {
@@ -2323,7 +2882,7 @@ html:has(.hm) {
 }
 .hm-qp-card {
   padding: clamp(24px, 3vw, 36px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .qf-grid {
@@ -2644,7 +3203,7 @@ html:has(.hm) {
 }
 .el-tier-photo {
   aspect-ratio: 4 / 3;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   overflow: hidden;
 }
 .el-tier-photo img {
@@ -2734,7 +3293,7 @@ html:has(.hm) {
   width: 168px;
   height: 64px;
   padding: 0 24px;
-  border-radius: 10px;
+  border-radius: var(--radius-card);
   background: #fff;
 }
 .hm-logos-band .hm-logos img {
@@ -2810,7 +3369,7 @@ html:has(.hm) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: 12px;
   padding: 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   height: clamp(440px, 38vw, 520px);
   scroll-margin-top: calc(var(--header-h) + 24px);
@@ -2880,7 +3439,7 @@ html:has(.hm) {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius-card);
   background: var(--chip);
 }
 .svc-photo img {
@@ -2985,12 +3544,12 @@ html:has(.hm) {
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 12px;
   padding: 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .ab-founder-photo {
   overflow: hidden;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius-card);
   background: #cdd0d4;
 }
 .ab-founder-photo img {
@@ -3088,7 +3647,7 @@ html:has(.hm) {
   gap: clamp(20px, 4vw, 56px);
   align-items: center;
   padding: clamp(20px, 3vw, 40px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 /* The chairman's photo is small, so it is shown at about its own size and stays sharp. */
@@ -3096,7 +3655,7 @@ html:has(.hm) {
   width: clamp(180px, 20vw, 240px);
   aspect-ratio: 228 / 220;
   overflow: hidden;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius-card);
   background: var(--chip);
 }
 .tm-lead-photo img {
@@ -3154,7 +3713,7 @@ html:has(.hm) {
   display: block;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .tm-photo img {
@@ -3188,7 +3747,7 @@ html:has(.hm) {
 .tm-card:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 6px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
 }
 /* The same hover as the other photo cards. */
 @media (hover: hover) {
@@ -3211,7 +3770,7 @@ html:has(.hm) {
   max-height: calc(100dvh - 48px);
   padding: 0;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas);
   color: var(--ink);
   overflow: hidden;
@@ -3356,7 +3915,7 @@ html:has(.tm-dialog[open]) {
 .cn-quote {
   margin-top: clamp(40px, 6vw, 72px);
   padding: clamp(28px, 5vw, 72px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: #0d1420;
   color: #fff;
 }
@@ -3455,7 +4014,7 @@ html:has(.tm-dialog[open]) {
   align-items: flex-start;
   gap: 12px;
   padding: clamp(24px, 3vw, 36px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .opp-meta {
@@ -3490,7 +4049,7 @@ html:has(.tm-dialog[open]) {
 .opp-photo {
   margin: 0 0 32px;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .opp-photo img {
@@ -3535,7 +4094,7 @@ html:has(.tm-dialog[open]) {
 .en-note {
   margin-top: 14px;
   padding: 14px 18px;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   font-size: 15px;
   line-height: 1.5;
@@ -3562,7 +4121,7 @@ html:has(.tm-dialog[open]) {
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: 12px;
   padding: 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
   scroll-margin-top: calc(var(--header-h) + 24px);
 }
@@ -3579,7 +4138,7 @@ html:has(.tm-dialog[open]) {
   aspect-ratio: 1;
   object-fit: cover;
   object-position: 50% 25%;
-  border-radius: calc(var(--radius) - 4px);
+  border-radius: var(--radius-card);
   background: var(--chip);
 }
 .ev-photos .ev-main {
@@ -3734,7 +4293,7 @@ html:has(.tm-dialog[open]) {
   place-items: center;
   height: 84px;
   padding: 14px 18px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--canvas-2);
 }
 .pt-logo img {
@@ -3966,7 +4525,7 @@ html:has(.tm-dialog[open]) {
     justify-content: space-between;
     margin-bottom: 0;
     padding: 14px 16px;
-    border-radius: var(--radius);
+    border-radius: var(--radius-card);
     background: var(--canvas-2);
     color: var(--ink);
     cursor: pointer;

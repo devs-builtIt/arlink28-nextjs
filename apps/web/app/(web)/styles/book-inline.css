@@ -6,7 +6,7 @@
 .giraffe-card {
   background: var(--bg-secondary);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   transition: var(--transition-smooth);
 }
