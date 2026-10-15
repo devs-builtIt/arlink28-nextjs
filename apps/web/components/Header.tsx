@@ -44,7 +44,7 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
   },
 ];
 
-const ELITE = { href: "/elite-jets", label: "Elite Jets" };
+const ELITE = { href: "/elite-jets", label: "ARLink28 Elite" };
 
 // More of the site, shown in the phone menu only.
 const MORE = [
