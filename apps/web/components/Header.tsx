@@ -217,8 +217,10 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                           height={96}
                           style={{ objectPosition: link.focus }}
                         />
-                        <span className="sh-mega-title">{link.label}</span>
-                        <span className="sh-mega-text">{link.text}</span>
+                        <span className="sh-mega-copy">
+                          <span className="sh-mega-title">{link.label}</span>
+                          <span className="sh-mega-text">{link.text}</span>
+                        </span>
                         <span className="sh-mega-go" aria-hidden="true">
                           <svg viewBox="0 0 16 16">
                             <path d="M4 12 12 4M5.5 4H12v6.5" />
@@ -229,7 +231,14 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                   ))}
                 </ul>
                 <div className="sh-mega-feature" style={{ ["--i" as string]: 4 }}>
-                  <img src="/images/home/proof-harare.webp" alt="" decoding="async" width={900} height={1200} />
+                  <img
+                    src="/images/home/team-support.webp"
+                    alt=""
+                    decoding="async"
+                    width={800}
+                    height={1000}
+                    style={{ objectPosition: "50% 0%" }}
+                  />
                   <p className="sh-mega-title">ARLink28 on the road</p>
                   <p className="sh-mega-text">Find the team at aviation and travel events across Africa and the UK.</p>
                   <Link className="sh-cta sh-cta-quiet sh-mega-btn" href="/contact">
