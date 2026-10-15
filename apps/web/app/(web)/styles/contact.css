@@ -65,7 +65,7 @@
 .ct-card {
   padding: 32px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--surface);
 }
 .ct-card h2 {
@@ -104,7 +104,7 @@
   flex: none;
   width: 80px;
   height: 80px;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   object-fit: cover;
   background: var(--chip);
 }
@@ -216,6 +216,14 @@
   background: var(--surface);
   color: var(--ink);
   font: 400 16px var(--font);
+}
+/* Our own dropdown, drawn to match the inputs beside it. */
+.ct-field .dd-btn {
+  min-height: 46px;
+  padding: 0 12px;
+  border-color: var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
 }
 .ct-field textarea {
   min-height: 132px;

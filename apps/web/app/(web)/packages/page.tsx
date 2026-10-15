@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ServiceFooter from "@/components/home/ServiceFooter";
 import KindSwitcher from "@/components/products/KindSwitcher";
 import HeroSearch from "@/components/packages/HeroSearch";
 import { ListingProvider, type ListingParams } from "@/components/packages/ListingContext";
@@ -59,53 +60,56 @@ export default async function PackagesPage({ searchParams }: { searchParams: Sea
   };
 
   return (
-    <ListingProvider params={params}>
-      <PageBanner
-        overlap
-        photo="holidays"
-        above={<KindSwitcher active="/packages" />}
-        title={
-          <>
-            Find your
-            <br />
-            next safari
-          </>
-        }
-        intro="Safari and lodge packages across Africa, with the price up front."
-      />
-
-      <div className="pkgs-searchwrap">
-        <HeroSearch destinations={destinations} />
-      </div>
-
-      <div className="pkgs-page">
-        <ResultsBar total={list?.total ?? null} destinations={destinations} partnerName={PARTNERS[params.partner]} />
-        <ResultsFrame>
-          {list === null ? (
-            <div className="pkgs-empty">
-              <h2>Packages can&apos;t be shown right now</h2>
-              <p>Something went wrong on our side. Reload the page in a moment.</p>
-            </div>
-          ) : list.items.length === 0 ? (
-            <div className="pkgs-empty">
-              <h2>No packages found</h2>
-              <p>Nothing matches these filters. Try removing one, or search for something broader.</p>
-              <Link className="pkgs-button" href="/packages">
-                Clear all filters
-              </Link>
-            </div>
-          ) : (
+    <>
+      <ListingProvider params={params}>
+        <PageBanner
+          overlap
+          photo="holidays"
+          above={<KindSwitcher active="/packages" />}
+          title={
             <>
-              <div className="pkgs-grid">
-                {list.items.map((pkg, i) => (
-                  <PackageCard key={pkg.id} pkg={pkg} priority={i < 4} />
-                ))}
-              </div>
-              <Pagination page={page} pageSize={size} total={list.total ?? list.items.length} hrefFor={hrefFor} />
+              Find your
+              <br />
+              next safari
             </>
-          )}
-        </ResultsFrame>
-      </div>
-    </ListingProvider>
+          }
+          intro="Safari and lodge packages across Africa, with the price up front."
+        />
+
+        <div className="pkgs-searchwrap">
+          <HeroSearch destinations={destinations} />
+        </div>
+
+        <div className="pkgs-page">
+          <ResultsBar total={list?.total ?? null} destinations={destinations} partnerName={PARTNERS[params.partner]} />
+          <ResultsFrame>
+            {list === null ? (
+              <div className="pkgs-empty">
+                <h2>Packages can&apos;t be shown right now</h2>
+                <p>Something went wrong on our side. Reload the page in a moment.</p>
+              </div>
+            ) : list.items.length === 0 ? (
+              <div className="pkgs-empty">
+                <h2>No packages found</h2>
+                <p>Nothing matches these filters. Try removing one, or search for something broader.</p>
+                <Link className="pkgs-button" href="/packages">
+                  Clear all filters
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="pkgs-grid">
+                  {list.items.map((pkg, i) => (
+                    <PackageCard key={pkg.id} pkg={pkg} priority={i < 4} />
+                  ))}
+                </div>
+                <Pagination page={page} pageSize={size} total={list.total ?? list.items.length} hrefFor={hrefFor} />
+              </>
+            )}
+          </ResultsFrame>
+        </div>
+      </ListingProvider>
+      <ServiceFooter service="packages" />
+    </>
   );
 }

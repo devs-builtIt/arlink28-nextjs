@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
 import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 import ServicesTabs from "@/components/home/ServicesTabs";
 import Reveal from "@/components/home/Reveal";
 import { SERVICES } from "@/content/services";
@@ -34,7 +36,8 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <ClosingCta />
+      <FaqSection items={SERVICE_FAQS.services} />
+      <ClosingCta bleed />
     </div>
   );
 }

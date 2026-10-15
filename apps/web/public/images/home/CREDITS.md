@@ -5,10 +5,10 @@
   Used under the Unsplash License (free for commercial use, no attribution required). Rotated 90 degrees to landscape.
   If the photographer's name is wanted for a credit line, take it from that page.
 
-- `review-couple-1400.webp`: a couple holding hands in the grass beside a safari vehicle.
-  Unsplash, photo-1673667616969-8466c862b9ca (https://unsplash.com/photos/a-man-and-a-woman-holding-hands-in-a-field-JjximVe_6tQ).
-  Used under the Unsplash License (free for commercial use, no attribution required). Photographer listed on Unsplash as Denice Alex; confirm on that page.
-  Stock photo of strangers: not an ARLink28 customer. Swap for a real customer photo, with permission, when one is available.
+- `review-pool-1000.webp`, `review-pool-1600.webp`, `review-pool-2160.webp`: a woman in a sun hat at the edge of an infinity pool above a bush valley.
+  Supplied by the owner as `singita-malilangwe-house-villa-pool-with-a-view.jpg` (2160 x 1440); it appears to be Singita Malilangwe House marketing photography.
+  **Rights not confirmed: get written permission from Singita (or the photographer) before this goes live, and add their credit here.**
+  Stock-style photo of a stranger beside a customer quote: not an ARLink28 customer. Swap for a real customer photo, with permission, when one is available.
 
 - `jet-tarmac-1600.webp`, `jet-sunset-1600.webp`, `jet-cabin-1600.webp`: private jet photos for the Elite Jets cards (re-fetched at 1800 px from the same Unsplash photos, tarmac cropped from portrait to landscape, re-encoded as WebP).
   Unsplash, used under the Unsplash License (free for commercial use, no attribution required). Photo ids:

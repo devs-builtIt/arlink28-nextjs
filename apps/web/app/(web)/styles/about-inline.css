@@ -122,7 +122,7 @@
   width: 100%;
   max-width: 860px;
   background: #0b121c;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   padding: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
