@@ -5,9 +5,10 @@ const KINDS = [
   { href: "/flights", label: "Flights" },
   { href: "/hotels", label: "Hotel reservations" },
   { href: "/visas", label: "Visa support" },
+  { href: "/elite-jets", label: "ARLink28 Elite" },
 ];
 
-/** Moves between the four kinds of listing from the top of any of their list pages. */
+/** Moves between the kinds of listing from the top of any of their list pages. */
 export default function KindSwitcher({ active }: { active: string }) {
   return (
     <nav className="pkgs-kinds" aria-label="Kind of listing">

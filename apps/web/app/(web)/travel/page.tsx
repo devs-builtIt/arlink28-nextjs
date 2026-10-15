@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../../styles/home.css";
 import PageBanner from "@/components/PageBanner";
 import ClosingCta from "@/components/home/ClosingCta";
+import FaqSection from "@/components/home/FaqSection";
+import { SERVICE_FAQS } from "@/content/service-faqs";
 import PartnerDirectory from "@/components/home/PartnerDirectory";
 import Reveal from "@/components/home/Reveal";
 import { TRAVEL_PARTNERS } from "@/content/travel-partners";
@@ -34,7 +36,8 @@ export default function TravelPage() {
         </div>
       </section>
 
-      <ClosingCta />
+      <FaqSection items={SERVICE_FAQS.travel} />
+      <ClosingCta bleed />
     </div>
   );
 }

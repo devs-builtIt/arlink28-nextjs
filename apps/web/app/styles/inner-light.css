@@ -72,3 +72,12 @@
 :root:has(.pb, .pkgs-topband) .sh-theme {
   display: none;
 }
+
+/* ---- Headings: the homepage's heading face on every inner page ------------------------------------
+   The hero's font, at its light weight and tight tracking. Sizes stay with each page. The header and footer keep
+   their own type. */
+:root:has(.pb, .pkgs-topband) :is(h1, h2, h3):not(.sh *, .sf *) {
+  font-family: var(--font-hero);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}

@@ -159,7 +159,7 @@ html:has(.hm) {
 .hm-seg button:focus-visible,
 .hm-trip button:focus-visible,
 .hm-routes button:focus-visible,
-.hm-faq summary:focus-visible,
+.hm-faq-q:focus-visible,
 .hm-badge:focus-visible,
 .hm-pkgs a:focus-visible {
   outline: 2px solid var(--ink);
@@ -1818,72 +1818,91 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   display: grid;
   gap: 10px;
 }
-.hm-faq details {
+.hm-faq-item {
   border-radius: var(--radius-card);
   background: var(--canvas-2);
   padding: 0 24px;
-  interpolate-size: allow-keywords;
-  transition: background-color 0.4s var(--ease-soft);
+  transition: background-color 0.5s var(--ease-glide);
 }
-.hm-faq details:hover {
+.hm-faq-item.is-open,
+.hm-faq-item:hover {
   background: color-mix(in srgb, var(--chip) 55%, transparent);
 }
-.hm-faq summary {
-  list-style: none;
-  cursor: pointer;
+.hm-faq-q {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
+  width: 100%;
   padding: 20px 0;
-  font-size: 18px;
-  font-weight: 500;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 500 18px/1.35 var(--font);
   letter-spacing: -0.01em;
-}
-.hm-faq summary::-webkit-details-marker {
-  display: none;
+  text-align: left;
+  cursor: pointer;
 }
 /* The same round badge as the card arrows: a plus that turns into a cross as the answer opens. */
-.hm-faq summary::after {
-  content: "+";
-  display: grid;
-  place-items: center;
+.hm-faq-q i {
+  position: relative;
   flex: none;
   width: 32px;
   height: 32px;
-  padding-bottom: 2px;
   border-radius: 50%;
   background: var(--ink);
-  color: var(--canvas);
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1;
-  transition: transform 0.5s var(--ease-glide);
+  transition: transform 0.6s var(--ease-glide);
 }
-.hm-faq details[open] summary::after {
+.hm-faq-q i::before,
+.hm-faq-q i::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -6px;
+  background: var(--canvas);
+}
+.hm-faq-q i::after {
+  transform: rotate(90deg);
+}
+.hm-faq-item.is-open .hm-faq-q i {
   transform: rotate(135deg);
 }
-.hm-faq summary:focus-visible {
+.hm-faq-q:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
   border-radius: 6px;
 }
-/* The answer eases open and shut where the browser supports animating the details panel. */
-.hm-faq details::details-content {
-  block-size: 0;
-  overflow: hidden;
-  transition:
-    block-size 0.5s var(--ease-glide),
-    content-visibility 0.5s allow-discrete;
+/* The answer's row grows from 0 to its own height, so the rows below glide down instead of jumping. */
+.hm-faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s var(--ease-glide);
 }
-.hm-faq details[open]::details-content {
-  block-size: auto;
+.hm-faq-item.is-open .hm-faq-a {
+  grid-template-rows: 1fr;
+}
+.hm-faq-a > div {
+  min-height: 0;
+  overflow: hidden;
 }
 .hm-faq p {
   max-width: 62ch;
   padding: 0 48px 24px 0;
   color: var(--ink-2);
   line-height: 1.65;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.35s var(--ease-glide),
+    transform 0.6s var(--ease-glide);
+}
+.hm-faq-item.is-open p {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.12s, 0s;
 }
 @media (max-width: 900px) {
   .hm-faq-wrap {
@@ -1901,8 +1920,10 @@ body:has(.hm-hero) .hm-title .hm-sticker {
     position: relative;
     top: auto;
   }
-  .hm-faq details::details-content,
-  .hm-faq summary::after {
+  .hm-faq-item,
+  .hm-faq-q i,
+  .hm-faq-a,
+  .hm-faq p {
     transition: none;
   }
 }
@@ -2228,57 +2249,6 @@ body:has(.hm-hero) .hm-title .hm-sticker {
 }
 
 /* How it works: three hairline step cards */
-.hm-process {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.hm-process li {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 290px;
-  padding: 24px;
-  border-radius: var(--radius-card);
-  background: var(--canvas-2);
-}
-.hm-process-step {
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--hairline);
-  color: var(--ink-2);
-  font-size: 14px;
-}
-.hm-process p {
-  color: var(--ink-2);
-  line-height: 1.55;
-}
-.hm-process-foot {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: auto;
-  padding-top: 40px;
-}
-.hm-process-foot h3 {
-  font-family: var(--font-hero);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  font-size: 22px;
-  line-height: 1.15;
-  max-width: 12ch;
-}
-.hm-process-foot .hm-icon {
-  margin: 0;
-}
-@media (max-width: 1024px) {
-  .hm-process {
-    grid-template-columns: 1fr;
-  }
-  .hm-process li {
-    min-height: 0;
-  }
-}
 
 /* How it works: a full-bleed photo under a dark wash, the step cards sitting on it. The cards are light in both
    themes, so their colours are set here instead of following the page. */
@@ -3037,6 +3007,11 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   border-radius: var(--radius);
   font: 400 16px var(--font);
 }
+.hm-ct .ct-field .dd-btn {
+  min-height: 52px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+}
 .hm-ct .ct-field textarea {
   min-height: 132px;
 }
@@ -3077,16 +3052,71 @@ body:has(.hm-hero) .hm-title .hm-sticker {
 .hm-ct .ct-reference {
   border-color: var(--hairline);
 }
-.hm-ct-more {
+/* Contact layout: the form wide on the left, one contact panel on the right, then the offices and department emails. */
+.hm-ct-top {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 4vw, 56px);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
-.hm-ct-more h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
+.hm-ct-panel {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius-card);
+  background: var(--canvas-2);
+}
+.hm-ct-panel h2 {
+  font-size: 28px;
+  line-height: 1.15;
+}
+.hm-ct-panel > p {
+  margin: 8px 0 24px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.hm-ct-panel h3 {
+  margin: 28px 0 14px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: -0.03em;
+}
+.hm-ct-ways {
+  display: grid;
+  gap: 18px;
+  list-style: none;
+}
+.hm-ct-ways li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.hm-ct-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--canvas);
+  font-size: 15px;
+}
+.hm-ct-ways li > div {
+  display: grid;
+  min-width: 0;
+}
+.hm-ct-ways li span:not(.hm-ct-icon) {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+.hm-ct-ways a {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: var(--track);
+  overflow-wrap: anywhere;
 }
 .hm-ct-hours {
   display: grid;
@@ -3100,12 +3130,74 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   margin: 2px 0 0;
   line-height: 1.5;
 }
-.hm-ct-hours a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.hm-ct-heading {
+  margin-bottom: 24px;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.1;
 }
-@media (max-width: 900px) {
-  .hm-ct-more {
+.hm-ct-offices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.hm-ct-offices article {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius-card);
+  background: var(--canvas-2);
+}
+.hm-ct-offices h3 {
+  font-size: 28px;
+  line-height: 1.1;
+}
+.hm-ct-offices address {
+  max-width: 40ch;
+  color: var(--ink-2);
+  font-style: normal;
+  line-height: 1.6;
+}
+.hm-ct-offices a {
+  margin-top: auto;
+  padding-top: 8px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.hm-ct-depts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+  list-style: none;
+}
+.hm-ct-depts li {
+  display: grid;
+  gap: 2px;
+}
+.hm-ct-depts span {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.hm-ct-depts a {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1024px) {
+  .hm-ct-top {
+    grid-template-columns: 1fr;
+  }
+  .hm-ct-panel {
+    position: static;
+  }
+}
+@media (max-width: 700px) {
+  .hm-ct-offices,
+  .hm-ct-depts {
     grid-template-columns: 1fr;
   }
 }
@@ -3184,68 +3276,92 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   }
 }
 
-/* ---- Elite jets page: the three tiers ------------------------------------------------------- */
+/* The list pages' stylesheet zeroes the margins of headings, paragraphs and lists inside .pkgs-page and loads after
+   this one, so the card text rules below are written one level up to keep their spacing. */
+/* ---- Elite jets page: the tiers as a grid of equal cards, so any number of tiers fits -------- */
 .el-tiers {
   display: grid;
-  gap: clamp(40px, 6vw, 88px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 24px;
   margin-top: clamp(32px, 4vw, 56px);
   list-style: none;
 }
 .el-tier {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(24px, 5vw, 72px);
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  /* On the list pages the surface is a grey page with white cards, as on the other service pages. */
+  background: var(--surface, var(--canvas-2));
+  box-shadow: 0 1px 2px rgba(11, 23, 38, 0.04);
+  transition: box-shadow 0.3s var(--ease-glide);
+  overflow: hidden;
   scroll-margin-top: calc(var(--header-h) + 24px);
 }
-.el-tier:nth-child(even) .el-tier-photo {
-  order: 2;
+@media (hover: hover) {
+  .el-tier:hover {
+    box-shadow: 0 12px 32px rgba(11, 23, 38, 0.1);
+  }
 }
 .el-tier-photo {
   aspect-ratio: 4 / 3;
-  border-radius: var(--radius-card);
   overflow: hidden;
 }
 .el-tier-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.9s var(--ease-glide);
 }
-.el-tier-no {
+@media (hover: hover) {
+  .el-tier:hover .el-tier-photo img {
+    transform: scale(1.04);
+  }
+}
+.el-tier-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: clamp(26px, 2.8vw, 36px);
+}
+.el-tiers .el-tier-no {
   color: var(--ink-2);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
 }
-.el-tier-body h3 {
-  margin: 10px 0 12px;
-  font-size: clamp(32px, 3.6vw, 52px);
-  line-height: 1.02;
+.el-tiers .el-tier-body h3 {
+  margin: 8px 0 10px;
+  font-size: clamp(28px, 2.6vw, 38px);
+  line-height: 1.05;
 }
-.el-tier-tag {
-  font-size: clamp(18px, 1.7vw, 22px);
+.el-tiers .el-tier-tag {
+  font-size: 18px;
   line-height: 1.4;
 }
-.el-tier-aud {
-  max-width: 46ch;
-  margin-top: 12px;
+.el-tiers .el-tier-aud {
+  margin-top: 14px;
   color: var(--ink-2);
+  font-size: 15px;
   line-height: 1.55;
 }
-.el-tier-inc {
-  margin: 28px 0 12px;
-  padding-top: 20px;
+.el-tiers .el-tier-inc {
+  margin: 36px 0 18px;
+  padding-top: 28px;
   border-top: 1px solid var(--hairline);
+  font-size: 15px;
   font-weight: 700;
 }
-.el-tier-body ul {
+.el-tiers .el-tier-body ul {
   display: grid;
-  gap: 8px;
-  margin-bottom: 32px;
+  flex: 1;
+  align-content: start;
+  gap: 12px;
+  margin-bottom: 36px;
   list-style: none;
 }
 .el-tier-body ul li {
   position: relative;
   padding-left: 22px;
+  font-size: 15px;
   line-height: 1.45;
 }
 .el-tier-body ul li::before {
@@ -3258,16 +3374,62 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   border-radius: 999px;
   background: var(--red);
 }
+.el-tier-body .hm-btn {
+  align-self: flex-start;
+}
 .el-end {
   margin-top: 40px;
 }
-@media (max-width: 900px) {
-  .el-tier {
-    grid-template-columns: 1fr;
-  }
-  .el-tier:nth-child(even) .el-tier-photo {
-    order: 0;
-  }
+
+/* Numbered pages for lists that are already on the page (services, travel partners). The same look as the listing pager. */
+.hm-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 32px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.hm-pager ul {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+.hm-pager button {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: none;
+  color: var(--ink);
+  font: 500 14px var(--font);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease);
+}
+.hm-pager button:hover:not(:disabled) {
+  background: var(--canvas-2);
+}
+.hm-pager button[aria-current="page"] {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.hm-pager button:disabled {
+  color: var(--ink-2);
+  opacity: 0.5;
+  cursor: default;
+}
+.hm-pager button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.hm-pager-gap {
+  padding: 0 4px;
 }
 
 /* Partner logos, a quiet strip of their own straight after the hero */

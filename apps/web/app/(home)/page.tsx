@@ -10,7 +10,9 @@ import Icon from "@/components/home/Icon";
 import QuoteWidget from "@/components/home/QuoteWidget";
 import Reveal from "@/components/home/Reveal";
 import RouteCards from "@/components/home/RouteCards";
+import FaqSection from "@/components/home/FaqSection";
 import HoverList from "@/components/home/HoverList";
+import StepsOnPhoto from "@/components/home/StepsOnPhoto";
 import {
   FAQ,
   GOOGLE_REVIEWS_URL,
@@ -425,73 +427,25 @@ export default async function HomePage() {
       </section>
 
       {/* 8a. How it works: a full-bleed photo with the three step cards over it, before the FAQ */}
-      <section className="hm-sec hm-how-bg" data-tone="dark" aria-labelledby="hm-how">
-        <img
-          className="hm-how-bg-img"
-          src="/images/home/slide-serengeti-1920.webp"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          width={1920}
-          height={1080}
-        />
-        <div className="hm-wrap">
-          <Title id="hm-how" sticker="How it works">
+      <StepsOnPhoto
+        id="hm-how"
+        heading={
+          <>
             Three steps from
             <br />
             request to booking.
-          </Title>
-          <ol className="hm-steps-glass">
-            {STEPS.map((st, i) => (
-              <li key={st.title} data-rv style={{ ["--i" as string]: i }}>
-                <span className="hm-step-num" aria-hidden="true">
-                  0{i + 1}
-                </span>
-                <h3>{st.title}</h3>
-                <p>{st.text}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="hm-how-cta" data-rv>
-            <Link className="hm-btn hm-btn-primary" href="/quote">
-              Get a quote
-            </Link>
-          </div>
-          {PARTNERS.length > 0 && <p className="hm-partners">Working with: {PARTNERS.join(", ")}.</p>}
-        </div>
-      </section>
+          </>
+        }
+        steps={STEPS}
+        photo="/images/home/slide-serengeti-1920.webp"
+        focus="50% 72%"
+        cta={{ href: "/quote", label: "Get a quote" }}
+      >
+        {PARTNERS.length > 0 && <p className="hm-partners">Working with: {PARTNERS.join(", ")}.</p>}
+      </StepsOnPhoto>
 
       {/* 8b. FAQ, after how it works */}
-      <section className="hm-sec" id="faq" aria-labelledby="hm-faq">
-        <div className="hm-wrap">
-          <div className="hm-faq-wrap">
-            <div className="hm-faq-side">
-              <h2 className="hm-title hm-title-left" id="hm-faq" data-rv>
-                <span className="hm-sticker" aria-hidden="true">
-                  FAQ
-                </span>
-                Questions
-                <br />
-                <span className="hm-dim">before you book.</span>
-              </h2>
-              <p data-rv style={{ ["--i" as string]: 1 }}>
-                Cannot see your question? Ask the team and a person replies.
-              </p>
-              <Link className="hm-btn hm-btn-primary" href="/contact" data-rv style={{ ["--i" as string]: 2 }}>
-                Contact us
-              </Link>
-            </div>
-            <div className="hm-faq">
-              {FAQ.map((f, i) => (
-                <details key={f.q} open={i === 0} data-rv style={{ ["--i" as string]: i }}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <FaqSection items={FAQ} schema={false} />
 
       {/* 8d. Blog teaser, after the FAQ: three photo cards with the title laid over them, as on the reference site */}
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-blog">

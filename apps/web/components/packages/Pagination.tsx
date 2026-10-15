@@ -18,12 +18,15 @@ export default function Pagination({
   pageSize,
   total,
   hrefFor,
+  noun = "packages",
 }: {
   page: number;
   pageSize: number;
   total: number;
   /** The address of a page, keeping the current filters. */
   hrefFor: (page: number) => string;
+  /** What is being counted, plural. */
+  noun?: string;
 }) {
   const pages = Math.ceil(total / pageSize);
   if (pages <= 1) return null;
@@ -33,7 +36,7 @@ export default function Pagination({
   return (
     <nav className="pkgs-pager" aria-label="Pages">
       <p>
-        Showing {from} to {to} of {total} packages
+        Showing {from} to {to} of {total} {noun}
       </p>
       <ul>
         <li>
