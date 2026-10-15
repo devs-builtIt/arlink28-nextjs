@@ -26,7 +26,7 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
     label: "Team",
     text: "The people who price and book your trips.",
     photo: "/images/home/proof-harare.webp",
-    focus: "50% 25%",
+    focus: "50% 8%",
   },
   {
     href: "/blogs",
@@ -40,7 +40,7 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
     label: "Contact",
     text: "Message or call us, or find our Lagos and London offices.",
     photo: "/images/home/team-support.webp",
-    focus: "50% 22%",
+    focus: "50% 0%",
   },
 ];
 

@@ -631,9 +631,9 @@
 }
 .sh-mega-thumb {
   flex: none;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-card);
   object-fit: cover;
 }
 .sh-mega-copy {
