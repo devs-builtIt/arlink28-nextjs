@@ -41,7 +41,10 @@ install -d -m 750 "$APP"
 { grep -v '^RELEASE_TAG=' "$APP/.env" 2>/dev/null || true; echo "RELEASE_TAG=$RELEASE_TAG"; } > "$APP/.env.new"
 mv "$APP/.env.new" "$APP/.env"
 install -m 644 "$SRC/web/deploy/compose.yaml" "$APP/compose.yaml"
-install -m 644 "$SRC/web/deploy/Caddyfile" "$APP/Caddyfile"
+# Write the Caddyfile in place (same inode). `install` would replace the file, and a single-file bind mount
+# keeps pointing at the old one, so Caddy would never see the change.
+touch "$APP/Caddyfile" && chmod 644 "$APP/Caddyfile"
+cat "$SRC/web/deploy/Caddyfile" > "$APP/Caddyfile"
 
 dc config --quiet            # validates the file and that the secret files exist; prints nothing
 dc build
@@ -57,6 +60,8 @@ echo "Database dump: $DUMP"
 dc run --rm -T migrate
 
 dc up -d --wait api web caddy
+# A running Caddy keeps the old config until told to reload; recreating it is not needed for that.
+dc exec -T caddy caddy reload --config /etc/caddy/Caddyfile < /dev/null
 dc ps
 
 echo "$(date -u +%FT%TZ) $RELEASE_TAG web=$WEB_REF api=$API_REF" >> "$ROOT/releases.log"
