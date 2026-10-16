@@ -3204,6 +3204,30 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   padding: 13px 16px;
   border-radius: var(--radius);
 }
+/* The site's date field is drawn for the dark quote panel; here it takes the look of the form's other fields. */
+.hm-ct .ct-field .dp-btn {
+  min-height: 52px;
+  padding: 13px 16px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 16px var(--font);
+}
+.hm-ct .ct-field .dp-btn:focus-visible,
+.hm-ct .ct-field .dp-btn[aria-expanded="true"] {
+  border-color: var(--ink);
+  background: var(--surface);
+}
+.hm-ct .ct-field .dp-btn[aria-invalid="true"] {
+  border-color: var(--error);
+}
+.hm-ct .ct-field .dp-placeholder {
+  color: var(--ink-2);
+}
+.hm-ct .ct-field .dp-btn svg {
+  stroke: var(--ink-2);
+}
 .hm-ct .ct-field textarea {
   min-height: 132px;
 }
