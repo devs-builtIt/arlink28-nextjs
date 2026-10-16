@@ -30,7 +30,7 @@ export default function AuthFrame({ title, intro, children }: Props) {
       </main>
       {/* The same photograph and line as the public homepage, so signing in feels like the same place. */}
       <aside className="auth-photo" aria-hidden="true">
-        <img src="/images/home/hero-zanzibar-1920.webp" alt="" width={1920} height={1280} />
+        <img src="/images/home/slide-serengeti-1920.webp" alt="" width={1920} height={1280} />
         <p>Travel across Africa with people who know the routes.</p>
       </aside>
     </div>
