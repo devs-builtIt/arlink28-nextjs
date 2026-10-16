@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import ProtectedPage from "@/components/ProtectedPage";
 import PageHead from "@/components/admin/PageHead";
 import Notice from "@/components/admin/Notice";
+import PasswordInput from "@/components/admin/PasswordInput";
 import { authApi } from "@/utils/api/auth";
 import { PASSWORD_HINT } from "@/components/admin/format";
 
@@ -41,10 +42,8 @@ export default function ChangePasswordPage() {
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="current">Current password</label>
-            <input
+            <PasswordInput
               id="current"
-              className="input"
-              type="password"
               autoComplete="current-password"
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
@@ -53,10 +52,8 @@ export default function ChangePasswordPage() {
           </div>
           <div className="field">
             <label htmlFor="next">New password</label>
-            <input
+            <PasswordInput
               id="next"
-              className="input"
-              type="password"
               autoComplete="new-password"
               aria-describedby="next-hint"
               value={next}

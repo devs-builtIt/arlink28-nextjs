@@ -100,7 +100,7 @@ test.describe("the banner at the top of the inner pages", () => {
     });
   });
 
-  test("gives holidays, flights, hotels, visas and ARLink28 Elite a photo of their own and everything else the safari", async ({
+  test("gives holidays, flights, hotels, visas, ARLink28 Elite and destinations a photo of their own and everything else the safari", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -112,6 +112,7 @@ test.describe("the banner at the top of the inner pages", () => {
       ["/hotels", "hotels"],
       ["/visas", "visas"],
       ["/elite-jets", "elite"],
+      ["/destinations", "destinations"],
     ] as const) {
       await page.goto(path);
       const m = await measure(page);

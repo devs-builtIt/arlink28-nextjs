@@ -9,6 +9,56 @@ const tiles = (page: Page) => page.locator("article.dst-tile");
 const country = (page: Page, name: string) => page.getByRole("region", { name });
 
 test.describe("the destinations index", () => {
+  test("opens with its own banner photo, the Serengeti camp, in the same banner as the other pages", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/destinations");
+    const banner = page.locator("section.pb");
+    await expect(banner).toHaveAttribute("data-photo", "destinations");
+    const img = banner.locator("img.pb-img");
+    await expect(img).toHaveAttribute("src", "/images/banner/destinations-1920.webp");
+    await expect(img).toHaveAttribute("srcset", /destinations-1280\.webp 1280w, .*destinations-1920\.webp 1920w$/);
+    expect(await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
+    await expect(banner.getByText("Destinations", { exact: true }).first()).toBeVisible();
+
+    // The same card as /packages: same height and inset, so only the photo differs.
+    const box = (await banner.locator(".pb-card").boundingBox())!;
+    await page.goto("/packages");
+    const other = (await page.locator("section.pb .pb-card").boundingBox())!;
+    expect(box.height).toBe(other.height);
+    expect(box.x).toBe(other.x);
+    expect(box.width).toBe(other.width);
+  });
+
+  test("ends with the destinations FAQ and the closing call to action, like the service pages", async ({ page }) => {
+    await page.goto("/destinations");
+    const faq = page.locator("#faq");
+    await expect(faq.getByRole("heading", { name: /Questions\s*before you book\./ })).toBeVisible();
+    await expect(faq).toContainText("Which destinations do you cover?");
+    await expect(faq).toContainText("How do I book a trip to a destination?");
+    await expect(faq).toContainText("Do I pay anything when I send a request?");
+    await expect(faq.getByRole("link", { name: "Contact us" })).toHaveAttribute("href", "/contact");
+
+    // The same questions are written out as FAQPage data for search engines.
+    const data = await faq.locator('script[type="application/ld+json"]').evaluate((el) => JSON.parse(el.textContent!));
+    expect(data["@type"]).toBe("FAQPage");
+    expect(data.mainEntity).toHaveLength(5);
+    expect(data.mainEntity[0].name).toBe("Which destinations do you cover?");
+
+    const cta = page.locator("#hm-deals");
+    await expect(cta).toContainText("Ready to go?");
+    await expect(cta).toContainText("We sort the booking.");
+    await expect(
+      page.locator("section[aria-labelledby='hm-deals']").getByRole("link", { name: "Book now" }),
+    ).toHaveAttribute("href", "/quote");
+
+    // They come after the places, FAQ first and the call to action last.
+    const y = async (sel: string) => (await page.locator(sel).first().boundingBox())!.y;
+    expect(await y("#faq")).toBeGreaterThan(await y("article.dst-tile"));
+    expect(await y("section[aria-labelledby='hm-deals']")).toBeGreaterThan(await y("#faq"));
+  });
+
   test("groups the published places by country, in alphabetical order", async ({ page }) => {
     await page.goto("/destinations");
     await expect(page.getByRole("heading", { name: "Destinations", level: 1 })).toBeVisible();

@@ -6,6 +6,7 @@ import { usersApi } from "@/utils/api/users";
 import { useAuth } from "@/context/AuthContext";
 import AuthFrame from "@/components/admin/AuthFrame";
 import Notice from "@/components/admin/Notice";
+import PasswordInput from "@/components/admin/PasswordInput";
 import { PASSWORD_HINT } from "@/components/admin/format";
 
 function AcceptInviteForm() {
@@ -64,10 +65,8 @@ function AcceptInviteForm() {
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>
-          <input
+          <PasswordInput
             id="password"
-            className="input"
-            type="password"
             autoComplete="new-password"
             aria-describedby="password-hint"
             value={password}
