@@ -148,6 +148,22 @@ test.describe("changing your password", () => {
     await expect(page).toHaveURL(/\/admin\/change-password$/);
   });
 
+  test("each password field has its own show and hide button", async ({ page }) => {
+    const current = page.getByLabel("Current password", { exact: true });
+    const next = page.getByLabel("New password", { exact: true });
+    await current.fill("one-secret");
+    await next.fill("two-secret");
+    await expect(page.getByRole("button", { name: "Show password" })).toHaveCount(2);
+
+    await page.getByRole("button", { name: "Show password" }).first().click();
+    await expect(current).toHaveAttribute("type", "text");
+    await expect(next).toHaveAttribute("type", "password");
+
+    await page.getByRole("button", { name: "Show password" }).click();
+    await expect(next).toHaveAttribute("type", "text");
+    await expect(next).toHaveValue("two-secret");
+  });
+
   test("a wrong current password is refused", async ({ page }) => {
     await page.getByLabel("Current password").fill("Not-my-password1");
     await page.getByLabel("New password").fill("Hangar-2026");

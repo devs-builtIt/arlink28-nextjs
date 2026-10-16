@@ -135,10 +135,27 @@ test.describe("password reset and invites", () => {
     await expect(page).toHaveURL(/\/admin\/login$/);
   });
 
+  test("the reset and invite pages can show the password being typed", async ({ page }) => {
+    for (const [url, label] of [
+      ["/admin/reset-password/confirm?token=valid-reset", "New password"],
+      ["/admin/invite/accept?token=valid-invite", "Password"],
+    ] as const) {
+      await page.goto(url);
+      const field = page.getByLabel(label, { exact: true });
+      await field.fill("Boarding-2026");
+      await expect(field).toHaveAttribute("type", "password");
+      await page.getByRole("button", { name: "Show password" }).click();
+      await expect(field).toHaveAttribute("type", "text");
+      await expect(field).toHaveValue("Boarding-2026");
+      await page.getByRole("button", { name: "Hide password" }).click();
+      await expect(field).toHaveAttribute("type", "password");
+    }
+  });
+
   test("accepting an invite creates the account and signs the new person in", async ({ page }) => {
     await page.goto("/admin/invite/accept?token=valid-invite");
     await page.getByLabel("Username").fill("new_hire");
-    await page.getByLabel("Password").fill("Boarding-2026");
+    await page.getByLabel("Password", { exact: true }).fill("Boarding-2026");
     await page.getByRole("button", { name: "Create account and sign in" }).click();
 
     await expect(page).toHaveURL(/\/admin\/dashboard$/);
