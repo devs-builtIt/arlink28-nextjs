@@ -230,6 +230,34 @@ body {
 .adm .input:disabled {
   opacity: 0.55;
 }
+.adm .pw {
+  position: relative;
+}
+.adm .pw .input {
+  padding-right: 44px;
+}
+.adm .pw-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  color: var(--muted);
+  cursor: pointer;
+}
+.adm .pw-toggle:hover {
+  color: var(--ink);
+}
+.adm .pw-toggle:focus-visible {
+  outline: 2px solid var(--livery);
+  outline-offset: -2px;
+}
 .adm select.input {
   appearance: none;
   padding-right: 36px;
