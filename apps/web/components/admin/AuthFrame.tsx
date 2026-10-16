@@ -28,10 +28,10 @@ export default function AuthFrame({ title, intro, children }: Props) {
           <a href="/">Back to arlink28.com</a>
         </p>
       </main>
-      {/* The same photograph and line as the public homepage, so signing in feels like the same place. */}
+      {/* A photograph from the public homepage, so signing in feels like the same place, with a line about what staff do here. */}
       <aside className="auth-photo" aria-hidden="true">
         <img src="/images/home/slide-serengeti-1920.webp" alt="" width={1920} height={1280} />
-        <p>Travel across Africa with people who know the routes.</p>
+        <p>Manage packages, enquiries and destinations in one place.</p>
       </aside>
     </div>
   );

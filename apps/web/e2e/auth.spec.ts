@@ -6,7 +6,7 @@ test.describe("signing in and out", () => {
     await expect(page).toHaveURL(/\/admin\/login\?next=%2Fadmin%2Fusers$/);
 
     await page.getByLabel("Username").fill(SUPER_ADMIN.username);
-    await page.getByLabel("Password").fill(SUPER_ADMIN.password);
+    await page.getByLabel("Password", { exact: true }).fill(SUPER_ADMIN.password);
     await page.getByRole("button", { name: "Sign in" }).click();
 
     await expect(page).toHaveURL(/\/admin\/users$/);
@@ -16,7 +16,7 @@ test.describe("signing in and out", () => {
   test("a wrong password shows the API's message and sets no session", async ({ page, context }) => {
     await page.goto("/admin/login");
     await page.getByLabel("Username").fill(SUPER_ADMIN.username);
-    await page.getByLabel("Password").fill("Wrong-pass1");
+    await page.getByLabel("Password", { exact: true }).fill("Wrong-pass1");
     await page.getByRole("button", { name: "Sign in" }).click();
 
     await expect(errorNotice(page)).toHaveText("Invalid username or password.");
@@ -60,6 +60,45 @@ test.describe("signing in and out", () => {
 
     await page.goto("/admin/users");
     await expect(page.getByText("Only super admins can open this page.")).toBeVisible();
+  });
+});
+
+test.describe("the sign-in page", () => {
+  test("the eye button shows and hides the password", async ({ page }) => {
+    await page.goto("/admin/login");
+    const password = page.getByLabel("Password", { exact: true });
+    await password.fill("Secret-pass1");
+    await expect(password).toHaveAttribute("type", "password");
+
+    await page.getByRole("button", { name: "Show password" }).click();
+    await expect(password).toHaveAttribute("type", "text");
+    await expect(password).toHaveValue("Secret-pass1");
+
+    await page.getByRole("button", { name: "Hide password" }).click();
+    await expect(password).toHaveAttribute("type", "password");
+  });
+
+  test("the photograph is the Serengeti, full bleed, with a line about the admin in Geist", async ({ page }) => {
+    await page.goto("/admin/login");
+    const photo = page.locator(".auth-photo");
+    await expect(photo.locator("img")).toHaveAttribute("src", "/images/home/slide-serengeti-1920.webp");
+    await expect(photo.locator("p")).toHaveText("Manage packages, enquiries and destinations in one place.");
+
+    const box = await photo.boundingBox();
+    const viewport = page.viewportSize()!;
+    expect(box!.y).toBe(0);
+    expect(box!.height).toBe(viewport.height);
+    // Flush to the left edge, and about half the page: the other half is the form.
+    expect(box!.x).toBe(0);
+    expect(Math.abs(box!.width - viewport.width / 2)).toBeLessThan(2);
+    expect(await photo.evaluate((el) => getComputedStyle(el).borderRadius)).toBe("0px");
+    expect(await page.locator(".auth-card").evaluate((el) => getComputedStyle(el).borderRadius)).toBe("1px");
+
+    const line = photo.locator("p");
+    expect(await line.evaluate((el) => getComputedStyle(el).fontFamily)).toContain("Geist");
+    expect(await line.evaluate((el) => getComputedStyle(el).fontWeight)).toBe("300");
+    // Geist is really loaded, not a fallback standing in for it.
+    expect(await page.evaluate(() => document.fonts.check("300 40px Geist"))).toBe(true);
   });
 });
 

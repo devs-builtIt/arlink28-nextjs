@@ -15,7 +15,7 @@ export const errorNotice = (page: Page) => page.locator('.notice[role="alert"]')
 export async function signIn(page: Page, who: { username: string; password: string }) {
   await page.goto("/admin/login");
   await page.getByLabel("Username").fill(who.username);
-  await page.getByLabel("Password").fill(who.password);
+  await page.getByLabel("Password", { exact: true }).fill(who.password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/admin\/dashboard$/);
 }
