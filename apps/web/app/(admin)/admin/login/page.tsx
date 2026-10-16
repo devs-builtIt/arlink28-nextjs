@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import AuthFrame from "@/components/admin/AuthFrame";
 import Notice from "@/components/admin/Notice";
+import PasswordInput from "@/components/admin/PasswordInput";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -44,10 +45,8 @@ export default function LoginPage() {
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>
-          <input
+          <PasswordInput
             id="password"
-            className="input"
-            type="password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
