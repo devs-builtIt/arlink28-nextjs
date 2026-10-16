@@ -129,3 +129,36 @@ test.describe("the homepage quote request", () => {
     await expect(page.getByRole("button", { name: /Switch to (light|dark) theme/ })).toHaveCount(0);
   });
 });
+
+test.describe("the order of the homepage sections", () => {
+  test("shows the featured packages straight after the destinations, then the reasons to choose us, then Elite", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+
+    const sections = [
+      "#destinations",
+      'section[aria-labelledby="hm-pkgs"]',
+      'section[aria-labelledby="hm-why"]',
+      'section[aria-labelledby="hm-jets"]',
+      'section[aria-labelledby="hm-reviews"]',
+    ];
+    const tops: number[] = [];
+    for (const sel of sections) {
+      const el = page.locator(sel);
+      await expect(el, `${sel} is on the page`).toHaveCount(1);
+      tops.push((await el.boundingBox())!.y);
+    }
+    // Destinations, Featured Packages, Why choose us, Elite, then the reviews: each one lower down than the last.
+    expect(tops).toEqual([...tops].sort((a, b) => a - b));
+    await expect(page.locator('section[aria-labelledby="hm-pkgs"] h2')).toContainText("Featured");
+    await expect(page.locator('section[aria-labelledby="hm-why"] h2')).toContainText("Why choose us");
+    await expect(page.locator('section[aria-labelledby="hm-jets"] h2')).toContainText("Private jet charter");
+
+    // Packages (grey) and Why choose us (white) differ, as do Elite and the reviews that follow it.
+    const bg = (sel: string) => page.locator(sel).evaluate((e) => getComputedStyle(e).backgroundColor);
+    expect(await bg(sections[1])).not.toBe(await bg(sections[2]));
+    expect(await bg(sections[3])).not.toBe(await bg(sections[4]));
+  });
+});

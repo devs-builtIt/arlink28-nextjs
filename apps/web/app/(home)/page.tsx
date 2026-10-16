@@ -202,42 +202,8 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* 6. Why choose us, on a white section. Under the reasons, a flat rating card. */}
-      <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-why">
-        <div className="hm-wrap">
-          <Title id="hm-why" sticker="Why choose us?">
-            One team for your
-            <br />
-            flight, hotel and visa.
-          </Title>
-          <HoverList
-            items={[
-              { ...WHY[0], src: "/images/home/slide-serengeti-1280.webp", pos: "50% 72%" },
-              { ...WHY[1], src: "/images/home/slide-namibia-1280.webp", pos: "50% 60%" },
-              { ...WHY[4], src: "/images/home/slide-knysna-1280.webp", pos: "50% 45%" },
-            ]}
-            cta={{ href: "/quote", label: "Get a quote" }}
-          >
-            <div className="hm-proof" data-rv>
-              <div className="hm-proof-card">
-                <p className="hm-proof-rating">
-                  <span className="hm-stars" aria-hidden="true">
-                    {"★★★★★"}
-                  </span>
-                  <b>{REVIEW_SUMMARY.score}</b>
-                  <span>on Google</span>
-                </p>
-                <p className="hm-proof-small">{RATING.count}</p>
-                <p className="hm-proof-count">
-                  <b>{HAPPY.value}</b> {HAPPY.label}
-                </p>
-              </div>
-            </div>
-          </HoverList>
-        </div>
-      </section>
-
-      {/* 7. Packages, live from the catalogue */}
+      {/* 6. Packages, live from the catalogue, right after the destinations: the one section with real prices, so it
+          comes before the general reasons to choose us. */}
       {packages.length > 0 && (
         <section className="hm-sec hm-sec-grey" aria-labelledby="hm-pkgs">
           <div className="hm-wrap">
@@ -287,7 +253,82 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* 7b. Reviews, after the packages: a split heading, then three panels in one row. A rating card on the left,
+      {/* 7. Why choose us, on a white section. Under the reasons, a flat rating card. */}
+      <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-why">
+        <div className="hm-wrap">
+          <Title id="hm-why" sticker="Why choose us?">
+            One team for your
+            <br />
+            flight, hotel and visa.
+          </Title>
+          <HoverList
+            items={[
+              { ...WHY[0], src: "/images/home/slide-serengeti-1280.webp", pos: "50% 72%" },
+              { ...WHY[1], src: "/images/home/slide-namibia-1280.webp", pos: "50% 60%" },
+              { ...WHY[4], src: "/images/home/slide-knysna-1280.webp", pos: "50% 45%" },
+            ]}
+            cta={{ href: "/quote", label: "Get a quote" }}
+          >
+            <div className="hm-proof" data-rv>
+              <div className="hm-proof-card">
+                <p className="hm-proof-rating">
+                  <span className="hm-stars" aria-hidden="true">
+                    {"★★★★★"}
+                  </span>
+                  <b>{REVIEW_SUMMARY.score}</b>
+                  <span>on Google</span>
+                </p>
+                <p className="hm-proof-small">{RATING.count}</p>
+                <p className="hm-proof-count">
+                  <b>{HAPPY.value}</b> {HAPPY.label}
+                </p>
+              </div>
+            </div>
+          </HoverList>
+        </div>
+      </section>
+
+      {/* 7a. Elite Jets teaser, straight after the reasons to choose us: three kinds of charter, no prices until the service has real content */}
+      <section className="hm-sec" aria-labelledby="hm-jets">
+        <div className="hm-wrap">
+          <div className="hm-row-head">
+            <h2 className="hm-title hm-title-left" id="hm-jets" data-rv>
+              <span className="hm-sticker" aria-hidden="true">
+                ARLink28 Elite
+              </span>
+              Private jet charter,
+              <br />
+              in three tiers.
+            </h2>
+            <div className="hm-jets-side" data-rv>
+              <p>Three ways to fly private, from the essentials to a journey designed entirely around you.</p>
+              <Link className="hm-btn hm-btn-primary" href="/elite-jets">
+                See the tiers
+              </Link>
+            </div>
+          </div>
+          <ul className="hm-stack">
+            {tiers.map((t, i) => (
+              <li key={t.slug} data-rv style={{ ["--i" as string]: i }}>
+                <div className="hm-stack-info">
+                  <h3>{t.title}</h3>
+                  <div className="hm-stack-copy">
+                    <p>{t.tagline}</p>
+                    <Link className="hm-btn hm-btn-primary" href={`/elite-jets#${t.slug}`}>
+                      Explore {t.tier}
+                    </Link>
+                  </div>
+                </div>
+                <div className="hm-stack-photo">
+                  <img src={t.image} alt={t.alt} loading="lazy" decoding="async" width={1600} height={1200} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 7b. Reviews, after the Elite teaser: a split heading, then three panels in one row. A rating card on the left,
           a photo with one featured quote in the middle, and a single column of review cards scrolling slowly on the
           right. Review text is placeholder until real. */}
       <section className="hm-sec hm-sec-white" data-tone="light" aria-labelledby="hm-reviews">
@@ -390,46 +431,6 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 7c. Elite Jets teaser, after the reviews: three kinds of charter, no prices until the service has real content */}
-      <section className="hm-sec" aria-labelledby="hm-jets">
-        <div className="hm-wrap">
-          <div className="hm-row-head">
-            <h2 className="hm-title hm-title-left" id="hm-jets" data-rv>
-              <span className="hm-sticker" aria-hidden="true">
-                ARLink28 Elite
-              </span>
-              Private jet charter,
-              <br />
-              in three tiers.
-            </h2>
-            <div className="hm-jets-side" data-rv>
-              <p>Three ways to fly private, from the essentials to a journey designed entirely around you.</p>
-              <Link className="hm-btn hm-btn-primary" href="/elite-jets">
-                See the tiers
-              </Link>
-            </div>
-          </div>
-          <ul className="hm-stack">
-            {tiers.map((t, i) => (
-              <li key={t.slug} data-rv style={{ ["--i" as string]: i }}>
-                <div className="hm-stack-info">
-                  <h3>{t.title}</h3>
-                  <div className="hm-stack-copy">
-                    <p>{t.tagline}</p>
-                    <Link className="hm-btn hm-btn-primary" href={`/elite-jets#${t.slug}`}>
-                      Explore {t.tier}
-                    </Link>
-                  </div>
-                </div>
-                <div className="hm-stack-photo">
-                  <img src={t.image} alt={t.alt} loading="lazy" decoding="async" width={1600} height={1200} />
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
