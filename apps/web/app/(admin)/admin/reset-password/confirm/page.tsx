@@ -6,6 +6,7 @@ import Link from "next/link";
 import { authApi } from "@/utils/api/auth";
 import AuthFrame from "@/components/admin/AuthFrame";
 import Notice from "@/components/admin/Notice";
+import PasswordInput from "@/components/admin/PasswordInput";
 import { PASSWORD_HINT } from "@/components/admin/format";
 
 function ConfirmResetForm() {
@@ -57,10 +58,8 @@ function ConfirmResetForm() {
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="password">New password</label>
-          <input
+          <PasswordInput
             id="password"
-            className="input"
-            type="password"
             autoComplete="new-password"
             aria-describedby="password-hint"
             value={password}
