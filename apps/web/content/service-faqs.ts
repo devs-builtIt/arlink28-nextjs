@@ -13,7 +13,18 @@ const NOTHING_CHARGED: Faq = {
  * supplier's own rules). Review the wording against the real terms before launch.
  */
 export const SERVICE_FAQS: Record<
-  "flights" | "hotels" | "visas" | "packages" | "services" | "travel" | "elite" | "about" | "team" | "blogs" | "quote",
+  | "flights"
+  | "hotels"
+  | "visas"
+  | "packages"
+  | "destinations"
+  | "services"
+  | "travel"
+  | "elite"
+  | "about"
+  | "team"
+  | "blogs"
+  | "quote",
   Faq[]
 > = {
   flights: [
@@ -90,6 +101,25 @@ export const SERVICE_FAQS: Record<
     {
       q: "Can you add flights and visa support to a package?",
       a: "Yes. We can arrange the flights and the visa support alongside the package so it is one booking conversation.",
+    },
+  ],
+  destinations: [
+    {
+      q: "Which destinations do you cover?",
+      a: "Places across Africa, and more are being added. Each destination page lists the places worth the trip and the packages that go there. If a place is not listed, ask and the team checks.",
+    },
+    {
+      q: "How do I book a trip to a destination?",
+      a: "Open a destination to see its packages, then send an enquiry with your dates. A member of the team replies with the details and a price, and books it once you agree.",
+    },
+    NOTHING_CHARGED,
+    {
+      q: "When is the best time to go?",
+      a: "It depends on the place and on what you want to see. Tell us your dates and the team replies with what to expect.",
+    },
+    {
+      q: "Can you add flights and visa support?",
+      a: "Yes. We can arrange the flights and the visa support alongside the trip so it is one booking conversation.",
     },
   ],
   services: [

@@ -5,6 +5,7 @@ import { groupByCountry, placeHref } from "@/utils/destinations";
 import { listDestinations } from "@/utils/server/catalogue";
 import "../../styles/destination-pages.css";
 import PageBanner from "@/components/PageBanner";
+import ServiceFooter from "@/components/home/ServiceFooter";
 
 export const metadata: Metadata = {
   title: "Destinations across Africa | ARLink28",
@@ -25,6 +26,7 @@ export default async function DestinationsPage() {
     <>
       <PageBanner
         label="Destinations"
+        photo="destinations"
         title="Destinations"
         intro="Where ARLink28 can take you across Africa. Choose a country, or go straight to a place."
       />
@@ -90,6 +92,8 @@ export default async function DestinationsPage() {
           </>
         )}
       </div>
+
+      <ServiceFooter service="destinations" />
     </>
   );
 }

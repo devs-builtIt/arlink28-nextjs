@@ -13,8 +13,8 @@ type Props = {
   above?: ReactNode;
   /** The page docks a search bar into the card's bottom edge: leaves room for it. */
   overlap?: boolean;
-  /** Which photo: the safari by default; holidays, flights, hotels, visas, Elite Jets and the Namibia desert each have their own. */
-  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas" | "elite" | "namibia";
+  /** Which photo: the safari by default; holidays, flights, hotels, visas, Elite Jets, the Namibia desert and Destinations each have their own. */
+  photo?: "banner" | "holidays" | "flights" | "hotels" | "visas" | "elite" | "namibia" | "destinations";
   id?: string;
 };
 
@@ -40,8 +40,8 @@ export default function PageBanner({
           src={`/images/banner/${photo}-1920.webp`}
           srcSet={
             `/images/banner/${photo}-1280.webp 1280w, /images/banner/${photo}-1920.webp 1920w` +
-            // The Namibia photo's source is 1920 wide, so there is no 2560 version.
-            (photo === "namibia" ? "" : `, /images/banner/${photo}-2560.webp 2560w`)
+            // The Namibia and Destinations photos have no 2560 version.
+            (photo === "namibia" || photo === "destinations" ? "" : `, /images/banner/${photo}-2560.webp 2560w`)
           }
           sizes="100vw"
           alt=""
