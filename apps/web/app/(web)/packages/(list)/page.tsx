@@ -8,7 +8,7 @@ import PackageCard from "@/components/packages/PackageCard";
 import Pagination from "@/components/packages/Pagination";
 import ResultsBar, { ResultsFrame } from "@/components/packages/ResultsBar";
 import { PAGE_SIZE, listDestinations, listPackages } from "@/utils/server/catalogue";
-import "../styles/packages.css";
+import "../../styles/packages.css";
 import PageBanner from "@/components/PageBanner";
 
 export const metadata: Metadata = {

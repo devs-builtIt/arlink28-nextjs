@@ -1,4 +1,4 @@
-import "../styles/packages.css";
+import "../../styles/packages.css";
 import PageBanner from "@/components/PageBanner";
 
 /** The list's shape while it loads: the hero and search bar, then a grid of quiet placeholder cards. */
