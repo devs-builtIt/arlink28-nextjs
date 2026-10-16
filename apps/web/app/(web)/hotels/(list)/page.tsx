@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ProductListing from "@/components/products/ProductListing";
 import { PUBLIC } from "@/utils/publicProducts";
-import "../styles/packages.css";
+import "../../styles/packages.css";
 
 export const metadata: Metadata = {
   title: PUBLIC.HotelReservation.metaTitle,

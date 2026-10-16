@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "../../styles/packages.css";
+import "../styles/packages.css";
 
 export default function PackageNotFound() {
   return (

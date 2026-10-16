@@ -34,6 +34,21 @@ export async function ProductPage({ type, slug }: { type: PublicType; slug: stri
   return <ProductDetail pkg={pkg} type={type} />;
 }
 
+/**
+ * Called from the layout of a listing's address, before anything is sent. The status code is fixed once the first
+ * bytes go out, and each of these routes has a loading.tsx that sends them before the page runs, so a listing that
+ * does not exist would be a "soft 404" (a 200 that says "not found") and a wrong-kind address would redirect in
+ * the browser instead of with a 308. A layout renders ahead of that loading boundary, so it can still answer 404
+ * and 308. If the catalogue cannot be reached it lets the page through, so an outage is not mistaken for a 404.
+ */
+export async function guardListing(type: PublicType | "HolidayPackage", slug: string) {
+  const pkg = await getPackage(slug).catch(() => undefined);
+  if (pkg === undefined) return;
+  if (pkg === null) notFound();
+  const kind = pkg.productType ?? "HolidayPackage";
+  if (kind !== type) permanentRedirect(publicPath(kind, slug));
+}
+
 /** Next's redirect() throws an error whose digest starts with NEXT_REDIRECT. */
 const isRedirect = (err: unknown) =>
   typeof err === "object" && err !== null && String((err as { digest?: unknown }).digest).startsWith("NEXT_REDIRECT");
