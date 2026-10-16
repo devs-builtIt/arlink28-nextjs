@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
+import DatePicker from "@/components/home/DatePicker";
 import Dropdown from "@/components/home/Dropdown";
 import { EnquiryAlert, EnquiryDone } from "@/components/home/EnquiryResult";
 import type { CreateEnquiryRequest, Quote } from "@arlink28/api-client";
@@ -254,15 +255,17 @@ export default function EnquiryForm({ pkg, aboutTitle, initialCheckIn, initialNi
                 <label htmlFor="ct-checkin">
                   {holiday || pkg.kind === "HotelReservation" ? "Check-in date" : "Preferred travel date"}
                 </label>
-                <input
+                <DatePicker
                   id="ct-checkin"
                   name="checkIn"
-                  type="date"
+                  ariaLabel={
+                    holiday || pkg.kind === "HotelReservation" ? "Choose a check-in date" : "Choose a travel date"
+                  }
                   value={checkIn}
                   min={minToday}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  aria-invalid={err("checkIn") ? true : undefined}
-                  aria-describedby={described("checkIn")}
+                  onChange={setCheckIn}
+                  invalid={!!err("checkIn")}
+                  describedBy={described("checkIn")}
                 />
                 {err("checkIn") && (
                   <p className="ct-error" id="ct-checkIn-error">
