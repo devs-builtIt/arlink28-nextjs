@@ -26,7 +26,7 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
     label: "Team",
     text: "The people who price and book your trips.",
     photo: "/images/home/proof-harare.webp",
-    focus: "50% 25%",
+    focus: "50% 8%",
   },
   {
     href: "/blogs",
@@ -40,7 +40,7 @@ const ESSENTIALS: { href: string; label: string; text: string; photo: string; fo
     label: "Contact",
     text: "Message or call us, or find our Lagos and London offices.",
     photo: "/images/home/team-support.webp",
-    focus: "50% 22%",
+    focus: "50% 0%",
   },
 ];
 
@@ -217,8 +217,10 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                           height={96}
                           style={{ objectPosition: link.focus }}
                         />
-                        <span className="sh-mega-title">{link.label}</span>
-                        <span className="sh-mega-text">{link.text}</span>
+                        <span className="sh-mega-copy">
+                          <span className="sh-mega-title">{link.label}</span>
+                          <span className="sh-mega-text">{link.text}</span>
+                        </span>
                         <span className="sh-mega-go" aria-hidden="true">
                           <svg viewBox="0 0 16 16">
                             <path d="M4 12 12 4M5.5 4H12v6.5" />
@@ -229,9 +231,11 @@ export default function Header({ themable = false }: { themable?: boolean }) {
                   ))}
                 </ul>
                 <div className="sh-mega-feature" style={{ ["--i" as string]: 4 }}>
-                  <img src="/images/home/proof-harare.webp" alt="" decoding="async" width={900} height={1200} />
-                  <p className="sh-mega-title">ARLink28 on the road</p>
-                  <p className="sh-mega-text">Find the team at aviation and travel events across Africa and the UK.</p>
+                  <img src="/images/home/menu-family.webp" alt="" decoding="async" width={900} height={675} />
+                  <p className="sh-mega-title">From the airport to the hotel</p>
+                  <p className="sh-mega-text">
+                    Flights, transfers and stays planned together, so your family arrives without the scramble.
+                  </p>
                   <Link className="sh-cta sh-cta-quiet sh-mega-btn" href="/contact">
                     Contact us
                   </Link>
