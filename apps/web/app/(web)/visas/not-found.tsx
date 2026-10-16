@@ -1,6 +1,6 @@
 import { ProductNotFound } from "@/components/products/productRoute";
-import "../../styles/packages.css";
+import "../styles/packages.css";
 
 export default function NotFound() {
-  return <ProductNotFound type="HotelReservation" />;
+  return <ProductNotFound type="VisaSupport" />;
 }
