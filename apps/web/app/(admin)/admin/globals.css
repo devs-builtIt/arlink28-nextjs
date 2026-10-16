@@ -26,6 +26,14 @@ body {
   font-style: normal;
   font-display: swap;
 }
+/* Geist, the home page's hero heading face, for the line over the sign-in photograph. */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 .adm {
   --canvas: #f4f6f9;
@@ -495,13 +503,13 @@ body {
   left: clamp(24px, 4vw, 56px);
   right: clamp(24px, 4vw, 56px);
   bottom: clamp(24px, 4vw, 48px);
-  max-width: 14em;
+  max-width: 12em;
   color: #fff;
-  font-family: var(--font);
-  font-size: clamp(1.75rem, 2.8vw, 3rem);
-  font-weight: 500;
+  font-family: Geist, var(--font);
+  font-size: clamp(2.25rem, 4vw, 4.5rem);
+  font-weight: 300;
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
 }
 @media (max-width: 900px) {
   .adm .auth {
