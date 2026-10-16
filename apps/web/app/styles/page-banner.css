@@ -63,6 +63,10 @@
 .pb[data-photo="namibia"] .pb-img {
   object-position: 60% 50%;
 }
+/* The Serengeti camp: low enough to keep the tree and the lit tents, with the sky above. */
+.pb[data-photo="destinations"] .pb-img {
+  object-position: 50% 62%;
+}
 .pb-card::after {
   content: "";
   position: absolute;

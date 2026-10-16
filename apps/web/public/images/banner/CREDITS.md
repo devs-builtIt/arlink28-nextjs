@@ -11,3 +11,4 @@
 - `visas-*.webp`: a family arriving at an airport, cropped from our own `images/airporttransfer.png` (1254 px, so the two larger sizes are upscaled). A stand-in until there is a real photo of a traveller with their documents.
   All three under the Unsplash License, cropped to 16:7 in the same three sizes. Used by the Holidays, Flights, Hotels and Visas listing pages (`photo` prop of `PageBanner`).
 - `elite-*.webp`: a private jet on the tarmac at golden hour, cropped to 16:7 from the full original of the photo already used on the Elite Jets cards (Unsplash photo id `1619659085985-f51a00f0160a`). Used by the Elite Jets page.
+- `destinations-1280.webp`, `destinations-1920.webp`: the Serengeti camp at dusk, copied from `images/home/slide-serengeti-*.webp` (the home page's Serengeti slide, same source and licence). Used by the Destinations index (`photo="destinations"`). No 2560 version.
