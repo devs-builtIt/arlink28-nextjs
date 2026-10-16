@@ -1304,13 +1304,15 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   position: relative;
   border-top: 1px solid var(--hairline);
 }
-/* The one highlight: it slides to the hovered row and fades out when the pointer leaves the list. */
+/* The one highlight: it slides to the hovered row and fades out when the pointer leaves the list. It is the same
+   soft fill the FAQ uses on hover, and the row's text keeps its colour. */
 .hm-why-bar {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  background: var(--ink);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--chip) 55%, transparent);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -1332,9 +1334,6 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   cursor: default;
   outline: none;
   transition: color 0.4s var(--ease);
-}
-.hm-why-list li.is-on {
-  color: var(--canvas);
 }
 .hm-why-num {
   padding-top: 8px;
@@ -1360,8 +1359,7 @@ body:has(.hm-hero) .hm-title .hm-sticker {
   transition: color 0.4s var(--ease);
 }
 .hm-why-list li.is-on .hm-why-body p {
-  color: inherit;
-  opacity: 0.8;
+  color: var(--ink);
 }
 .hm-why-cta {
   align-self: flex-start;

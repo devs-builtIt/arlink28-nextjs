@@ -535,9 +535,10 @@
 .sh-drop-btn:hover {
   opacity: 1;
 }
-/* As on the reference, the open trigger dims while its panel is showing. */
+/* While its panel is showing, the trigger stays solid and is underlined, so it reads as the open one. */
 .sh-drop-btn[aria-expanded="true"] {
-  opacity: 0.55;
+  opacity: 1;
+  border-bottom-color: var(--ink);
 }
 .sh-drop-btn.is-active {
   opacity: 1;
@@ -573,7 +574,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
   gap: 20px;
   padding: calc(var(--bar) - 4px) 20px 20px;
-  border-radius: 28px;
+  border-radius: var(--radius-card);
   background: var(--canvas);
   box-shadow:
     0 1px 2px rgba(11, 23, 38, 0.06),
@@ -598,46 +599,52 @@
 }
 .sh-mega-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-auto-rows: 1fr;
+  min-width: 0;
+  gap: 12px;
   list-style: none;
 }
 .sh-mega-cards a {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
   height: 100%;
-  min-height: 156px;
-  padding: 20px;
-  border-radius: 20px;
-  background: var(--canvas-2);
+  padding: 20px 56px 20px 20px;
+  /* Links in the nav do not wrap; these hold sentences. */
+  white-space: normal;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-card);
+  background: transparent;
   color: var(--ink);
   opacity: 1;
-  border-bottom: 0;
   transition:
-    background-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s var(--ease);
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
-.sh-mega-cards a:hover {
-  background: var(--canvas);
-  box-shadow: 0 14px 34px rgba(11, 23, 38, 0.12);
-  transform: translateY(-2px);
+.sh-mega-cards a:hover,
+.sh-mega-cards a:focus-visible {
+  background: var(--canvas-2);
+  border-color: color-mix(in srgb, var(--ink) 22%, transparent);
 }
-/* A round photograph stands in for an icon, and a round arrow badge waits in the corner. */
 .sh-mega-thumb {
-  width: 52px;
-  height: 52px;
-  margin-bottom: auto;
-  border-radius: 50%;
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-card);
   object-fit: cover;
-  box-shadow:
-    0 0 0 3px var(--canvas),
-    0 2px 8px rgba(11, 23, 38, 0.12);
 }
+.sh-mega-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* The arrow waits at the end of the tile and appears on hover. */
 .sh-mega-go {
   position: absolute;
-  top: 20px;
+  top: 50%;
   right: 20px;
   display: grid;
   place-items: center;
@@ -647,10 +654,10 @@
   background: var(--red);
   color: #fff;
   opacity: 0;
-  transform: scale(0.8);
+  transform: translateY(-50%) scale(0.8);
   transition:
-    opacity 0.25s ease,
-    transform 0.3s var(--ease);
+    opacity 0.2s ease,
+    transform 0.25s var(--ease);
 }
 .sh-mega-go svg {
   display: block;
@@ -666,16 +673,17 @@
 .sh-mega-cards a:hover .sh-mega-go,
 .sh-mega-cards a:focus-visible .sh-mega-go {
   opacity: 1;
-  transform: none;
+  transform: translateY(-50%);
 }
 /* The page you are on is marked with a small red dot, so it does not look like a stuck hover. */
 .sh-mega-cards a[aria-current="page"]::before {
   content: "";
   position: absolute;
-  top: 26px;
-  right: 26px;
+  top: 50%;
+  right: 31px;
   width: 8px;
   height: 8px;
+  margin-top: -4px;
   border-radius: 50%;
   background: var(--red);
 }
@@ -704,7 +712,6 @@
   stroke-linejoin: round;
   transition: transform 0.25s var(--ease);
 }
-.sh-mega-cards a:hover svg,
 .sh-mega-links a:hover svg {
   transform: translateX(3px);
 }
@@ -724,7 +731,7 @@
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   margin-bottom: 16px;
 }
 .sh-mega-links {
@@ -770,10 +777,11 @@
 }
 
 /* Pages that open with a photo hero: until the visitor scrolls, the header sits on the photo, so it
-   uses the dark theme's colours whatever theme the page is in. On the homepage it is a flat, transparent
+   uses the dark theme's colours whatever theme the page is in. While the Essentials panel is open the bar sits on the
+   panel, so it goes back to the page's own colours. On the homepage it is a flat, transparent
    bar with the white logo; scrolling turns it into the floating pill. */
-body:has(.hm-phero) .sh:not(.is-scrolled),
-body:has(.hm-hero) .sh:not(.is-scrolled) {
+body:has(.hm-phero) .sh:not(.is-scrolled):not(.is-mega),
+body:has(.hm-hero) .sh:not(.is-scrolled):not(.is-mega) {
   --ink: #f5f7fa;
   --canvas: #0a0d12;
   --header-bg: rgba(10, 13, 18, 0.72);
@@ -784,7 +792,7 @@ body:has(.hm-hero) .sh:not(.is-scrolled) {
   --btn2-line: rgba(255, 255, 255, 0.16);
   color-scheme: dark;
 }
-body:has(.hm-hero) .sh:not(.is-scrolled) {
+body:has(.hm-hero) .sh:not(.is-scrolled):not(.is-mega) {
   --logo: url("/images/logo-horizontal-white.png");
 }
 
